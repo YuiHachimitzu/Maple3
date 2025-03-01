@@ -166,42 +166,14 @@
     </div>
 
     <div class="container file-storage hidden" id="file-storage">
-        <h1>Welcome to Starlight File Storage</h1>
+        <button onclick="redirectToSite()">Login</button>
 
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('lua-files')">Lua Files</div>
-            <div class="tab" onclick="showTab('python-files')">Python Files</div>
-            <div class="tab" onclick="showTab('text-files')">Text Files</div>
-        </div>
-
-        <div id="lua-files" class="files active">
-            <div class="file-box">Packet 1: Lua Script
-                <a href="packet1.lua" class="download-link" download>Download</a>
-            </div>
-            <div class="file-box">Packet 2: Lua Script
-                <a href="packet2.lua" class="download-link" download>Download</a>
-            </div>
-        </div>
-
-        <div id="python-files" class="files">
-            <div class="file-box">Packet 3: Python Script
-                <a href="packet3.py" class="download-link" download>Download</a>
-            </div>
-            <div class="file-box">Packet 4: Python Script
-                <a href="packet4.py" class="download-link" download>Download</a>
-            </div>
-        </div>
-
-        <div id="text-files" class="files">
-            <div class="file-box">Packet 5: Text File
-                <a href="packet5.txt" class="download-link" download>Download</a>
-            </div>
-            <div class="file-box">Packet 6: Text File
-                <a href="packet6.txt" class="download-link" download>Download</a>
-            </div>
-        </div>
-    </div>
-
+        <script>
+            function redirectToSite() {
+                window.location.href = "https://hianime.to/";
+            }
+        </script>
+        
     <script>
         document.getElementById("username").addEventListener("input", checkLogin);
         document.getElementById("password").addEventListener("input", checkLogin);
