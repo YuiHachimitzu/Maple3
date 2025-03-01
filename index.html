@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Starlight Secure Storage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
         }
         body {
             background: #121212;
@@ -19,6 +21,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
         .login-container, .file-storage {
             background: rgba(30, 30, 30, 0.9);
@@ -62,9 +65,15 @@
             color: #fff;
             cursor: pointer;
             box-shadow: 0px 0px 10px rgba(0, 183, 255, 0.8);
+            animation: pulse 1s infinite;
         }
         .login-btn.active:hover {
             background: #0088cc;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         .tabs {
             display: flex;
@@ -116,30 +125,35 @@
         .download-link:hover {
             text-decoration: underline;
         }
+        .particle {
+            position: absolute;
+            background-color: rgba(0, 183, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            transition: opacity 0.6s, transform 0.6s;
+        }
     </style>
 </head>
 <body>
-
-    <!-- Login Page -->
     <div class="login-container" id="login-container">
         <h1>Welcome to Maple3</h1>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
-        <button id="login-btn" class="login-btn">Login</button>
+        <button id="login-btn" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
     </div>
 
-    <!-- File Storage (Hidden Initially) -->
     <div class="file-storage hidden" id="file-storage">
         <h1>Welcome to Starlight File Storage</h1>
 
-        <!-- Tabs -->
         <div class="tabs">
             <div class="tab active" onclick="showTab('lua-files')">Lua Files</div>
             <div class="tab" onclick="showTab('python-files')">Python Files</div>
             <div class="tab" onclick="showTab('text-files')">Text Files</div>
         </div>
 
-        <!-- File Sections -->
         <div id="lua-files" class="files active">
             <div class="file-box">Packet 1: Lua Script
                 <a href="packet1.lua" class="download-link" download>Download</a>
@@ -169,7 +183,6 @@
     </div>
 
     <script>
-        // Login Validation
         document.getElementById("username").addEventListener("input", checkLogin);
         document.getElementById("password").addEventListener("input", checkLogin);
 
@@ -200,7 +213,6 @@
             }
         });
 
-        // Tab Switching
         function showTab(tabId) {
             const allTabs = document.querySelectorAll('.tab');
             const allFiles = document.querySelectorAll('.files');
@@ -214,24 +226,23 @@
             document.getElementById(tabId).classList.add('active');
             document.getElementById(tabId).style.display = 'block';
         }
-    </script>
-  <script>
+
         document.addEventListener("mousemove", function(event) {
-            const particles = document.querySelector(".particles");
+            const particles = document.querySelector("body");
             const particle = document.createElement("div");
             particle.classList.add("particle");
             particle.style.left = `${event.clientX}px`;
             particle.style.top = `${event.clientY}px`;
             particles.appendChild(particle);
-            
+
             setTimeout(() => {
                 particle.style.opacity = 1;
                 particle.style.transform = `translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px) scale(${Math.random() + 0.5})`;
             }, 10);
-            
+
             setTimeout(() => {
                 particle.style.opacity = 0;
-                setTimeout(() => particles.removeChild(particle), 300);
+                setTimeout(() => particles.removeChild(particle), 600);
             }, 500);
         });
     </script>
