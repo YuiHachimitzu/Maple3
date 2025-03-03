@@ -1,98 +1,227 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', Arial, sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #1e1e1e, #121212);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 500px;
-    padding: 20px;
-    background: rgba(30, 30, 30, 0.9);
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.5);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.hidden {
-    opacity: 0;
-    transform: scale(0.9);
-    display: none;
-}
-
-h1 {
-    margin-bottom: 15px;
-    font-size: 24px;
-    color: #ffffff;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-h1:hover {
-    color: #131a83;
-    text-shadow: 0 0 10px #3335d1, 0 0 10px #241094, 0 0 10px #0d348a;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-    text-align: center;
-    background: #333;
-    color: #fff;
-}
-
-.login-btn {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    background: #444;
-    color: #999;
-    cursor: not-allowed;
-    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
-    font-weight: bold;
-}
-
-.login-btn.active {
-    background: linear-gradient(135deg, #00bfff, #007bff);
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.8);
-}
-
-.login-btn.active:hover {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-}
-
-.profile-picture {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid #00bfff;
-    margin-right: 10px;
-}
-
-.welcome-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+      * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e1e1e, #121212);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.5);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .hidden {
+            opacity: 0;
+            transform: scale(0.9);
+            display: none;
+        }
+        h1 {
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: #ffffff;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        h1:hover {
+            color: #131a83;
+            text-shadow: 0 0 10px #3335d1, 0 0 10px #241094, 0 0 10px #0d348a;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            text-align: center;
+            background: #333;
+            color: #fff;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #444;
+            color: #999;
+            cursor: not-allowed;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+        .login-btn.active {
+            background: linear-gradient(135deg, #00bfff, #007bff);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.8);
+        }
+        .login-btn.active:hover {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #00bfff;
+            margin-right: 10px;
+        }
+        .welcome-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .redirect-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #e41818;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .redirect-btn:hover {
+            background: #007bff;
+            transform: scale(1.05);
+        }
+        .additional-btns {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .additional-btn {
+            padding: 10px 20px;
+            background: #444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .additional-btn:hover {
+            background: #007bff;
+            transform: scale(1.05);
+        }
+        .option-btns {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-btn {
+            padding: 10px 20px;
+            background: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .option-btn:hover {
+            background: #0099ff;
+            transform: scale(1.05);
+        }
+        .content-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .content-section.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .terminal-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1e1e;
+            border-top: 2px solid #00bfff;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 1600%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0px -5px 15px rgba(0, 183, 255, 0.5);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .terminal {
+            width: 100%;
+            height: 30vh;
+            background: #1e1e1e;
+            color: #00bfff;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 20px;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.5);
+            border: 1px solid #00bfff;
+            scrollbar-width: thin;
+            scrollbar-color: #00bfff #333;
+        }
+        .terminal::-webkit-scrollbar {
+            width: 12px;
+        }
+        .terminal::-webkit-scrollbar-track {
+            background: #333;
+            border-radius: 15px;
+        }
+        .terminal::-webkit-scrollbar-thumb {
+            background-color: #00bfff;
+            border-radius: 15px;
+            border: 2px solid #333;
+        }
+        .terminal::-webkit-scrollbar-thumb:hover {
+            background-color: #c71a23;
+        }
+        .terminal p {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .terminal-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            background: #333;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 0px 0px 10px rgba(0, 183, 255, 0.5);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .terminal-input:focus {
+            background: #444;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.8);
+            transform: scale(0.98);
+        }
+ 
