@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starlight Secure Storage</title>
+    <title>Maple empire</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -44,7 +44,12 @@
         h1 {
             margin-bottom: 15px;
             font-size: 24px;
-            color: #00bfff;
+            color: #ffffff;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        h1:hover {
+            color: #131a83;
+            text-shadow: 0 0 10px #3335d1, 0 0 10px #241094, 0 0 10px #0d348a;
         }
         input {
             width: 100%;
@@ -65,23 +70,17 @@
             background: #444;
             color: #999;
             cursor: not-allowed;
-            transition: 0.3s;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
             font-weight: bold;
         }
         .login-btn.active {
-            background: #00bfff;
+            background: linear-gradient(135deg, #00bfff, #007bff);
             color: #fff;
             cursor: pointer;
-            box-shadow: 0px 0px 10px rgba(0, 183, 255, 0.8);
-            animation: pulse 1s infinite;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.8);
         }
         .login-btn.active:hover {
-            background: #0088cc;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            30% { transform: scale(1.05); }
-            40% { transform: scale(1); }
+            background: linear-gradient(135deg, #007bff, #0056b3);
         }
         .profile-picture {
             width: 50px;
@@ -177,17 +176,39 @@
             width: 1600%;
             max-width: 800px;
             margin: 0 auto;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0px -5px 15px rgba(0, 183, 255, 0.5);
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
         .terminal {
             width: 100%;
-            height: 200px;
-            background: #000;
-            color: rgb(172, 94, 30);
-            padding: 10px;
-            border-radius: 5px;
+            height: 30vh;
+            background: #1e1e1e;
+            color: #00bfff;
+            padding: 15px;
+            border-radius: 10px;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
-            margin-top: 10px;
+            margin-top: 20px;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.5);
+            border: 1px solid #00bfff;
+            scrollbar-width: thin;
+            scrollbar-color: #00bfff #333;
+        }
+        .terminal::-webkit-scrollbar {
+            width: 12px;
+        }
+        .terminal::-webkit-scrollbar-track {
+            background: #333;
+            border-radius: 15px;
+        }
+        .terminal::-webkit-scrollbar-thumb {
+            background-color: #00bfff;
+            border-radius: 15px;
+            border: 2px solid #333;
+        }
+        .terminal::-webkit-scrollbar-thumb:hover {
+            background-color: #c71a23;
         }
         .terminal p {
             margin: 0;
@@ -204,14 +225,22 @@
             background: #333;
             color: #fff;
             font-family: 'Courier New', Courier, monospace;
+            box-shadow: 0px 0px 10px rgba(0, 183, 255, 0.5);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
         }
+        .terminal-input:focus {
+            background: #444;
+            box-shadow: 0px 0px 15px rgba(0, 183, 255, 0.8);
+            transform: scale(0.98);
+        }
+
         .particle {
             position: absolute;
-            background-color: rgba(0, 183, 255, 0.7);
-            border-radius: 50%;
-            pointer-events: none;
             width: 10px;
             height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
             opacity: 0;
             transition: opacity 0.6s, transform 0.6s;
         }
@@ -257,7 +286,7 @@
             <p>This is the Apis section content.</p>
         </div>
         <div id="python" class="content-section">
-            <h2>shado</h2>
+            <h2>Maple3</h2>
             <div class="terminal-container" id="terminal-container">
                 <div class="terminal" id="terminal"></div>
                 <input type="text" class="terminal-input" id="terminal-input" placeholder="Type your command here...">
@@ -300,12 +329,124 @@
                 } catch (error) {
                     result = error;
                 }
-        } else if (command === 'help') {
-            result = 'Available commands: py <code>, lua <code>, clear';
+
         }
-     else if (command.startsWith('print("') && command.endsWith('")')) {
+
+    else if (/^[0-9+\-*/().\s]+$/.test(command)) {
+        try {
+        result = eval(command);
+        } catch (error) {
+        result = `Error: ${error.message}`;
+        }
+    } 
+
+        else if (command.startsWith('print("') && command.endsWith('")')) {
         result = command.slice(7, -2);
-        } else if (command === 'clear') {
+    } else if (command === 'date') {
+            result = new Date().toString();
+        } else if (command.startsWith('reverse ')) {
+            result = command.slice(8).split('').reverse().join('');
+        } else if (command.startsWith('upper ')) {
+            result = command.slice(6).toUpperCase();
+        } else if (command.startsWith('lower ')) {
+            result = command.slice(6).toLowerCase();
+        } else if (command.startsWith('length ')) {
+            result = command.slice(7).length.toString();
+        } else if (command.startsWith('concat ')) {
+            const parts = command.slice(7).split(',');
+            result = parts.join('');
+        } else if (command.startsWith('repeat ')) {
+            const [text, times] = command.slice(7).split(' ');
+            result = text.repeat(parseInt(times, 10));
+        } else if (command.startsWith('substring ')) {
+            const [text, start, end] = command.slice(10).split(' ');
+            result = text.substring(parseInt(start, 10), parseInt(end, 10));
+        } else if (command.startsWith('trim ')) {
+            result = command.slice(5).trim();
+        } else if (command.startsWith('replace ')) {
+            const [text, search, replacement] = command.slice(8).split(' ');
+            result = text.replace(new RegExp(search, 'g'), replacement);
+        } else if (command.startsWith('encr ')) {
+            const text = command.slice(8);
+            result = btoa(text); // Base64 encode
+        } else if (command.startsWith('decr ')) {
+            const text = command.slice(8);
+            try {
+                result = atob(text); // Base64 decode
+            } catch (error) {
+                result = `Error: ${error.message}`;
+            }
+        } else if (command === 'help') {
+            result = `Available commands:
+- py <code>: Execute Python code
+
+- lua <code>: Execute Lua code
+
+- pyurl <link>: Fetch and execute Python code from a URL
+
+- print("text"): Print text
+
+- p(+,-,*,/): Evaluate arithmetic expressions for eg (1+1)
+
+- date: Display the current date and time
+
+- reverse <text>: Reverse the given text
+
+- upper <text>: Convert the given text to uppercase
+
+- lower <text>: Convert the given text to lowercase
+
+- length <text>: Display the length of the given text
+
+- concat <text1>,<text2>: Concatenate two pieces of text
+
+- repeat <text> <times>: Repeat the given text a specified number of times
+
+- substring <text> <start> <end>: Extract a substring from the given text
+
+- trim <text>: Trim whitespace from the given text
+
+- replace <text> <search> <replacement>: Replace occurrences of a search string with a replacement string in the given text
+
+- encr <text>: Encrypt the given text using Base64 encoding
+
+- decr <text>: Decrypt the given Base64 encoded text
+
+- clear: Clear the terminal`;
+        }
+        else if (command.startsWith('print("') && command.endsWith('")')) {
+            result = command.slice(7, -2);
+        } else if (/^[0-9+\-*/().\s]+$/.test(command)) {
+            try {
+            result = eval(command);
+            } catch (error) {
+            result = `Error: ${error.message}`;
+            }
+        } 
+
+
+        else if (command.startsWith('pyurl ')) {
+            const url = command.slice(6);
+            try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const code = await response.text();
+            result = await pyodide.runPythonAsync(code);
+            result = result ? result.toString() : '';
+            } catch (error) {
+            result = `Error: ${error.message}`;
+            }
+        }
+        
+        
+        
+        
+        
+      
+      
+        else if (command === 'clear') {
             terminal.innerHTML = '';
             input.value = '';
             return;
