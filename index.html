@@ -44,6 +44,7 @@
         h1 {
             margin-bottom: 15px;
             font-size: 24px;
+            color: #00bfff;
         }
         input {
             width: 100%;
@@ -53,6 +54,8 @@
             border-radius: 5px;
             outline: none;
             text-align: center;
+            background: #333;
+            color: #fff;
         }
         .login-btn {
             width: 100%;
@@ -77,68 +80,8 @@
         }
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .tab {
-            background: #333;
-            padding: 10px 20px;
-            margin: 0 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .tab.active {
-            background: #007bff;
-        }
-        .tab:hover {
-            background: #0056b3;
-        }
-        .files {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s ease, transform 0.3s ease;
-        }
-        .files.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .file-box {
-            background: rgba(50, 50, 50, 0.8);
-            padding: 15px;
-            margin: 10px auto;
-            width: 90%;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-        .file-box:hover {
-            transform: scale(1.05);
-            background: rgba(70, 70, 70, 0.9);
-        }
-        .download-link {
-            color: #00bfff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .download-link:hover {
-            text-decoration: underline;
-        }
-        .particle {
-            position: absolute;
-            background-color: rgba(0, 183, 255, 0.7);
-            border-radius: 50%;
-            pointer-events: none;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
-            transition: opacity 0.6s, transform 0.6s;
+            30% { transform: scale(1.05); }
+            40% { transform: scale(1); }
         }
         .profile-picture {
             width: 50px;
@@ -152,7 +95,129 @@
             align-items: center;
             justify-content: center;
         }
+        .redirect-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #e41818;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .redirect-btn:hover {
+            background: #007bff;
+            transform: scale(1.05);
+        }
+        .additional-btns {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .additional-btn {
+            padding: 10px 20px;
+            background: #444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .additional-btn:hover {
+            background: #007bff;
+            transform: scale(1.05);
+        }
+        .option-btns {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-btn {
+            padding: 10px 20px;
+            background: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .option-btn:hover {
+            background: #0099ff;
+            transform: scale(1.05);
+        }
+        .content-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .content-section.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .terminal-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1e1e;
+            border-top: 2px solid #00bfff;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 1600%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .terminal {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            color: rgb(172, 94, 30);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 10px;
+        }
+        .terminal p {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .terminal-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            background: #333;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .particle {
+            position: absolute;
+            background-color: rgba(0, 183, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            transition: opacity 0.6s, transform 0.6s;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
+    <script src="https://unpkg.com/fengari-web@0.1.4/dist/fengari-web.js"></script>
 </head>
 <body>
     <div class="container" id="login-container">
@@ -162,19 +227,183 @@
         </div>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
-        <button id="login-btn" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <button id="login-btn" class="login-btn" disabled><i class="fas fa-sign-in-alt"></i> Login</button>
     </div>
 
     <div class="container file-storage hidden" id="file-storage">
-        <button onclick="redirectToSite()">Login</button>
+        <button class="redirect-btn" onclick="redirectToSite()">Back</button>
+        <div class="additional-btns">
+            <button class="additional-btn" onclick="generateOptions('about')">About</button>
+            <button class="additional-btn" onclick="generateOptions('cannary')">Cannary</button>
+            <button class="additional-btn" onclick="generateOptions('applications')">Applications</button>
+            <button class="additional-btn" onclick="generateOptions('apis')">Apis</button>
+            <button class="additional-btn" onclick="generateOptions('python')">Terminal</button>
+        </div>
+        <div class="option-btns" id="option-btns"></div>
+        <div id="about" class="content-section">
+            <h2>About</h2>
+            <p>This is the About section content.</p>
+        </div>
+        <div id="cannary" class="content-section">
+            <h2>Cannary</h2>
+            <p>This is the Cannary section content.</p>
+        </div>
+        <div id="applications" class="content-section">
+            <h2>Applications</h2>
+            <p>This is the Applications section content.</p>
+        </div>
+        <div id="apis" class="content-section">
+            <h2>Apis</h2>
+            <p>This is the Apis section content.</p>
+        </div>
+        <div id="python" class="content-section">
+            <h2>shado</h2>
+            <div class="terminal-container" id="terminal-container">
+                <div class="terminal" id="terminal"></div>
+                <input type="text" class="terminal-input" id="terminal-input" placeholder="Type your command here...">
+            </div>
+        </div>
+    </div>
 
-        <script>
-            function redirectToSite() {
-                window.location.href = "https://hianime.to/";
-            }
-        </script>
-        
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
+    <script src="https://unpkg.com/fengari-web@0.1.4/dist/fengari-web.js"></script>
     <script>
+        async function loadPyodideAndPackages() {
+            self.pyodide = await loadPyodide({
+                indexURL: "https://cdn.jsdelivr.net/pyodide/v0.21.3/full/"
+            });
+            window.pyodide = self.pyodide;
+        }
+        loadPyodideAndPackages().then(() => {
+            console.log("Pyodide loaded successfully");
+        }).catch((error) => {
+            console.error("Failed to load Pyodide:", error);
+        });
+
+        async function executeCommand(command) {
+            const terminal = document.getElementById('terminal');
+            const input = document.getElementById('terminal-input');
+            const output = document.createElement('p');
+            terminal.appendChild(output);
+
+            let result;
+            if (command.startsWith('py ')) {
+                try {
+                    result = await pyodide.runPythonAsync(command.slice(3));
+                    result = result ? result.toString() : '';
+                } catch (error) {
+                    result = `Error: ${error.message}`;
+                }
+            } else if (command.startsWith('lua ')) {
+                try {
+                    result = fengari.load(command.slice(4))();
+                } catch (error) {
+                    result = error;
+                }
+        } else if (command === 'help') {
+            result = 'Available commands: py <code>, lua <code>, clear';
+        }
+     else if (command.startsWith('print("') && command.endsWith('")')) {
+        result = command.slice(7, -2);
+        } else if (command === 'clear') {
+            terminal.innerHTML = '';
+            input.value = '';
+            return;
+        } else {
+            try {
+                let [success, luaResult] = fengari.pcall(fengari.load(command));
+                if (!success) {
+                result = `Lua Error: ${luaResult}`;
+                } else {
+                result = luaResult;
+                }
+            } catch (error) {
+                result = `Execution Error: ${error.message}`;
+            }
+            }
+
+            const resultElement = document.createElement('p');
+            resultElement.textContent = result;
+            terminal.appendChild(resultElement);
+
+            input.value = '';
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("terminal-input").addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    const command = event.target.value.trim();
+                    if (command) {
+                        executeCommand(command);
+                    }
+                }
+            });
+        });
+
+        function redirectToSite() {
+            window.location.href = "a.html"; //link to the next page
+        }
+
+        function generateOptions(category) {
+            const optionBtns = document.getElementById('option-btns');
+            optionBtns.innerHTML = ''; // Clear existing buttons
+
+            let options = [];
+            switch (category) {
+                case 'about':
+                    options = ['About Option 1', 'About Option 2', 'About Option 3', 'About Option 4', 'About Option 5'];
+                    break;
+                case 'cannary':
+                    options = ['Cannary Option 1', 'Cannary Option 2', 'Cannary Option 3', 'Cannary Option 4', 'Cannary Option 5'];
+                    break;
+                case 'applications':
+                    options = ['Applications Option 1', 'Applications Option 2', 'Applications Option 3', 'Applications Option 4', 'Applications Option 5'];
+                    break;
+                case 'apis':
+                    options = ['Apis Option 1', 'Apis Option 2', 'Apis Option 3', 'Apis Option 4', 'Apis Option 5'];
+                    break;
+                case 'python':
+                    showContent('python');
+                    const terminalContainer = document.getElementById('terminal-container');
+                    if (terminalContainer.style.display === 'none' || terminalContainer.style.display === '') {
+                        terminalContainer.style.display = 'flex';
+                    } else {
+                        terminalContainer.style.display = 'none';
+                    }
+                    return;
+            }
+
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => showContent(category);
+                optionBtns.appendChild(btn);
+            });
+
+            // Hide the option buttons if the same category button is clicked again
+            const additionalBtns = document.querySelectorAll('.additional-btn');
+            additionalBtns.forEach(btn => {
+                btn.onclick = () => {
+                    if (optionBtns.style.display === 'none' || optionBtns.innerHTML === '') {
+                        generateOptions(btn.textContent.toLowerCase());
+                        optionBtns.style.display = 'flex';
+                    } else {
+                        optionBtns.style.display = 'none';
+                    }
+                };
+            });
+        }
+
+        function showContent(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
         document.getElementById("username").addEventListener("input", checkLogin);
         document.getElementById("password").addEventListener("input", checkLogin);
 
@@ -204,20 +433,6 @@
                 }, 500);
             }
         });
-
-        function showTab(tabId) {
-            const allTabs = document.querySelectorAll('.tab');
-            const allFiles = document.querySelectorAll('.files');
-
-            allTabs.forEach(tab => tab.classList.remove('active'));
-            allFiles.forEach(fileSection => {
-                fileSection.classList.remove('active');
-                fileSection.style.display = 'none';
-            });
-
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById(tabId).style.display = 'block';
-        }
 
         document.addEventListener("mousemove", function(event) {
             const particles = document.querySelector("body");
