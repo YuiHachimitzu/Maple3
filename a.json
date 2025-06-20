@@ -1,0 +1,5 @@
+{
+  "hello": ["Hey there!", "Welcome back, traveler.", "Yo!"],
+  "bye": ["See you soon!", "Take care!", "Later, legend."],
+  "default": ["I didn't catch that. Try again?"]
+}
