@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Keep your existing inline CSS for details page */
+    </style>
+</head>
+<body>
+    <a href="anime.html" class="back-btn">← Back to List</a>
+    <div class="details-header">
+        <img id="details-image" class="details-image" src="" alt="">
+        <div class="details-title-block">
+            <h1 class="details-title" id="details-title"></h1>
+            <div class="details-category" id="details-category"></div>
+            <div class="details-meta" id="details-meta"></div>
+        </div>
+    </div>
+    <div class="details-description-block">
+        <div class="details-description-title">Description</div>
+        <div class="details-description" id="details-description"></div>
+    </div>
+    <script>
+        const itemData = [
+            {
+                title: "Algebra Quiz 1",
+                subject: "math",
+                type: "quiz",
+                description: "Covers linear equations and inequalities.",
+                image: "images/math/quiz1.jpg",
+                date: "2025-07-01"
+            },
+            {
+                title: "Geometry Notes",
+                subject: "math",
+                type: "notes",
+                description: "Notes on triangles and circles.",
+                image: "images/math/notes1.png",
+                date: "2025-06-28"
+            },
+            {
+                title: "Biology Lab Activity",
+                subject: "science",
+                type: "activity",
+                description: "Cell structure experiment.",
+                image: "images/science/activity1.jpg",
+                date: "2025-07-05"
+            },
+            {
+                title: "Essay Draft",
+                subject: "english",
+                type: "notes",
+                description: "Draft for persuasive essay.",
+                image: "images/english/draft1.png",
+                date: "2025-07-03"
+            }
+        ];
+
+        function getItemFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('item');
+            if (!name) return null;
+            return itemData.find(item => item.title.toLowerCase() === name.toLowerCase());
+        }
+
+        let item = getItemFromURL() || itemData[0];
+
+        document.getElementById('details-image').src = item.image;
+        document.getElementById('details-image').alt = `${item.title} (${item.type})`;
+        document.getElementById('details-title').textContent = item.title;
+        document.getElementById('details-category').textContent = `Subject: ${item.subject}`;
+        document.getElementById('details-description').textContent = item.description;
+        document.getElementById('details-meta').innerHTML = `
+            <b>Type:</b> ${item.type} | <b>Date:</b> ${item.date}
+        `;
+    </script>
+</body>
+</html>
