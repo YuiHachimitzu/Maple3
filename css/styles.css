@@ -1,0 +1,67 @@
+.pending-assignments-container {
+    width: min(100%, 800px);
+    margin: 2rem auto;
+    background: #232526;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+}
+
+.pending-assignments-container h2 {
+    font-size: 1.8rem;
+    color: #e94560;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.pending-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pending-item {
+    background: #181a1b;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e94560;
+    box-shadow: 0 2px 8px rgba(233, 69, 96, 0.4);
+    transition: transform 0.2s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.pending-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(233, 69, 96, 0.5);
+}
+
+.pending-item h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.pending-item p {
+    margin: 0;
+    font-size: 1rem;
+    color: #ccc;
+}
+
+
+.item-list-container {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 70vh;
+    padding: 16px;
+    background: #232526;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+    margin: 24px 0;
+}
+
+.item-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
