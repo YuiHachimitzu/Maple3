@@ -1,181 +1,159 @@
-/* --- CSS Variables for Easy Theming --- */
+/* --- Global Styles & Variables --- */
 :root {
-    --glow-color: hsl(130, 76%, 58%); /* Maple Tree Green */
-    --accent-color: hsl(220, 73%, 65%); /* Machine God Blue */
-    --card-bg: hsla(228, 25%, 15%, 0.6);
-    --body-bg1: hsl(231, 35%, 12%);
-    --body-bg2: hsl(261, 30%, 10%);
-    --text-primary: hsl(210, 20%, 95%);
-    --text-secondary: hsl(220, 20%, 70%);
-    --font-primary: 'Orbitron', sans-serif;
-    --font-secondary: 'Russo One', sans-serif;
+    --primary-color: #28a745; /* Maple Tree Green */
+    --background-color: #f8f9fa; /* Light Gray */
+    --text-color: #212529; /* Dark Gray */
+    --card-bg-color: #ffffff; /* White */
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --font-family: 'Poppins', sans-serif;
 }
 
-/* --- Base & Animated Background --- */
-body, html {
+body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--font-primary);
-    background: linear-gradient(-45deg, var(--body-bg1), var(--body-bg2), var(--body-bg1));
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    overflow: hidden;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* --- Main Container for 3D Effect --- */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    padding: 2rem;
-    perspective: 1000px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* --- Glassmorphism HUD Card --- */
-.hud-card {
-    position: relative;
-    width: 100%;
-    max-width: 450px;
-    padding: 2rem;
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid hsla(0, 0%, 100%, 0.1);
-    border-radius: 15px;
-    box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.2), 
-                0 0 20px var(--glow-color), 
-                inset 0 0 15px hsla(0, 0%, 0%, 0.4);
-    color: var(--text-primary);
-    text-align: center;
-    transition: transform 0.1s ease-out; /* For 3D tilt */
-    transform-style: preserve-3d;
-}
-
-/* --- HUD Decorative Elements --- */
-.corner {
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    border: 2px solid var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-color);
-    animation: pulse 2s infinite alternate;
-}
-.corner.top-left { top: -5px; left: -5px; border-right: none; border-bottom: none; }
-.corner.top-right { top: -5px; right: -5px; border-left: none; border-bottom: none; }
-.corner.bottom-left { bottom: -5px; left: -5px; border-right: none; border-top: none; }
-.corner.bottom-right { bottom: -5px; right: -5px; border-left: none; border-top: none; }
-
-@keyframes pulse {
-    from { opacity: 0.5; box-shadow: 0 0 8px var(--accent-color); }
-    to { opacity: 1; box-shadow: 0 0 15px var(--accent-color); }
-}
-
-/* --- Header --- */
+/* --- Header & Navigation --- */
 header {
-    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;
-}
-.header-icon {
-    font-size: 3rem;
-    color: var(--glow-color);
-    --fa-animation-duration: 3s;
-    text-shadow: 0 0 15px var(--glow-color);
-}
-header h1 {
-    font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 2.5rem;
-    margin: 0.5rem 0 0;
-    color: var(--text-primary);
-    letter-spacing: 2px;
-}
-header p {
-    margin: 0.25rem 0 0;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    font-family: var(--font-secondary);
+    background-color: var(--card-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
 }
 
-/* --- File Info Section --- */
-.file-info {
-    margin: 1.5rem 0;
-    text-align: left;
-    font-size: 0.9rem;
-    background: hsla(0, 0%, 0%, 0.2);
-    border-radius: 8px;
-    padding: 1rem;
-}
-.file-info h3 {
-    font-family: var(--font-secondary);
-    color: var(--accent-color);
-    margin-top: 0;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--accent-color);
-    padding-bottom: 0.5rem;
-}
-.file-info dl {
-    margin: 0;
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 0.75rem;
-}
-.file-info dt { /* The label e.g., "File Name" */
-    font-weight: bold;
-    color: var(--text-secondary);
-}
-.file-info dd { /* The value e.g., "Maple3.rar" */
-    margin: 0;
-    color: var(--text-primary);
-    word-break: break-all;
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* --- Download Button --- */
-.download-btn {
+.logo {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 0.75rem;
-    width: 100%;
-    padding: 1rem;
-    font-family: var(--font-secondary);
     font-size: 1.2rem;
-    color: var(--text-primary);
-    background: linear-gradient(45deg, var(--glow-color), hsl(130, 86%, 65%));
-    border: none;
-    border-radius: 8px;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+nav a {
+    color: var(--text-color);
     text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px var(--glow-color), inset 0 0 5px hsla(0, 0%, 100%, 0.3);
-    margin-top: 1.5rem;
+    margin-left: 1.5rem;
+    font-weight: 600;
+    transition: color 0.2s ease-in-out;
 }
-.download-btn:not(.disabled):hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 5px 25px var(--glow-color);
+
+nav a:hover {
+    color: var(--primary-color);
 }
-.download-btn.disabled {
-    background: hsl(230, 10%, 40%);
-    cursor: not-allowed;
-    box-shadow: none;
-    color: var(--text-secondary);
+
+/* --- Main Content --- */
+main {
+    padding: 3rem 0;
+}
+
+main h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.file-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* --- File Card Styling --- */
+.file-card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.file-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.07);
+}
+
+.file-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-top: 5px;
+}
+
+.file-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-details h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.4rem;
+}
+
+.file-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.file-meta span {
+    margin-right: 1rem;
+}
+
+.file-description {
+    margin: 0 0 1.5rem;
+    flex-grow: 1; /* Pushes button to the bottom */
+}
+
+.download-btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    align-self: flex-start; /* Aligns button to the start of the flex item */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.download-btn:hover {
+    background-color: #218838; /* Darker Green */
+}
+
+.download-btn i {
+    margin-right: 0.5rem;
 }
 
 /* --- Footer --- */
 footer {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid hsla(0, 0%, 100%, 0.1);
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: #6c757d;
 }
