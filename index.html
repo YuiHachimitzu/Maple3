@@ -14,64 +14,91 @@
 </head>
 <body>
 
-    <header>
+    <header id="main-header">
         <div class="container">
             <div class="logo">
                 <i class="fa-solid fa-tree"></i>
                 <h1>Maple Tree Archives</h1>
             </div>
-            <nav>
+            <nav id="main-nav">
                 <a href="#">Home</a>
                 <a href="#">About</a>
                 <a href="#">Discord</a>
             </nav>
+            <button id="menu-btn" class="menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </header>
 
     <main>
         <div class="container">
-            <h2>Available Files</h2>
-            <div class="file-list">
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Search for files...">
+            </div>
+
+            <div class="file-list" id="file-list">
 
                 <div class="file-card">
-                    <div class="file-icon">
-                        <i class="fa-solid fa-file-zipper"></i>
+                    <div class="card-header">
+                        <h3>Maple3 Core</h3>
+                        <span class="badge badge-zip">ZIP</span>
                     </div>
-                    <div class="file-details">
-                        <h3>Maple3</h3>
-                        <div class="file-meta">
-                            <span>Version: 1.0</span>
-                            <span>Size: 726 MB</span>
-                        </div>
-                        <p class="file-description">The complete guild starter pack. Contains all necessary assets and configurations.</p>
-                        <a href="YOUR_MEDIAFIRE_LINK_HERE_1" class="download-btn">
-                            <i class="fa-solid fa-download"></i> Download
-                        </a>
+                    <p class="file-description">The complete guild starter pack. Contains all necessary assets and configurations.</p>
+                    <div class="file-meta">
+                        <span>Version: 1.0</span>
+                        <span>Size: 726 MB</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="YOUR_MEDIAFIRE_LINK_HERE_1" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
+                        <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy Link</button>
                     </div>
                 </div>
+
                 <div class="file-card">
-                    <div class="file-icon">
-                        <i class="fa-solid fa-file-image"></i>
-                    </div>
-                    <div class="file-details">
+                    <div class="card-header">
                         <h3>Guild Emblem Pack</h3>
-                        <div class="file-meta">
-                            <span>Version: 2.1</span>
-                            <span>Size: 45 MB</span>
-                        </div>
-                        <p class="file-description">High-resolution guild emblems and branding assets for content creators.</p>
-                        <a href="YOUR_MEDIAFIRE_LINK_HERE_2" class="download-btn">
-                            <i class="fa-solid fa-download"></i> Download
-                        </a>
+                        <span class="badge badge-img">IMAGE</span>
+                    </div>
+                    <p class="file-description">High-resolution guild emblems and branding assets for content creators.</p>
+                    <div class="file-meta">
+                        <span>Version: 2.1</span>
+                        <span>Size: 45 MB</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="YOUR_MEDIAFIRE_LINK_HERE_2" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
+                        <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy Link</button>
                     </div>
                 </div>
+                
+                <div class="file-card">
+                    <div class="card-header">
+                        <h3>New World Guide</h3>
+                        <span class="badge badge-pdf">PDF</span>
+                    </div>
+                    <p class="file-description">A complete player's handbook for all new members joining the Maple Tree guild.</p>
+                    <div class="file-meta">
+                        <span>Version: 3.0</span>
+                        <span>Size: 12 MB</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="YOUR_MEDIAFIRE_LINK_HERE_3" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
+                        <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy Link</button>
+                    </div>
                 </div>
+
+                </div>
+            <div id="no-results" class="no-results-message">
+                <h3>No files found</h3>
+                <p>Try searching for something else.</p>
+            </div>
         </div>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; <span id="current-year">2025</span> Maple Tree Guild. Created by Guesten (shado).</p>
+            <p>&copy; <span id="current-year"></span> Maple Tree Guild. Created by Guesten (shado).</p>
         </div>
     </footer>
 
