@@ -1,9 +1,0 @@
-{
-    "movies": ["Naruto", "One Piece", "Attack on Titan"],
-    "latest": ["My Hero Academia", "Demon Slayer", "Jujutsu Kaisen"],
-    "hot": ["Fullmetal Alchemist: Brotherhood", "Death Note", "Sword Art Online"],
-    "action": ["Naruto", "Attack on Titan", "My Hero Academia", "Demon Slayer", "Jujutsu Kaisen", "Fullmetal Alchemist: Brotherhood", "Bleach", "Black Clover", "Dragon Ball Z", "Naruto Shippuden", "Boruto", "Attack on Titan Season 2", "My Hero Academia Season 2", "Demon Slayer Season 2", "Jujutsu Kaisen Season 2", "Fullmetal Alchemist", "Bleach Season 2", "Black Clover Season 2", "Dragon Ball Super"],
-    "adventure": ["One Piece", "Sword Art Online", "Fairy Tail", "Hunter x Hunter", "Sword Art Online Season 2", "Fairy Tail Season 2", "Hunter x Hunter Season 2"],
-    "comedy": ["One Punch Man", "One Punch Man Season 2"],
-    "drama": ["Death Note", "Death Note Season 2"]
-}
