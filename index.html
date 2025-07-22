@@ -3,30 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maple3 - Download</title>
+    <title>Maple OS // Devour v7.2</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Maple3</h1>
-        <p>Your gateway to anime magic!</p>
-    </header>
 
-    <main>
-        <section id="introduction">
-            <h2>Welcome to Maple3</h2>
-            <p>Experience the thrill of anime through Maple3. Dive in and enjoy!</p>
-        </section>
+    <div class="container">
+        <div class="hud-card">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+            
+            <header>
+                <i class="fa-solid fa-shield-halved fa-beat-fade header-icon"></i>
+                <h1>MAPLE_OS</h1>
+                <p>Build: Devour v7.2 // All-VIT</p>
+            </header>
 
-        <section id="download">
-            <h2>Download Maple3</h2>
-            <p>Click the button below to download Maple3 and start your journey.</p>
-            <a href="your-download-link-here" class="download-btn">Download Now</a>
-        </section>
-    </main>
+            <main>
+                <div class="status-log">
+                    <p id="status-text">> Initializing...</p>
+                </div>
 
-    <footer>
-        <p>&copy; 2025 Maple3. All Rights Reserved.</p>
-    </footer>
+                <div class="features">
+                    <h3>// Patch Notes</h3>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i> [Syrup] companion module updated.</li>
+                        <li><i class="fa-solid fa-check"></i> [Atrocity] skill tree rebalanced.</li>
+                        <li><i class="fa-solid fa-check"></i> [Loving Sacrifice] subroutine optimized.</li>
+                    </ul>
+                </div>
+                
+                <a id="downloadBtn" class="download-btn disabled">
+                    <i id="btn-icon" class="fa-solid fa-hourglass-start"></i>
+                    <span id="btn-text">Awaiting System Check</span>
+                </a>
+            </main>
+
+            <footer>
+                <p>&copy; 2025 Maple Tree Guild. Catanauan Division.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
