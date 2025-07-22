@@ -1,18 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- CONFIGURATION ---
-    const downloadLink = 'your-mediafire-download-link-here';
-    const countdownSeconds = 5;
+    // --- ‼️ IMPORTANT ‼️ ---
+    // --- PASTE YOUR MEDIAFIRE DOWNLOAD LINK HERE ---
+    const mediafireDownloadLink = 'YOUR_MEDIAFIRE_LINK_HERE';
+
 
     // --- ELEMENT SELECTORS ---
     const container = document.querySelector('.container');
     const hudCard = document.querySelector('.hud-card');
-    const statusTextEl = document.getElementById('status-text');
     const downloadBtn = document.getElementById('downloadBtn');
     const btnIcon = document.getElementById('btn-icon');
     const btnText = document.getElementById('btn-text');
 
     // --- 3D MOUSE TILT EFFECT ---
     container.addEventListener('mousemove', (e) => {
+        if (window.innerWidth < 768) return; // Disable effect on mobile
         let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
         let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
         hudCard.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
@@ -28,51 +29,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- ADVANCED TYPING & COUNTDOWN LOGIC ---
-    const typeMessage = (element, message, delay = 50) => {
-        return new Promise(resolve => {
-            let i = 0;
-            element.innerHTML = "> ";
-            const interval = setInterval(() => {
-                if (i < message.length) {
-                    element.innerHTML += message.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, delay);
-        });
-    };
-
-    const runSystemCheck = async () => {
-        await new Promise(r => setTimeout(r, 500));
-        await typeMessage(statusTextEl, 'Verifying defense parameters...');
-        await new Promise(r => setTimeout(r, 800));
-        await typeMessage(statusTextEl, 'Compiling skill modules...');
-        await new Promise(r => setTimeout(r, 1000));
-        await typeMessage(statusTextEl, 'Connection secured. Ready for download.');
-        await new Promise(r => setTimeout(r, 500));
-
-        // Start countdown
-        let countdown = countdownSeconds;
+    // --- DOWNLOAD BUTTON LOGIC ---
+    const activateDownload = () => {
         btnIcon.className = 'fa-solid fa-sync fa-spin';
-        
-        const countdownInterval = setInterval(async () => {
-            if (countdown > 0) {
-                await typeMessage(statusTextEl, `Initializing in T-${countdown}...`);
-                btnText.textContent = `Initializing...`;
-                countdown--;
-            } else {
-                clearInterval(countdownInterval);
-                statusTextEl.innerHTML = "> Download integrity verified. Proceed.";
-                downloadBtn.classList.remove('disabled');
-                downloadBtn.href = downloadLink; // Set the link only when active
-                btnIcon.className = 'fa-solid fa-download';
-                btnText.textContent = 'Execute Download';
-            }
-        }, 1200);
+        btnText.textContent = 'Preparing Link...';
+
+        setTimeout(() => {
+            downloadBtn.classList.remove('disabled');
+            downloadBtn.href = mediafireDownloadLink; // Set the actual download link
+            
+            btnIcon.className = 'fa-solid fa-download';
+            btnText.textContent = 'Download Maple3';
+
+            // Add a click listener to provide feedback
+            downloadBtn.addEventListener('click', () => {
+                btnIcon.className = 'fa-solid fa-check';
+                btnText.textContent = 'Download Started!';
+                
+                // Prevent multiple clicks and reset state after a delay
+                downloadBtn.classList.add('disabled');
+                setTimeout(() => {
+                     downloadBtn.classList.remove('disabled');
+                     btnIcon.className = 'fa-solid fa-download';
+                     btnText.textContent = 'Download Maple3';
+                }, 5000); // Reset after 5 seconds
+            });
+
+        }, 2000); // Wait 2 seconds before making the link active
     };
 
-    runSystemCheck();
+    // Start the activation sequence
+    activateDownload();
 });
