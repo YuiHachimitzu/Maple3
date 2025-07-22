@@ -1,66 +1,187 @@
-/* General Reset */
-body, h1, h2, p, a {
+/* --- CSS Variables for Easy Theming --- */
+:root {
+    --glow-color: hsl(348, 83%, 58%); /* Bofuri Red/Pink */
+    --accent-color: hsl(220, 73%, 65%); /* Machine God Blue */
+    --card-bg: hsla(228, 25%, 15%, 0.6);
+    --body-bg1: hsl(231, 35%, 12%);
+    --body-bg2: hsl(261, 30%, 10%);
+    --text-primary: hsl(210, 20%, 95%);
+    --text-secondary: hsl(220, 20%, 70%);
+    --font-primary: 'Orbitron', sans-serif;
+    --font-secondary: 'Russo One', sans-serif;
+}
+
+/* --- Base & Animated Background --- */
+body, html {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
     box-sizing: border-box;
+    font-family: var(--font-primary);
+    background: linear-gradient(-45deg, var(--body-bg1), var(--body-bg2), var(--body-bg1));
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    overflow: hidden;
 }
 
-/* Body Styling */
-body {
-    background: #f7e9e3; /* Soft anime-inspired pastel */
-    color: #333;
-    font-family: 'Poppins', sans-serif;
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Main Container for 3D Effect --- */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 2rem;
+    perspective: 1000px;
+}
+
+/* --- Glassmorphism HUD Card --- */
+.hud-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.2), 
+                0 0 20px var(--glow-color), 
+                inset 0 0 15px hsla(0, 0%, 0%, 0.4);
+    color: var(--text-primary);
     text-align: center;
-    padding: 20px;
+    transition: transform 0.1s ease-out; /* For 3D tilt */
+    transform-style: preserve-3d;
 }
 
-/* Header */
+/* --- HUD Decorative Elements --- */
+.corner {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+    animation: pulse 2s infinite alternate;
+}
+.corner.top-left { top: -5px; left: -5px; border-right: none; border-bottom: none; }
+.corner.top-right { top: -5px; right: -5px; border-left: none; border-bottom: none; }
+.corner.bottom-left { bottom: -5px; left: -5px; border-right: none; border-top: none; }
+.corner.bottom-right { bottom: -5px; right: -5px; border-left: none; border-top: none; }
+
+@keyframes pulse {
+    from { opacity: 0.5; box-shadow: 0 0 8px var(--accent-color); }
+    to { opacity: 1; box-shadow: 0 0 15px var(--accent-color); }
+}
+
+/* --- Header --- */
 header {
-    background: #ff7eb3; /* Vibrant anime pink */
-    padding: 20px;
-    color: white;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
-
+.header-icon {
+    font-size: 3rem;
+    color: var(--glow-color);
+    --fa-animation-duration: 2s;
+    text-shadow: 0 0 15px var(--glow-color);
+}
 header h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin: 0.5rem 0 0;
+    color: var(--text-primary);
+    letter-spacing: 2px;
+}
+header p {
+    margin: 0.25rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-family: var(--font-secondary);
 }
 
-/* Main Content */
-main {
-    margin: 20px auto;
-    max-width: 600px;
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-section {
-    margin-bottom: 20px;
-}
-
-.download-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: #ff7eb3;
-    color: white;
-    text-decoration: none;
+/* --- Main Content Sections --- */
+.status-log {
+    background: hsla(0, 0%, 0%, 0.3);
+    padding: 0.75rem 1rem;
     border-radius: 5px;
-    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--glow-color);
+    text-align: left;
+    min-height: 24px;
+}
+#status-text::after {
+    content: '▋';
+    animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.features {
+    margin: 1.5rem 0;
+    text-align: left;
+    font-size: 0.9rem;
+}
+.features h3 {
+    font-family: var(--font-secondary);
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+.features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text-secondary);
+}
+.features ul li {
+    margin-bottom: 0.5rem;
+}
+.features ul li .fa-check {
+    color: var(--glow-color);
+    margin-right: 0.5rem;
 }
 
-.download-btn:hover {
-    background: #ff4d94;
+/* --- Download Button --- */
+.download-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1rem;
+    font-family: var(--font-secondary);
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    background: linear-gradient(45deg, var(--glow-color), hsl(348, 93%, 65%));
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px var(--glow-color), inset 0 0 5px hsla(0, 0%, 100%, 0.3);
+}
+.download-btn:not(.disabled):hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 5px 25px var(--glow-color);
+}
+.download-btn.disabled {
+    background: hsl(230, 10%, 40%);
+    cursor: not-allowed;
+    box-shadow: none;
+    color: var(--text-secondary);
 }
 
-/* Footer */
+/* --- Footer --- */
 footer {
-    margin-top: 20px;
-    color: #777;
-    font-size: 0.9em;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid hsla(0, 0%, 100%, 0.1);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
 }
