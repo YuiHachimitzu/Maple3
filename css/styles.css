@@ -1,6 +1,6 @@
 /* --- CSS Variables for Easy Theming --- */
 :root {
-    --glow-color: hsl(348, 83%, 58%); /* Bofuri Red/Pink */
+    --glow-color: hsl(130, 76%, 58%); /* Maple Tree Green */
     --accent-color: hsl(220, 73%, 65%); /* Machine God Blue */
     --card-bg: hsla(228, 25%, 15%, 0.6);
     --body-bg1: hsl(231, 35%, 12%);
@@ -88,7 +88,7 @@ header {
 .header-icon {
     font-size: 3rem;
     color: var(--glow-color);
-    --fa-animation-duration: 2s;
+    --fa-animation-duration: 3s;
     text-shadow: 0 0 15px var(--glow-color);
 }
 header h1 {
@@ -106,44 +106,37 @@ header p {
     font-family: var(--font-secondary);
 }
 
-/* --- Main Content Sections --- */
-.status-log {
-    background: hsla(0, 0%, 0%, 0.3);
-    padding: 0.75rem 1rem;
-    border-radius: 5px;
-    font-family: 'Courier New', Courier, monospace;
-    color: var(--glow-color);
-    text-align: left;
-    min-height: 24px;
-}
-#status-text::after {
-    content: '▋';
-    animation: blink 1s step-end infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
-.features {
+/* --- File Info Section --- */
+.file-info {
     margin: 1.5rem 0;
     text-align: left;
     font-size: 0.9rem;
+    background: hsla(0, 0%, 0%, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
 }
-.features h3 {
+.file-info h3 {
     font-family: var(--font-secondary);
     color: var(--accent-color);
-    margin-bottom: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 0.5rem;
 }
-.features ul {
-    list-style: none;
-    padding: 0;
+.file-info dl {
     margin: 0;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0.75rem;
+}
+.file-info dt { /* The label e.g., "File Name" */
+    font-weight: bold;
     color: var(--text-secondary);
 }
-.features ul li {
-    margin-bottom: 0.5rem;
-}
-.features ul li .fa-check {
-    color: var(--glow-color);
-    margin-right: 0.5rem;
+.file-info dd { /* The value e.g., "Maple3.rar" */
+    margin: 0;
+    color: var(--text-primary);
+    word-break: break-all;
 }
 
 /* --- Download Button --- */
@@ -157,13 +150,14 @@ header p {
     font-family: var(--font-secondary);
     font-size: 1.2rem;
     color: var(--text-primary);
-    background: linear-gradient(45deg, var(--glow-color), hsl(348, 93%, 65%));
+    background: linear-gradient(45deg, var(--glow-color), hsl(130, 86%, 65%));
     border: none;
     border-radius: 8px;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 0 15px var(--glow-color), inset 0 0 5px hsla(0, 0%, 100%, 0.3);
+    margin-top: 1.5rem;
 }
 .download-btn:not(.disabled):hover {
     transform: translateY(-3px) scale(1.02);
