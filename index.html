@@ -3,59 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maple Tree Guild // Download: Maple3</title>
+    <title>Maple Tree Guild Archives</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <div class="container">
-        <div class="hud-card">
-            <div class="corner top-left"></div>
-            <div class="corner top-right"></div>
-            <div class="corner bottom-left"></div>
-            <div class="corner bottom-right"></div>
-            
-            <header>
-                <i class="fa-solid fa-tree fa-beat-fade header-icon"></i>
-                <h1>Maple Tree</h1>
-                <p>Official Guild Archives</p>
-            </header>
-
-            <main>
-                <div class="file-info">
-                    <h3>// File Information</h3>
-                    <dl>
-                        <dt>File Name</dt>
-                        <dd>Maple3.rar</dd>
-
-                        <dt>File Size</dt>
-                        <dd>726 MB</dd>
-
-                        <dt>Uploader</dt>
-                        <dd>Guesten (shado)</dd>
-                        
-                        <dt>Description</dt>
-                        <dd>Contains the complete guild starter pack.</dd>
-                    </dl>
-                </div>
-                
-                <a id="downloadBtn" class="download-btn disabled">
-                    <i id="btn-icon" class="fa-solid fa-hourglass-start"></i>
-                    <span id="btn-text">Verifying File...</span>
-                </a>
-            </main>
-
-            <footer>
-                <p>&copy; 2025 Maple Tree Guild // Catanauan Division</p>
-            </footer>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fa-solid fa-tree"></i>
+                <h1>Maple Tree Archives</h1>
+            </div>
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Discord</a>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Available Files</h2>
+            <div class="file-list">
+
+                <div class="file-card">
+                    <div class="file-icon">
+                        <i class="fa-solid fa-file-zipper"></i>
+                    </div>
+                    <div class="file-details">
+                        <h3>Maple3</h3>
+                        <div class="file-meta">
+                            <span>Version: 1.0</span>
+                            <span>Size: 726 MB</span>
+                        </div>
+                        <p class="file-description">The complete guild starter pack. Contains all necessary assets and configurations.</p>
+                        <a href="YOUR_MEDIAFIRE_LINK_HERE_1" class="download-btn">
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+                <div class="file-card">
+                    <div class="file-icon">
+                        <i class="fa-solid fa-file-image"></i>
+                    </div>
+                    <div class="file-details">
+                        <h3>Guild Emblem Pack</h3>
+                        <div class="file-meta">
+                            <span>Version: 2.1</span>
+                            <span>Size: 45 MB</span>
+                        </div>
+                        <p class="file-description">High-resolution guild emblems and branding assets for content creators.</p>
+                        <a href="YOUR_MEDIAFIRE_LINK_HERE_2" class="download-btn">
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="current-year">2025</span> Maple Tree Guild. Created by Guesten (shado).</p>
+        </div>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>
