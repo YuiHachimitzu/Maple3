@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maple Tree Guild Archives</title>
+    <title>Maple Tree // Panel Starter Pack</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,12 +18,12 @@
         <div class="container">
             <div class="logo">
                 <i class="fa-solid fa-tree"></i>
-                <h1>Maple Tree Archives</h1>
+                <h1>Panel Starter Pack</h1>
             </div>
             <nav id="main-nav">
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Discord</a>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="YOUR_DISCORD_INVITE_LINK" target="_blank" rel="noopener noreferrer">Discord</a>
             </nav>
             <button id="menu-btn" class="menu-btn">
                 <i class="fa-solid fa-bars"></i>
@@ -31,11 +31,11 @@
         </div>
     </header>
 
-    <main>
+    <main id="home">
         <div class="container">
             <div class="search-container">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Search for files...">
+                <input type="text" id="search-input" placeholder="Search for Lua scripts...">
             </div>
 
             <div class="file-list" id="file-list">
@@ -43,7 +43,7 @@
                 <div class="file-card">
                     <div class="card-header">
                         <h3>Maple3.lua</h3>
-                        <span class="badge badge-zip">Lua</span>
+                        <span class="badge badge-lua">LUA</span>
                     </div>
                     <p class="file-description">Cul Ui // Mod menu</p>
                     <div class="file-meta">
@@ -59,9 +59,9 @@
                 <div class="file-card">
                     <div class="card-header">
                         <h3>Panel_Template.lua</h3>
-                        <span class="badge badge-img">Lua</span>
+                        <span class="badge badge-lua">LUA</span>
                     </div>
-                    <p class="file-description">A Panel Template With Only One function in which you can modify</p>
+                    <p class="file-description">A Panel Template With Only One function in which you can modify.</p>
                     <div class="file-meta">
                         <span>Version: 2.1</span>
                         <span>Size: 45 MB</span>
@@ -75,9 +75,9 @@
                 <div class="file-card">
                     <div class="card-header">
                         <h3>Functions.lua</h3>
-                        <span class="badge badge-pdf">Lua</span>
+                        <span class="badge badge-lua">LUA</span>
                     </div>
-                    <p class="file-description">A complete player's handbook for all new members joining the Maple Tree guild.</p>
+                    <p class="file-description">A library of helper functions to accelerate development for new guild members.</p>
                     <div class="file-meta">
                         <span>Version: 3.0</span>
                         <span>Size: 12 MB</span>
@@ -88,17 +88,24 @@
                     </div>
                 </div>
 
-                </div>
+            </div>
             <div id="no-results" class="no-results-message">
-                <h3>No files found</h3>
+                <h3>No scripts found</h3>
                 <p>Try searching for something else.</p>
             </div>
         </div>
     </main>
 
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>About This Project</h2>
+            <p>This Panel Starter Pack is a collection of Lua scripts designed to help developers and guild members create their own user interfaces and in-game tools. Whether you're building a custom UI or testing new functions, these templates provide a solid foundation. This archive is maintained by Guesten (shado) for the Maple Tree community.</p>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
-            <p>&copy; <span id="current-time"></span> Panel_Starter Pack. Created by @guesten (shado).</p>
+            <p>&copy; <span id="current-time"></span> Catanauan, PH. Created by @guesten (shado).</p>
         </div>
     </footer>
 
