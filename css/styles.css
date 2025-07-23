@@ -10,6 +10,11 @@
     --font-family: 'Poppins', sans-serif;
 }
 
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px; /* Offset for sticky header */
+}
+
 body {
     margin: 0;
     font-family: var(--font-family);
@@ -72,12 +77,11 @@ nav a:hover {
     color: var(--primary-color);
 }
 
-/* --- Main Content --- */
+/* --- Main Content & Search --- */
 main {
     padding: 2rem 0;
 }
 
-/* --- Search Bar --- */
 .search-container {
     position: relative;
     margin-bottom: 2rem;
@@ -116,7 +120,7 @@ main {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    opacity: 0; /* For fade-in animation */
+    opacity: 0;
     transform: translateY(20px);
 }
 .file-card.visible {
@@ -146,9 +150,7 @@ main {
     border-radius: 5px;
     color: white;
 }
-.badge-zip { background-color: #007bff; }
-.badge-img { background-color: #28a745; }
-.badge-pdf { background-color: #dc3545; }
+.badge-lua { background-color: #2c2d71; } /* Lua Color */
 
 
 .file-description {
@@ -166,7 +168,6 @@ main {
     margin-right: 1.5rem;
 }
 
-/* --- Button Group --- */
 .button-group {
     display: flex;
     gap: 0.75rem;
@@ -199,19 +200,36 @@ main {
 }
 .button-group i { margin-right: 0.5rem; }
 
-/* --- No Results Message --- */
 .no-results-message {
     text-align: center;
     padding: 3rem;
-    display: none; /* Hidden by default */
+    display: none;
+}
+
+/* --- New About Section Styles --- */
+.about-section {
+    padding: 3rem 0;
+    background-color: var(--card-bg-color);
+    border-top: 1px solid var(--border-color);
+}
+.about-section h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+.about-section p {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    color: #6c757d;
+    font-size: 1.1rem;
 }
 
 /* --- Footer --- */
 footer {
     text-align: center;
     padding: 2rem 0;
-    margin-top: 2rem;
-    border-top: 1px solid var(--border-color);
+    background-color: #e9ecef; /* Slightly different footer color */
     color: #6c757d;
 }
 
@@ -229,25 +247,4 @@ footer {
 /* --- Responsive Design --- */
 @media (min-width: 769px) {
     .file-list {
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    }
-}
-
-@media (max-width: 768px) {
-    .logo h1 { font-size: 1.2rem; }
-    .menu-btn { display: block; }
-    #main-nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background-color: var(--card-bg-color);
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        box-shadow: 0 4px 6px var(--shadow-color);
-    }
-    #main-nav.is-open { display: flex; }
-    #main-nav a { margin: 0.5rem 0; }
-}
+        grid-template-columns: repeat(auto-
