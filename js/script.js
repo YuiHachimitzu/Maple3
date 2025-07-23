@@ -70,10 +70,36 @@ document.addEventListener('DOMContentLoaded', () => {
     menuBtn.addEventListener('click', () => {
         nav.classList.toggle('is-open');
     });
+    
+    // --- Close Mobile Menu on Link Click ---
+    nav.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            nav.classList.remove('is-open');
+        }
+    });
 
-    // --- Automatic Year in Footer ---
-    const yearSpan = document.getElementById('current-year');
-    if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
+    // --- Live Time in Footer ---
+    const timeSpan = document.getElementById('current-time');
+    function updateTime() {
+        // Options to format time for Philippines (PHT)
+        const options = {
+            timeZone: 'Asia/Manila',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        };
+        const formatter = new Intl.DateTimeFormat('en-US', options);
+        const formattedTime = formatter.format(new Date());
+        
+        if (timeSpan) {
+            timeSpan.textContent = formattedTime;
+        }
     }
+    
+    updateTime(); // Run once on load
+    setInterval(updateTime, 1000); // Update every second
 });
