@@ -1,105 +1,227 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- Sticky Header ---
-    const header = document.getElementById('main-header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
+/* --- Global Styles & White/Gray Theme --- */
+:root {
+    --primary-color: #343a40;
+    --primary-hover: #212529;
+    --background-color: #f8f9fa;
+    --text-color: #212529;
+    --card-bg-color: #ffffff;
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --font-family: 'Poppins', sans-serif;
+}
 
-    // --- Live Search Filter ---
-    const searchInput = document.getElementById('search-input');
-    const fileList = document.getElementById('file-list');
-    const fileCards = fileList.getElementsByClassName('file-card');
-    const noResults = document.getElementById('no-results');
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
 
-    searchInput.addEventListener('keyup', () => {
-        const filter = searchInput.value.toLowerCase();
-        let filesFound = false;
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        for (let card of fileCards) {
-            const textContent = card.textContent || card.innerText;
-            if (textContent.toLowerCase().includes(filter)) {
-                card.style.display = "";
-                filesFound = true;
-            } else {
-                card.style.display = "none";
-            }
-        }
-        noResults.style.display = filesFound ? "none" : "block";
-    });
+/* --- Sticky Header --- */
+header {
+    background-color: var(--card-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+header.scrolled {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+}
+.logo h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
 
-    // --- Fade-in Animation on Scroll ---
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
+/* --- Navigation Buttons --- */
+nav {
+    display: flex;
+    gap: 0.5rem;
+}
+.nav-btn {
+    color: var(--text-color);
+    background-color: transparent;
+    border: 1px solid transparent;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+.nav-btn:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    color: var(--primary-hover);
+}
+.nav-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+}
 
-    for (let card of fileCards) {
-        observer.observe(card);
+/* --- Main Content --- */
+main { padding: 2rem 0; }
+
+/* Search Bar, File List, File Card styles remain the same */
+.search-container {
+    position: relative;
+    margin-bottom: 2rem;
+}
+#search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+}
+.search-container .fa-magnifying-glass {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+.file-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+.file-card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(20px);
+}
+.file-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.file-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.card-header h3 { margin: 0; font-size: 1.4rem; }
+.badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    color: white;
+}
+.badge-lua { background-color: #2c2d71; }
+.file-description { margin: 0 0 1rem; flex-grow: 1; color: #6c757d; }
+.file-meta { font-size: 0.9rem; color: #6c757d; margin-bottom: 1.5rem; }
+.file-meta span:not(:last-child) { margin-right: 1.5rem; }
+.button-group { display: flex; gap: 0.75rem; }
+.download-btn, .copy-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid var(--primary-color);
+    cursor: pointer;
+}
+.download-btn { background-color: var(--primary-color); color: #ffffff; }
+.download-btn:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); }
+.copy-btn { background-color: transparent; color: var(--primary-color); }
+.copy-btn:hover { background-color: var(--primary-color); color: #ffffff; }
+.button-group i { margin-right: 0.5rem; }
+.no-results-message { text-align: center; padding: 3rem; display: none; }
+
+/* --- About Page Specific Styles --- */
+.page-content h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+}
+.about-content {
+    background-color: var(--card-bg-color);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+.about-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem;
+}
+.about-content p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    line-height: 1.8;
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+/* --- Mobile Menu --- */
+.menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color); }
+
+/* --- Responsive Design --- */
+@media (min-width: 769px) {
+    .file-list { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); }
+}
+@media (max-width: 768px) {
+    .logo h1 { font-size: 1.2rem; }
+    .menu-btn { display: block; }
+    #main-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--card-bg-color);
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        box-shadow: 0 4px 6px var(--shadow-color);
+        gap: 1rem;
     }
-
-    // --- Copy Link Button ---
-    fileList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('copy-btn') || e.target.parentElement.classList.contains('copy-btn')) {
-            const copyBtn = e.target.closest('.copy-btn');
-            const downloadBtn = copyBtn.previousElementSibling;
-            const linkToCopy = downloadBtn.href;
-
-            navigator.clipboard.writeText(linkToCopy).then(() => {
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        }
-    });
-
-    // --- Mobile Menu Toggle ---
-    const menuBtn = document.getElementById('menu-btn');
-    const nav = document.getElementById('main-nav');
-    menuBtn.addEventListener('click', () => {
-        nav.classList.toggle('is-open');
-    });
-    
-    // --- Close Mobile Menu on Link Click ---
-    nav.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A') {
-            nav.classList.remove('is-open');
-        }
-    });
-
-    // --- Live Time in Footer ---
-    const timeSpan = document.getElementById('current-time');
-    function updateTime() {
-        // Options to format time for Philippines (PHT)
-        const options = {
-            timeZone: 'Asia/Manila',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        };
-        const formatter = new Intl.DateTimeFormat('en-US', options);
-        const formattedTime = formatter.format(new Date());
-        
-        if (timeSpan) {
-            timeSpan.textContent = formattedTime;
-        }
-    }
-    
-    updateTime(); // Run once on load
-    setInterval(updateTime, 1000); // Update every second
-});
+    #main-nav.is-open { display: flex; }
+}
