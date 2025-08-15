@@ -3,37 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hack Scripts Hub</title>
+    <title>Maple3 Panel Starter Pack</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/styles.css">
-    <script src="scripts.js" defer></script>
-    <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
+    <!-- Header -->
     <header id="main-header">
         <div class="container">
             <div class="logo">
-                <h1>Hack Scripts Hub</h1>
+                <i class="fa-solid fa-tree"></i>
+                <h1>Panel Starter Pack</h1>
             </div>
-            <button id="menu-btn" class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+
             <nav id="main-nav">
                 <a href="index.html" class="nav-btn active">Home</a>
                 <a href="about.html" class="nav-btn">About</a>
+                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" class="nav-btn">Discord</a>
             </nav>
+
+            <button id="menu-btn" class="menu-btn" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="container">
+        <!-- Search -->
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" id="search-input" placeholder="Search scripts...">
         </div>
-        <div id="file-list" class="file-list"></div>
-        <div id="no-results" class="no-results-message">No scripts found.</div>
+
+        <!-- Script Cards -->
+        <section id="file-list" class="file-list"></section>
+        <div id="no-results-message" class="no-results-message">No scripts found.</div>
     </main>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Hack Scripts Hub</p>
-        <p>Current Time: <span id="current-time"></span></p>
+        <div class="container">
+            <p>&copy; <span id="current-time"></span> Created by <strong>@guesten (shado)</strong>.</p>
+        </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
 </body>
 </html>
