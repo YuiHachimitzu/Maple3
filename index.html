@@ -2,50 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Script Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hack Scripts Hub</title>
     <link rel="stylesheet" href="style.css">
+    <script src="scripts.js" defer></script>
+    <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<header id="main-header">
-    <div class="container">
-        <div class="logo"><h1>Script Hub</h1></div>
-        <nav id="main-nav"></nav>
-    </div>
-</header>
-
-<main class="container">
-    <div id="file-list" class="file-list"></div>
-    <p id="no-results" class="no-results-message">No results found.</p>
-</main>
-
-<script src="js/scripts-data.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const fileList = document.getElementById("file-list");
-
-    scriptsData.forEach(script => {
-        const card = document.createElement("div");
-        card.className = "file-card visible";
-        card.innerHTML = `
-            <div class="card-header">
-                <h3>${script.name}</h3>
-                <span class="badge badge-lua">${script.type}</span>
+    <header id="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1>Hack Scripts Hub</h1>
             </div>
-            <p class="file-description">${script.description}</p>
-            <div class="file-meta">
-                <span><i class="fa-solid fa-code"></i> v${script.version}</span>
-                <span><i class="fa-solid fa-database"></i> ${script.size}</span>
-                <span><i class="fa-solid fa-calendar"></i> ${script.date}</span>
-            </div>
-            <div class="button-group">
-                <a href="script.html?id=${script.id}" class="download-btn">
-                    <i class="fa-solid fa-eye"></i> View Details
-                </a>
-            </div>
-        `;
-        fileList.appendChild(card);
-    });
-});
-</script>
+            <button id="menu-btn" class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <nav id="main-nav">
+                <a href="index.html" class="nav-btn active">Home</a>
+                <a href="about.html" class="nav-btn">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="Search scripts...">
+        </div>
+        <div id="file-list" class="file-list"></div>
+        <div id="no-results" class="no-results-message">No scripts found.</div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Hack Scripts Hub</p>
+        <p>Current Time: <span id="current-time"></span></p>
+    </footer>
 </body>
 </html>
