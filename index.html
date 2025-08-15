@@ -3,16 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maple3</title>
+    <title>Panel Starter Pack</title>
     
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Optional: New badge styles */
+        .badge { padding: 2px 8px; border-radius: 5px; font-size: 0.8em; }
+        .badge-lua { background: #6a5acd; color: #fff; }
+        .badge-js { background: #f0db4f; color: #000; }
+        .badge-py { background: #306998; color: #fff; }
+        .badge-default { background: #999; color: #fff; }
+        .badge-new { background: #ff4444; color: white; margin-left: 5px; }
+        .fade-in { opacity: 0; transform: translateY(10px); transition: all 0.3s ease-in-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header id="main-header">
         <div class="container">
             <div class="logo">
@@ -30,16 +45,19 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <main id="home">
         <div class="container">
+            <!-- Search -->
             <div class="search-container">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="search-input" placeholder="Search for Lua scripts...">
             </div>
 
-            <!-- JS will insert file cards here -->
+            <!-- File List Container (JS will fill this) -->
             <div class="file-list" id="file-list"></div>
 
+            <!-- No Results Message -->
             <div id="no-results" class="no-results-message" style="display: none;">
                 <h3>No scripts found</h3>
                 <p>Try searching for something else.</p>
@@ -47,12 +65,14 @@
         </div>
     </main>
     
+    <!-- Footer -->
     <footer>
         <div class="container">
             <p>&copy; <span id="current-time"></span> By @guesten (shado).</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="js/script.js"></script>
 </body>
 </html>
