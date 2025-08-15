@@ -1,177 +1,177 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Script Data Array ---
+    // -------------------------
+    // SCRIPT DATA ARRAY
+    // -------------------------
     const scripts = [
         {
             name: "Maple3.lua",
             description: "Cul Ui // Mod menu",
-            version: "1.0",
-            size: "12 KB",
-            link: "https://www.mediafire.com/file/d97botb0qb8oi8f/a.lua/file"
+            version: 1.0,
+            bytes: 12288,
+            type: "lua",
+            link: "https://www.mediafire.com/file/d97botb0qb8oi8f/a.lua/file",
+            dateAdded: "2025-08-10"
         },
         {
             name: "panel_template.lua",
             description: "Reusable GUI Panel Template",
-            version: "1.1",
-            size: "12 KB",
-            link: "https://www.mediafire.com/file/bqgpmn6p4en06wk/Guesten_punel.lua/file"
+            version: 1.1,
+            bytes: 12288,
+            type: "lua",
+            link: "https://www.mediafire.com/file/bqgpmn6p4en06wk/Guesten_punel.lua/file",
+            dateAdded: "2025-08-14"
         },
         {
             name: "aimbut.lua",
             description: "Mystery script functionality",
-            version: "1.0",
-            size: "5 KB",
-            link: "https://www.mediafire.com/file/rtrcg2jovnzrkqt/aimbot.lua/file"
+            version: 1.0,
+            bytes: 5120,
+            type: "lua",
+            link: "https://www.mediafire.com/file/rtrcg2jovnzrkqt/aimbot.lua/file",
+            dateAdded: "2025-08-01"
         },
         {
             name: "speedhack.lua",
             description: "Boost movement speed in-game",
-            version: "2.0",
-            size: "8 KB",
-            link: "https://www.mediafire.com/file/example/speedhack.lua/file"
+            version: 2.0,
+            bytes: 8192,
+            type: "lua",
+            link: "https://www.mediafire.com/file/example/speedhack.lua/file",
+            dateAdded: "2025-08-12"
         },
         {
             name: "flymod.lua",
             description: "Allows the player to fly freely",
-            version: "1.3",
-            size: "10 KB",
-            link: "https://www.mediafire.com/file/example/flymod.lua/file"
+            version: 1.3,
+            bytes: 10240,
+            type: "lua",
+            link: "https://www.mediafire.com/file/example/flymod.lua/file",
+            dateAdded: "2025-08-08"
         },
         {
             name: "wallhack.lua",
             description: "See through walls for tactical advantage",
-            version: "1.4",
-            size: "7 KB",
-            link: "https://www.mediafire.com/file/example/wallhack.lua/file"
+            version: 1.4,
+            bytes: 7168,
+            type: "lua",
+            link: "https://www.mediafire.com/file/example/wallhack.lua/file",
+            dateAdded: "2025-08-15"
         }
     ];
 
-    // --- Generate File Cards ---
+    // Utility functions
+    const formatSize = (bytes) => {
+        if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + " MB";
+        return (bytes / 1024).toFixed(2) + " KB";
+    };
+    const getBadgeColor = (type) => {
+        switch (type.toLowerCase()) {
+            case "lua": return "badge-lua";
+            case "js": return "badge-js";
+            case "py": return "badge-py";
+            default: return "badge-default";
+        }
+    };
+    const isNew = (dateAdded) => {
+        const daysDiff = (new Date() - new Date(dateAdded)) / (1000 * 60 * 60 * 24);
+        return daysDiff <= 7;
+    };
+
+    // Sort newest version, then alphabetically
+    scripts.sort((a, b) => b.version - a.version || a.name.localeCompare(b.name));
+
+    // Render cards
     const fileList = document.getElementById('file-list');
     if (fileList) {
         scripts.forEach(script => {
             const card = document.createElement('div');
-            card.className = 'file-card';
+            card.className = 'file-card fade-in';
             card.innerHTML = `
                 <div class="card-header">
                     <h3>${script.name}</h3>
-                    <span class="badge badge-lua">LUA</span>
+                    <span class="badge ${getBadgeColor(script.type)}">${script.type.toUpperCase()}</span>
+                    ${isNew(script.dateAdded) ? '<span class="badge badge-new">NEW</span>' : ''}
                 </div>
                 <p class="file-description">${script.description}</p>
                 <div class="file-meta">
                     <span>Version: ${script.version}</span>
-                    <span>Size: ${script.size}</span>
+                    <span>Size: ${formatSize(script.bytes)}</span>
                 </div>
                 <div class="button-group">
-                    <a href="${script.link}" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
+                    <a href="${script.link}" class="download-btn" target="_blank"><i class="fa-solid fa-download"></i> Download</a>
                     <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy Link</button>
                 </div>
             `;
+
+            // Make whole card clickable (except copy button)
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.copy-btn')) {
+                    window.open(script.link, '_blank');
+                }
+            });
+
             fileList.appendChild(card);
         });
     }
 
-    // --- Sticky Header ---
+    // Sticky Header
     const header = document.getElementById('main-header');
     if (header) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            header.classList.toggle('scrolled', window.scrollY > 50);
         });
     }
 
-    // --- Live Search Filter ---
+    // Search Filter
     const searchInput = document.getElementById('search-input');
+    const noResults = document.getElementById('no-results');
     if (searchInput) {
-        const noResults = document.getElementById('no-results');
-        searchInput.addEventListener('keyup', () => {
+        searchInput.addEventListener('input', () => {
             const filter = searchInput.value.toLowerCase();
-            const fileCards = fileList.getElementsByClassName('file-card');
-            let filesFound = false;
-
-            for (let card of fileCards) {
-                const textContent = card.textContent || card.innerText;
-                if (textContent.toLowerCase().includes(filter)) {
-                    card.style.display = "";
-                    filesFound = true;
-                } else {
-                    card.style.display = "none";
-                }
-            }
-            noResults.style.display = filesFound ? "none" : "block";
+            let found = false;
+            document.querySelectorAll('.file-card').forEach(card => {
+                const match = card.textContent.toLowerCase().includes(filter);
+                card.style.display = match ? "" : "none";
+                found = found || match;
+            });
+            noResults.style.display = found ? "none" : "block";
         });
     }
 
-    // --- Fade-in Animation on Scroll ---
-    const animatedCards = document.querySelectorAll('.file-card');
-    if (animatedCards.length > 0) {
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        animatedCards.forEach(card => observer.observe(card));
-    }
-
-    // --- Copy Link Button ---
+    // Copy Button
     if (fileList) {
         fileList.addEventListener('click', (e) => {
             const copyBtn = e.target.closest('.copy-btn');
             if (copyBtn) {
-                const downloadBtn = copyBtn.previousElementSibling;
-                const linkToCopy = downloadBtn.href;
-
-                navigator.clipboard.writeText(linkToCopy).then(() => {
-                    const originalText = copyBtn.innerHTML;
+                e.stopPropagation();
+                const link = copyBtn.previousElementSibling.href;
+                navigator.clipboard.writeText(link).then(() => {
                     copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = originalText;
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
+                    setTimeout(() => copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Link', 2000);
                 });
             }
         });
     }
 
-    // --- Mobile Menu Toggle ---
+    // Mobile Menu Toggle
     const menuBtn = document.getElementById('menu-btn');
     const nav = document.getElementById('main-nav');
     if (menuBtn && nav) {
-        menuBtn.addEventListener('click', () => {
-            nav.classList.toggle('is-open');
-        });
-        
+        menuBtn.addEventListener('click', () => nav.classList.toggle('is-open'));
         nav.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                nav.classList.remove('is-open');
-            }
+            if (e.target.tagName === 'A') nav.classList.remove('is-open');
         });
     }
 
-    // --- Live Time in Footer ---
+    // Live Time
     const timeSpan = document.getElementById('current-time');
     if (timeSpan) {
         const updateTime = () => {
-            const options = {
+            timeSpan.textContent = new Intl.DateTimeFormat('en-US', {
                 timeZone: 'Asia/Manila',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            };
-            const formatter = new Intl.DateTimeFormat('en-US', options);
-            const formattedTime = formatter.format(new Date());
-            timeSpan.textContent = formattedTime;
+                year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+            }).format(new Date());
         };
         updateTime();
         setInterval(updateTime, 1000);
