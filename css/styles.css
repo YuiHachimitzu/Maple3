@@ -186,6 +186,23 @@ main { padding: 2rem 0; }
     background-color: transparent;
     color: var(--primary-color);
 }
+.steps-btn {
+    background-color: transparent;
+    color: var(--primary-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    font-weight: 600;
+    border: 1px solid var(--primary-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+.steps-btn:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
 .copy-btn:hover {
     background-color: var(--primary-color);
     color: #ffffff;
