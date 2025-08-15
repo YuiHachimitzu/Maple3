@@ -232,3 +232,50 @@ footer {
     }
     #main-nav.is-open { display: flex; }
 }
+/* Better Buttons */
+.download-btn, .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 40px;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+.download-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.download-btn:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.copy-btn {
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.copy-btn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Fade-in buttons when card appears */
+.button-group {
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.file-card.visible .button-group {
+    opacity: 1;
+    transform: translateY(0);
+}
