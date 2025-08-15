@@ -2,42 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Script Details</title>
     <link rel="stylesheet" href="style.css">
+    <script src="scripts.js" defer></script>
 </head>
 <body>
-<main class="container" id="script-detail"></main>
-
-<script src="js/scripts-data.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-    const script = scriptsData.find(s => s.id === id);
-
-    if (!script) {
-        document.getElementById("script-detail").innerHTML = "<p>Script not found.</p>";
-        return;
-    }
-
-    document.title = `${script.name} - Script Details`;
-    document.getElementById("script-detail").innerHTML = `
-        <h1>${script.name}</h1>
-        <p>${script.description}</p>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/${script.youtubeId}" frameborder="0" allowfullscreen></iframe>
-        <div class="file-meta">
-            <p><strong>Version:</strong> ${script.version}</p>
-            <p><strong>Size:</strong> ${script.size}</p>
-            <p><strong>Type:</strong> ${script.type}</p>
-            <p><strong>Date:</strong> ${script.date}</p>
+<header id="main-header">
+    <div class="container">
+        <div class="logo">
+            <h1>Hack Scripts Hub</h1>
         </div>
+        <nav id="main-nav">
+            <a href="index.html" class="nav-btn">Home</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <div id="script-detail">
+        <h2 id="script-title"></h2>
+        <p id="script-description"></p>
+        <div id="script-meta"></div>
+
+        <iframe id="script-video" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
+
         <div class="button-group">
-            <a href="steps.html?id=${script.id}" class="download-btn">
-                <i class="fa-solid fa-list"></i> Steps on How to Use
-            </a>
+            <a id="download-btn" class="download-btn" target="_blank"><i class="fa-solid fa-download"></i> Download</a>
+            <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy Link</button>
+            <a id="steps-btn" class="nav-btn" href="#"><i class="fa-solid fa-list"></i> Steps on How to Use</a>
         </div>
-    `;
-});
-</script>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Hack Scripts Hub</p>
+</footer>
 </body>
 </html>
