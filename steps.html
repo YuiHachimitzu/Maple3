@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Usage Steps</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="container" id="steps-content"></main>
+
+<script src="js/scripts-data.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const script = scriptsData.find(s => s.id === id);
+
+    if (!script) {
+        document.getElementById("steps-content").innerHTML = "<p>Script not found.</p>";
+        return;
+    }
+
+    document.title = `${script.name} - How to Use`;
+    let stepsHTML = script.steps.map((step, index) => `<li>Step ${index + 1}: ${step}</li>`).join("");
+
+    document.getElementById("steps-content").innerHTML = `
+        <h1>How to Use ${script.name}</h1>
+        <ol>${stepsHTML}</ol>
+        <div class="button-group" style="margin-top:20px;">
+            <a href="script.html?id=${script.id}" class="copy-btn"><i class="fa-solid fa-arrow-left"></i> Back to Script</a>
+        </div>
+    `;
+});
+</script>
+</body>
+</html>
