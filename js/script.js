@@ -3,31 +3,90 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search-input");
     const noResultsMessage = document.getElementById("no-results-message");
 
-    // Example script data
+    // Example subject-themed data
     const scripts = [
         {
-            title: "Aimbot",
-            description: "Automatically aim at enemies for perfect shots.",
+            title: "Mathematics",
+            description: "Life is like algebra — find your x and never forget your y.",
             views: 1240,
             uploadDate: "2025-08-10",
-            language: "Lua",
-            downloadLink: "scripts/aimbot.lua",
-            codeSnippet: "-- Aimbot code example",
-            stepsPage: "steps-aimbot.html"
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Math is the language the universe whispers to those who listen."`,
+            stepsPage: "steps-math.html"
         },
         {
-            title: "Speed Hack",
-            description: "Boost your movement speed in-game.",
+            title: "Science",
+            description: "Even small reactions can change the whole experiment of life.",
             views: 980,
             uploadDate: "2025-08-09",
-            language: "Lua",
-            downloadLink: "scripts/speedhack.lua",
-            codeSnippet: "-- Speed hack code example",
-            stepsPage: "steps-speedhack.html"
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Stay curious — the next discovery might be yours."`,
+            stepsPage: "steps-science.html"
+        },
+        {
+            title: "English",
+            description: "Your words are chapters — write them with meaning.",
+            views: 860,
+            uploadDate: "2025-08-08",
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Every sentence you write is a step in your own story."`,
+            stepsPage: "steps-english.html"
+        },
+        {
+            title: "History",
+            description: "The past is your teacher, but the future is your exam.",
+            views: 790,
+            uploadDate: "2025-08-07",
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Those who learn from history write their own destiny."`,
+            stepsPage: "steps-history.html"
+        },
+        {
+            title: "Geography",
+            description: "Find your place in the world — and explore beyond the map.",
+            views: 720,
+            uploadDate: "2025-08-06",
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"The world is a book, and those who do not travel read only one page."`,
+            stepsPage: "steps-geography.html"
+        },
+        {
+            title: "Music",
+            description: "Your heartbeat is the first rhythm you ever danced to.",
+            views: 680,
+            uploadDate: "2025-08-05",
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Life without music is like a body without a soul."`,
+            stepsPage: "steps-music.html"
+        },
+        {
+            title: "Art",
+            description: "Life is your canvas — spill every color you feel.",
+            views: 650,
+            uploadDate: "2025-08-04",
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Every blank page is an invitation to create."`,
+            stepsPage: "steps-art.html"
+        },
+        {
+            title: "Physical Education",
+            description: "Strength isn’t just in muscles — it’s in showing up every day.",
+            views: 610,
+            uploadDate: "2025-08-03",
+            language: "Quote",
+            downloadLink: "#",
+            codeSnippet: `"Your body can go further than your mind thinks."`,
+            stepsPage: "steps-pe.html"
         }
     ];
 
-    // Function to create script cards
     function renderScripts(filter = "") {
         fileList.innerHTML = "";
         let filtered = scripts.filter(script =>
@@ -72,19 +131,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Initial render
     renderScripts();
 
-    // Search filter
     searchInput.addEventListener("input", e => {
         renderScripts(e.target.value);
     });
 
-    // Mobile menu
     document.getElementById("menu-btn").addEventListener("click", () => {
         document.getElementById("main-nav").classList.toggle("is-open");
     });
 
-    // Footer year
     document.getElementById("current-time").textContent = new Date().getFullYear();
 });
