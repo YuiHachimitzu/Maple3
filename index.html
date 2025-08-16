@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maple3 Scripts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maple3 Panel Starter Pack</title>
 
     <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -21,13 +21,13 @@
         <div class="container">
             <div class="logo">
                 <i class="fa-solid fa-tree"></i>
-                <h1>Maple3 Scripts</h1>
+                <h1>Panel Starter Pack</h1>
             </div>
 
             <nav id="main-nav">
                 <a href="index.html" class="nav-btn active">Home</a>
                 <a href="about.html" class="nav-btn">About</a>
-                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" rel="noopener noreferrer" class="nav-btn">Discord</a>
+                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" class="nav-btn">Discord</a>
             </nav>
 
             <button id="menu-btn" class="menu-btn" aria-label="Toggle navigation">
@@ -37,19 +37,16 @@
     </header>
 
     <!-- Main Content -->
-    <main>
-        <section class="container">
-            <div class="search-container">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Search scripts..." />
-            </div>
+    <main class="container">
+        <!-- Search -->
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="Search scripts...">
+        </div>
 
-            <!-- Where script cards will go -->
-            <div id="file-list" class="file-list"></div>
-
-            <!-- No results message -->
-            <div class="no-results-message">No scripts found.</div>
-        </section>
+        <!-- Script Cards -->
+        <section id="file-list" class="file-list"></section>
+        <div id="no-results-message" class="no-results-message">No scripts found.</div>
     </main>
 
     <!-- Footer -->
@@ -59,52 +56,7 @@
         </div>
     </footer>
 
-    <!-- Script that generates cards -->
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const scripts = [
-            {
-                name: "Speed Hack",
-                description: "Boost movement speed instantly.",
-                version: "1.0",
-                size: "5 KB",
-                link: "#"
-            },
-            {
-                name: "Aimbot",
-                description: "Automatically aim at enemies.",
-                version: "2.3",
-                size: "7 KB",
-                link: "#"
-            }
-        ];
-
-        const fileList = document.getElementById("file-list");
-
-        scripts.forEach(file => {
-            const card = document.createElement("div");
-            card.classList.add("file-card");
-
-            card.innerHTML = `
-                <div class="card-header">
-                    <h3>${file.name}</h3>
-                    <span class="badge badge-lua">LUA</span>
-                </div>
-                <p class="file-description">${file.description}</p>
-                <div class="file-meta">
-                    <span><i class="fa-solid fa-code-branch"></i> v${file.version}</span>
-                    <span><i class="fa-solid fa-file"></i> ${file.size}</span>
-                </div>
-                <div class="button-group">
-                    <a href="${file.link}" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
-                    <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy</button>
-                    <a href="steps.html" class="steps-btn"><i class="fa-solid fa-list"></i> Steps</a>
-                </div>
-            `;
-
-            fileList.appendChild(card);
-        });
-    });
-    </script>
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
 </body>
 </html>
