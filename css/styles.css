@@ -1,191 +1,313 @@
-/* --- Global Styles & White/Gray Theme --- */
-:root{
-  --primary-color:#343a40;
-  --primary-hover:#212529;
-  --background-color:#f8f9fa;
-  --text-color:#212529;
-  --card-bg-color:#ffffff;
-  --border-color:#dee2e6;
-  --shadow-color:rgba(0,0,0,0.05);
-  --font-family:'Poppins',sans-serif;
+document.addEventListener("DOMContentLoaded", () => {
+  const fileList = document.getElementById("file-list");
+  const searchInput = document.getElementById("search-input");
+  const noResultsMessage = document.getElementById("no-results-message");
 
-  /* Subject accent helpers */
-  --math:#3b82f6;
-  --science:#16a34a;
-  --english:#a855f7;
-  --history:#f59e0b;
-  --geography:#0ea5e9;
-  --music:#ef4444;
-  --art:#dc2626;
-  --pe:#059669;
-}
+  const typeFilter = document.getElementById("type-filter");
+  const subjectFilter = document.getElementById("subject-filter");
+  const sortBy = document.getElementById("sort-by");
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:var(--font-family);
-  background-color:var(--background-color);
-  color:var(--text-color);
-  line-height:1.6;
-}
+  /* Data model for study items */
+  const items = [
+    {
+      type: "Quiz",
+      title: "Algebra Basics",
+      subject: "Math",
+      description: "Linear equations, inequalities, and factoring warm-up.",
+      date: "2025-08-15",
+      questions: 10,
+      difficulty: "Medium",
+      previewImage: "images/math-preview.jpg",
+      previewLink: "quiz-math-algebra.html",
+      viewLink: "quiz-math-algebra.html",
+      answersLink: "answers-math-algebra.html",
+      info: {
+        timeLimit: "15 min",
+        attempts: "1",
+        coverage: "Ch. 2–3",
+      }
+    },
+    {
+      type: "Assignment",
+      title: "Lab Report: States of Matter",
+      subject: "Science",
+      description: "Observations and conclusions from heating/cooling curves.",
+      date: "2025-08-17",
+      dueDate: "2025-08-20",
+      points: 50,
+      previewImage: "images/science-preview.jpg",
+      previewLink: "assignment-science-lab.html",
+      viewLink: "assignment-science-lab.html",
+      info: {
+        format: "PDF or Google Doc",
+        rubric: "Accuracy, Clarity, Data",
+      }
+    },
+    {
+      type: "Quiz",
+      title: "Vocabulary Set 5",
+      subject: "English",
+      description: "Synonyms/antonyms and context clues.",
+      date: "2025-08-12",
+      questions: 20,
+      difficulty: "Easy",
+      previewImage: "images/english-preview.jpg",
+      previewLink: "quiz-english-vocab5.html",
+      viewLink: "quiz-english-vocab5.html",
+      answersLink: "answers-english-vocab5.html",
+      info: {
+        timeLimit: "20 min",
+        attempts: "2",
+      }
+    },
+    {
+      type: "Quiz",
+      title: "World War II Basics",
+      subject: "History",
+      description: "Major events and figures from 1939–1945.",
+      date: "2025-08-10",
+      questions: 15,
+      difficulty: "Medium",
+      previewImage: "images/history-preview.jpg",
+      previewLink: "quiz-history-ww2.html",
+      viewLink: "quiz-history-ww2.html",
+      answersLink: "answers-history-ww2.html",
+      info: {
+        coverage: "Ch. 7",
+        timeLimit: "18 min",
+      }
+    },
+    {
+      type: "Assignment",
+      title: "Map Skills Portfolio",
+      subject: "Geography",
+      description: "Latitude/longitude & reading topographic maps.",
+      date: "2025-08-09",
+      dueDate: "2025-08-16",
+      points: 30,
+      previewImage: "images/geography-preview.jpg",
+      previewLink: "assignment-geo-maps.html",
+      viewLink: "assignment-geo-maps.html",
+      info: {
+        deliverable: "Slides (max 10)",
+        collab: "Pair work allowed",
+      }
+    },
+    {
+      type: "Notes",
+      title: "Circle of Fifths (Cheat Sheet)",
+      subject: "Music",
+      description: "Keys, relative minors, and common chord progressions.",
+      date: "2025-08-05",
+      previewImage: "images/music-preview.jpg",
+      previewLink: "notes-music-cof.html",
+      viewLink: "notes-music-cof.html",
+      info: {
+        format: "Infographic",
+      }
+    },
+    {
+      type: "Assignment",
+      title: "Color Theory Poster",
+      subject: "Art",
+      description: "Create a poster demonstrating color harmony.",
+      date: "2025-08-04",
+      dueDate: "2025-08-14",
+      points: 40,
+      previewImage: "images/art-preview.jpg",
+      previewLink: "assignment-art-color.html",
+      viewLink: "assignment-art-color.html",
+      info: {
+        medium: "Any (digital or paper)",
+      }
+    },
+    {
+      type: "Quiz",
+      title: "Cardio & Muscles",
+      subject: "PE",
+      description: "Basic fitness concepts and muscle groups.",
+      date: "2025-08-03",
+      questions: 12,
+      difficulty: "Easy",
+      previewImage: "images/pe-preview.jpg",
+      previewLink: "quiz-pe-cardio.html",
+      viewLink: "quiz-pe-cardio.html",
+      answersLink: "answers-pe-cardio.html",
+      info: {
+        timeLimit: "12 min",
+      }
+    },
+  ];
 
-.container{width:90%;max-width:1200px;margin:0 auto}
-
-/* --- Sticky Header --- */
-header{
-  background-color:var(--card-bg-color);
-  border-bottom:1px solid var(--border-color);
-  padding:1rem 0;
-  position:sticky;top:0;z-index:100;
-  transition:background-color .3s ease,box-shadow .3s ease;
-}
-header.scrolled{
-  background-color:rgba(255,255,255,.85);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:0 2px 10px rgba(0,0,0,.1);
-}
-header .container{
-  display:flex;justify-content:space-between;align-items:center
-}
-.logo{display:flex;align-items:center;gap:.75rem;font-weight:700}
-.logo h1{margin:0;font-size:1.5rem}
-
-/* --- Navigation Buttons --- */
-nav{display:flex;gap:.5rem}
-.nav-btn{
-  color:var(--text-color);
-  background:transparent;
-  border:1px solid transparent;
-  text-decoration:none;
-  padding:.5rem 1rem;
-  border-radius:6px;
-  font-weight:600;
-  transition:all .2s ease-in-out
-}
-.nav-btn:hover{
-  background:#e9ecef;border-color:#dee2e6;color:var(--primary-hover)
-}
-.nav-btn.active{
-  background:var(--primary-color);
-  border-color:var(--primary-color);
-  color:#fff
-}
-
-/* --- Main Content --- */
-main{padding:2rem 0}
-
-/* Search Bar */
-.search-container{position:relative;margin-bottom:1rem}
-#search-input{
-  width:100%;padding:1rem 1rem 1rem 3rem;font-size:1rem;
-  border-radius:10px;border:1px solid var(--border-color);background:#fff
-}
-.search-container .fa-magnifying-glass{
-  position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#6c757d
-}
-
-/* Filter Row */
-.filter-row{
-  display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem
-}
-.filter-row select{
-  padding:.65rem .9rem;border:1px solid var(--border-color);
-  border-radius:8px;background:#fff;font-weight:600
-}
-
-/* Grid */
-.file-list{
-  display:grid;grid-template-columns:1fr;gap:1.25rem
-}
-
-/* --- Quiz/Assignment Card --- */
-.quiz-card{
-  background:var(--card-bg-color);
-  border:1px solid var(--border-color);
-  border-radius:12px;overflow:hidden;
-  box-shadow:0 4px 6px var(--shadow-color);
-  display:flex;flex-direction:column;
-  transition:transform .25s ease,box-shadow .25s ease;
-  opacity:0;transform:translateY(20px)
-}
-.quiz-card.visible{opacity:1;transform:translateY(0)}
-.quiz-card:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.08)}
-
-/* Preview image (top, clickable) */
-.quiz-preview-link{display:block;line-height:0}
-.quiz-preview{
-  width:100%;height:190px;object-fit:cover;display:block
-}
-
-/* Content */
-.quiz-content{padding:1.1rem 1.1rem 1.2rem;display:flex;flex-direction:column;flex-grow:1}
-.quiz-header{
-  display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.35rem
-}
-.quiz-title{margin:0;font-size:1.2rem;font-weight:700;line-height:1.3}
-.subject-badge{
-  font-size:.75rem;font-weight:800;color:#fff;padding:.25rem .5rem;border-radius:999px;white-space:nowrap
-}
-
-/* Subject colors */
-.badge-math{background:var(--math)}
-.badge-science{background:var(--science)}
-.badge-english{background:var(--english)}
-.badge-history{background:var(--history)}
-.badge-geography{background:var(--geography)}
-.badge-music{background:var(--music)}
-.badge-art{background:var(--art)}
-.badge-pe{background:var(--pe)}
-
-.quiz-description{color:#6c757d;margin:.35rem 0 .75rem}
-
-/* Meta row */
-.quiz-meta{
-  display:flex;flex-wrap:wrap;gap:1rem;color:#6c757d;font-size:.92rem;margin-bottom:1rem
-}
-.quiz-meta span i{margin-right:.4rem}
-
-/* Info list (optional, compact table feel) */
-.quiz-info{
-  border:1px dashed var(--border-color);
-  background:#fafafa;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem
-}
-.quiz-info-row{display:flex;justify-content:space-between;gap:1rem;padding:.35rem 0}
-.quiz-info-row + .quiz-info-row{border-top:1px dashed var(--border-color)}
-.quiz-info-label{color:#6c757d;font-weight:600}
-.quiz-info-value{color:#111827;font-weight:600}
-
-/* Actions */
-.quiz-actions{display:flex;gap:.6rem;flex-wrap:wrap}
-.quiz-btn{
-  padding:.6rem 1rem;border-radius:8px;font-weight:700;
-  border:1px solid var(--primary-color);background:transparent;color:var(--primary-color);
-  text-decoration:none;text-align:center;transition:all .2s ease;display:inline-flex;align-items:center;gap:.5rem
-}
-.quiz-btn:hover{background:var(--primary-color);color:#fff;transform:translateY(-1px)}
-.quiz-btn.primary{background:var(--primary-color);color:#fff}
-.quiz-btn.primary:hover{background:var(--primary-hover)}
-
-/* Empty state */
-.no-results-message{text-align:center;padding:3rem;display:none}
-
-/* --- Footer --- */
-footer{text-align:center;padding:2rem 0;background:#e9ecef;color:#6c757d}
-
-/* Mobile Menu */
-.menu-btn{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-color)}
-
-/* Responsive */
-@media (min-width:769px){
-  .file-list{grid-template-columns:repeat(auto-fill,minmax(360px,1fr))}
-}
-@media (max-width:768px){
-  .logo h1{font-size:1.2rem}
-  .menu-btn{display:block}
-  #main-nav{
-    display:none;position:absolute;top:100%;left:0;width:100%;background:var(--card-bg-color);
-    flex-direction:column;align-items:center;padding:1rem 0;box-shadow:0 4px 6px var(--shadow-color);gap:1rem
+  function subjectBadgeClass(subject){
+    switch ((subject || "").toLowerCase()){
+      case "math": return "badge-math";
+      case "science": return "badge-science";
+      case "english": return "badge-english";
+      case "history": return "badge-history";
+      case "geography": return "badge-geography";
+      case "music": return "badge-music";
+      case "art": return "badge-art";
+      case "pe": return "badge-pe";
+      default: return "";
+    }
   }
-  #main-nav.is-open{display:flex}
-}
+
+  function formatDate(iso){
+    try{
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+    }catch{ return iso; }
+  }
+
+  function render(itemsToRender){
+    fileList.innerHTML = "";
+
+    if (!itemsToRender.length){
+      noResultsMessage.style.display = "block";
+      return;
+    }
+    noResultsMessage.style.display = "none";
+
+    itemsToRender.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "quiz-card visible";
+
+      // Info rows (dynamic)
+      let infoRows = "";
+      if (item.type === "Quiz"){
+        infoRows += row("Difficulty", item.difficulty || "—");
+        infoRows += row("Questions", item.questions ?? "—");
+        if (item.info?.timeLimit) infoRows += row("Time Limit", item.info.timeLimit);
+        if (item.info?.attempts) infoRows += row("Attempts", item.info.attempts);
+        if (item.info?.coverage) infoRows += row("Coverage", item.info.coverage);
+      } else if (item.type === "Assignment"){
+        infoRows += row("Due", item.dueDate ? formatDate(item.dueDate) : "—");
+        infoRows += row("Points", item.points ?? "—");
+        if (item.info?.format) infoRows += row("Format", item.info.format);
+        if (item.info?.rubric) infoRows += row("Rubric", item.info.rubric);
+        if (item.info?.deliverable) infoRows += row("Deliverable", item.info.deliverable);
+        if (item.info?.collab) infoRows += row("Collaboration", item.info.collab);
+      } else { // Notes / Others
+        if (item.info){
+          for (const [k,v] of Object.entries(item.info)){
+            infoRows += row(capitalize(k), v);
+          }
+        }
+      }
+
+      const subjectClass = subjectBadgeClass(item.subject);
+      const dateLabel = item.type === "Assignment" ? "Assigned" : "Date";
+
+      card.innerHTML = `
+        <a class="quiz-preview-link" href="${item.previewLink || item.viewLink || '#'}" target="_self" rel="noopener">
+          <img class="quiz-preview" src="${item.previewImage || 'images/placeholder.jpg'}" alt="${item.subject || ''} preview">
+        </a>
+
+        <div class="quiz-content">
+          <div class="quiz-header">
+            <h3 class="quiz-title">${escapeHTML(item.title)}</h3>
+            <span class="subject-badge ${subjectClass}">${escapeHTML(item.subject || '—')}</span>
+          </div>
+
+          <p class="quiz-description">${escapeHTML(item.description || '')}</p>
+
+          <div class="quiz-meta">
+            <span title="${item.type}"><i class="fa-solid fa-tag"></i>${escapeHTML(item.type)}</span>
+            <span><i class="fa-solid fa-calendar"></i>${formatDate(item.date)}</span>
+            ${item.type === "Quiz" && item.questions != null ? `<span><i class="fa-solid fa-list-ol"></i>${item.questions} Qs</span>` : ""}
+            ${item.type === "Assignment" && item.dueDate ? `<span><i class="fa-solid fa-hourglass-half"></i>Due ${formatDate(item.dueDate)}</span>` : ""}
+          </div>
+
+          ${infoRows ? `
+            <div class="quiz-info">
+              ${infoRows}
+            </div>` : ""}
+
+          <div class="quiz-actions">
+            <a class="quiz-btn primary" href="${item.viewLink || item.previewLink || '#'}">
+              <i class="fa-solid fa-eye"></i> View
+            </a>
+            ${item.answersLink ? `
+              <a class="quiz-btn" href="${item.answersLink}">
+                <i class="fa-solid fa-list-check"></i> Answers
+              </a>` : ""}
+            ${item.previewLink && item.viewLink && item.previewLink !== item.viewLink ? `
+              <a class="quiz-btn" href="${item.previewLink}">
+                <i class="fa-solid fa-image"></i> Preview
+              </a>` : ""}
+          </div>
+        </div>
+      `;
+
+      fileList.appendChild(card);
+    });
+  }
+
+  function row(label, value){
+    return `
+      <div class="quiz-info-row">
+        <span class="quiz-info-label">${escapeHTML(label)}</span>
+        <span class="quiz-info-value">${escapeHTML(String(value))}</span>
+      </div>
+    `;
+  }
+
+  function capitalize(s){ return (s||"").charAt(0).toUpperCase() + (s||"").slice(1); }
+
+  function escapeHTML(str){
+    return (str ?? "").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  /* Filter + Search + Sort pipeline */
+  function applyFilters(){
+    const q = (searchInput.value || "").toLowerCase();
+    const t = (typeFilter.value || "").toLowerCase();
+    const s = (subjectFilter.value || "").toLowerCase();
+    const sort = sortBy.value;
+
+    let list = items.filter(it => {
+      const hay = `${it.title} ${it.subject} ${it.type} ${it.description}`.toLowerCase();
+      const matchesSearch = hay.includes(q);
+      const matchesType = !t || (it.type || "").toLowerCase() === t;
+      const matchesSubject = !s || (it.subject || "").toLowerCase() === s;
+      return matchesSearch && matchesType && matchesSubject;
+    });
+
+    list.sort((a,b) => {
+      if (sort === "dateAsc") return new Date(a.date) - new Date(b.date);
+      if (sort === "dateDesc") return new Date(b.date) - new Date(a.date);
+      if (sort === "titleAsc") return (a.title||"").localeCompare(b.title||"");
+      if (sort === "titleDesc") return (b.title||"").localeCompare(a.title||"");
+      return 0;
+    });
+
+    render(list);
+  }
+
+  // Initial render
+  applyFilters();
+
+  // Events
+  searchInput.addEventListener("input", applyFilters);
+  typeFilter.addEventListener("change", applyFilters);
+  subjectFilter.addEventListener("change", applyFilters);
+  sortBy.addEventListener("change", applyFilters);
+
+  // Mobile menu
+  document.getElementById("menu-btn").addEventListener("click", () => {
+    document.getElementById("main-nav").classList.toggle("is-open");
+  });
+
+  // Header shadow on scroll
+  window.addEventListener("scroll", () => {
+    const header = document.getElementById("main-header");
+    if (window.scrollY > 6) header.classList.add("scrolled");
+    else header.classList.remove("scrolled");
+  });
+
+  // Footer year
+  document.getElementById("current-time").textContent = new Date().getFullYear();
+});
