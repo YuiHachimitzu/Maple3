@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maple3 | Panel Starter Pack</title>
+    <title>Maple3 Scripts</title>
 
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,27 +21,36 @@
         <div class="container">
             <div class="logo">
                 <i class="fa-solid fa-tree"></i>
-                <h1>Panel Starter Pack</h1>
+                <h1>Maple3 Scripts</h1>
             </div>
+
             <nav id="main-nav">
                 <a href="index.html" class="nav-btn active">Home</a>
                 <a href="about.html" class="nav-btn">About</a>
-                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" class="nav-btn">Discord</a>
+                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" rel="noopener noreferrer" class="nav-btn">Discord</a>
             </nav>
-            <button id="menu-btn" class="menu-btn">
+
+            <button id="menu-btn" class="menu-btn" aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </header>
 
-    <!-- Search -->
-    <section class="container search-section">
-        <input type="text" id="search-input" placeholder="Search for scripts..." />
-    </section>
+    <!-- Main Content -->
+    <main>
+        <section class="container">
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Search scripts..." />
+            </div>
 
-    <!-- File List -->
-    <section id="file-list" class="container file-list"></section>
-    <p id="no-results" style="display:none;">No scripts found.</p>
+            <!-- Where script cards will go -->
+            <div id="file-list" class="file-list"></div>
+
+            <!-- No results message -->
+            <div class="no-results-message">No scripts found.</div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
@@ -50,57 +59,52 @@
         </div>
     </footer>
 
+    <!-- Script that generates cards -->
     <script>
-        const scriptsData = [
+    document.addEventListener("DOMContentLoaded", () => {
+        const scripts = [
             {
-                id: "aimbot",
-                title: "Aimbot",
-                description: "Automatically aim at enemies with precision.",
-                views: 420,
-                uploadDate: "Aug 2025",
-                downloadLink: "downloads/aimbot.lua"
+                name: "Speed Hack",
+                description: "Boost movement speed instantly.",
+                version: "1.0",
+                size: "5 KB",
+                link: "#"
             },
             {
-                id: "speedhack",
-                title: "Speed Hack",
-                description: "Move faster than normal players.",
-                views: 350,
-                uploadDate: "Aug 2025",
-                downloadLink: "downloads/speedhack.lua"
+                name: "Aimbot",
+                description: "Automatically aim at enemies.",
+                version: "2.3",
+                size: "7 KB",
+                link: "#"
             }
         ];
 
         const fileList = document.getElementById("file-list");
-        scriptsData.forEach(script => {
+
+        scripts.forEach(file => {
             const card = document.createElement("div");
             card.classList.add("file-card");
 
             card.innerHTML = `
                 <div class="card-header">
-                    <h3>${script.title}</h3>
-                    <span class="badge badge-lua">Lua</span>
+                    <h3>${file.name}</h3>
+                    <span class="badge badge-lua">LUA</span>
                 </div>
-                <p class="file-description">${script.description}</p>
+                <p class="file-description">${file.description}</p>
                 <div class="file-meta">
-                    <span><i class="fa-solid fa-eye"></i> ${script.views}</span>
-                    <span><i class="fa-solid fa-calendar"></i> ${script.uploadDate}</span>
+                    <span><i class="fa-solid fa-code-branch"></i> v${file.version}</span>
+                    <span><i class="fa-solid fa-file"></i> ${file.size}</span>
                 </div>
                 <div class="button-group">
-                    <a href="${script.downloadLink}" class="download-btn" download>
-                        <i class="fa-solid fa-download"></i> Download
-                    </a>
-                    <button class="copy-btn" onclick="navigator.clipboard.writeText('${script.downloadLink}')">
-                        <i class="fa-solid fa-copy"></i> Copy
-                    </button>
-                    <a href="steps.html?script=${script.id}" class="steps-btn">
-                        <i class="fa-solid fa-list-check"></i> Steps
-                    </a>
+                    <a href="${file.link}" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
+                    <button class="copy-btn"><i class="fa-solid fa-copy"></i> Copy</button>
+                    <a href="steps.html" class="steps-btn"><i class="fa-solid fa-list"></i> Steps</a>
                 </div>
             `;
+
             fileList.appendChild(card);
         });
+    });
     </script>
-
-    <script src="js/script.js"></script>
 </body>
 </html>
