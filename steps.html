@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How to Use | Maple3</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Steps to Use | Maple3 Scripts</title>
 
     <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
@@ -21,25 +21,34 @@
         <div class="container">
             <div class="logo">
                 <i class="fa-solid fa-tree"></i>
-                <h1>Panel Starter Pack</h1>
+                <h1>Maple3 Scripts</h1>
             </div>
+
             <nav id="main-nav">
                 <a href="index.html" class="nav-btn">Home</a>
                 <a href="about.html" class="nav-btn">About</a>
-                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" class="nav-btn">Discord</a>
+                <a href="https://discordapp.com/users/1089425325034852352" target="_blank" rel="noopener noreferrer" class="nav-btn">Discord</a>
             </nav>
-            <button id="menu-btn" class="menu-btn">
+
+            <button id="menu-btn" class="menu-btn" aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </header>
 
-    <!-- Steps Content -->
-    <main class="container">
-        <section class="page-content">
-            <h2 id="steps-title"><i class="fa-solid fa-list-check"></i> How to Use</h2>
-            <ol id="steps-list" class="steps-list"></ol>
-            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+    <!-- Main Content -->
+    <main>
+        <section class="page-content container">
+            <h2>Steps to Use This Script</h2>
+            <div class="steps-container">
+                <ol>
+                    <li>Download the script from the Home page by clicking the <strong>Download</strong> button.</li>
+                    <li>Open your preferred Lua executor (Synapse X, KRNL, etc.).</li>
+                    <li>Paste the copied script into the executor.</li>
+                    <li>Inject into the game.</li>
+                    <li>Press the execute button and enjoy the features!</li>
+                </ol>
+            </div>
         </section>
     </main>
 
@@ -50,47 +59,7 @@
         </div>
     </footer>
 
-    <script>
-        const stepsData = {
-            aimbot: {
-                title: "How to Use the Aimbot",
-                steps: [
-                    "Download the Aimbot script from the homepage.",
-                    "Open your game and your preferred executor.",
-                    "Paste the Lua script code into the executor.",
-                    "Execute the script while in-game.",
-                    "Adjust sensitivity and target settings in the UI."
-                ]
-            },
-            speedhack: {
-                title: "How to Use the Speed Hack",
-                steps: [
-                    "Download the Speed Hack script from the homepage.",
-                    "Open your game and your preferred executor.",
-                    "Paste the Lua script code into the executor.",
-                    "Execute the script while in-game.",
-                    "Adjust movement speed from the script's UI."
-                ]
-            }
-        };
-
-        // Get script type from URL
-        const params = new URLSearchParams(window.location.search);
-        const scriptName = params.get("script");
-
-        if (stepsData[scriptName]) {
-            document.getElementById("steps-title").innerHTML = `<i class="fa-solid fa-list-check"></i> ${stepsData[scriptName].title}`;
-            const stepsList = document.getElementById("steps-list");
-            stepsData[scriptName].steps.forEach(step => {
-                const li = document.createElement("li");
-                li.textContent = step;
-                stepsList.appendChild(li);
-            });
-        } else {
-            document.getElementById("steps-title").textContent = "Invalid script selected.";
-        }
-    </script>
-
+    <!-- JS -->
     <script src="js/script.js"></script>
 </body>
 </html>
