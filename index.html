@@ -1,94 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Study Library | Quizzes & Assignments</title>
-
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz & Assignment Library</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://kit.fontawesome.com/a2e0e9b7c8.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Header -->
-  <header id="main-header">
-    <div class="container">
-      <div class="logo">
-        <i class="fa-solid fa-book-open"></i>
-        <h1>Study Library</h1>
-      </div>
 
-      <nav id="main-nav">
-        <a href="#" class="nav-btn active">Library</a>
-        <a href="#" class="nav-btn">Subjects</a>
-        <a href="#" class="nav-btn">About</a>
-      </nav>
-
-      <button id="menu-btn" class="menu-btn" aria-label="Toggle navigation">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+<header>
+  <div class="container">
+    <div class="logo">
+      <h1>My Quizzes</h1>
     </div>
-  </header>
+    <button id="menu-btn" class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+    <nav id="main-nav">
+      <a href="#" class="nav-btn active">Home</a>
+      <a href="#" class="nav-btn">Assignments</a>
+    </nav>
+  </div>
+</header>
 
-  <!-- Main -->
-  <main>
-    <div class="container">
-      <!-- Search -->
-      <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input id="search-input" type="text" placeholder="Search titles, subjects, types (Quiz / Assignment)..." />
-      </div>
+<main class="container">
+  <div class="search-container">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="search-input" placeholder="Search quizzes or assignments...">
+  </div>
 
-      <!-- Filter Row (optional, simple demo) -->
-      <div class="filter-row">
-        <select id="type-filter">
-          <option value="">All Types</option>
-          <option value="Quiz">Quiz</option>
-          <option value="Assignment">Assignment</option>
-          <option value="Notes">Notes</option>
-        </select>
-        <select id="subject-filter">
-          <option value="">All Subjects</option>
-          <option>Math</option>
-          <option>Science</option>
-          <option>English</option>
-          <option>History</option>
-          <option>Geography</option>
-          <option>Music</option>
-          <option>Art</option>
-          <option>PE</option>
-        </select>
-        <select id="sort-by">
-          <option value="dateDesc">Newest First</option>
-          <option value="dateAsc">Oldest First</option>
-          <option value="titleAsc">Title A–Z</option>
-          <option value="titleDesc">Title Z–A</option>
-        </select>
-      </div>
+  <div id="quiz-list" class="quiz-list"></div>
+  <div id="no-results-message" class="no-results-message">No results found</div>
+</main>
 
-      <!-- Cards -->
-      <div id="file-list" class="file-list"></div>
-      <div id="no-results-message" class="no-results-message">
-        No matches. Try a different search or filter.
-      </div>
-    </div>
+<footer>
+  <p>&copy; <span id="current-time"></span> My Quizzes</p>
+</footer>
 
-    <!-- Detail / Steps pages can render here if you want single-page modal later -->
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>&copy; <span id="current-time"></span> Created by <strong>@guesten (shado)</strong>.</p>
-    </div>
-  </footer>
-
-  <!-- Script -->
-  <script src="js/script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
