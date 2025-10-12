@@ -1,299 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Yui and Koi</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yui and Koi</title>
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  background: linear-gradient(135deg, #ffe6f2, #ffd6e8);
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container {
+  width: 90%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 25px;
+  padding: 20px;
+  margin-top: 30px;
+  box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
+}
+h1 {
+  text-align: center;
+  color: #ff69b4;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+.add-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+input, select, button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 15px;
+}
+input, select {
+  background: #ffeaf2;
+}
+button {
+  background: #ff8fb1;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #ff6f91;
+}
+.posts {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.date-bubble {
+  align-self: flex-start;
+  background: #ffb6c1;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 20px 20px 20px 0;
+  box-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
+  animation: fadeIn 0.5s ease;
+}
+.assignment-note {
+  background: #fff3cd;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
+  transform: rotate(-1deg);
+  animation: pop 0.4s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
 </head>
 <body>
-  <div class="glow-bg"></div>
-
-  <header class="top">
-    <div class="brand">
-      <div class="logo">Y❤K</div>
-      <div class="titles">
-        <div class="main-title">Yui and Koi</div>
-        <div class="sub-title">our little universe</div>
-      </div>
+<div class="container">
+  <h1>🌸 Yui and Koi 🌸</h1>
+  <div class="add-section">
+    <select id="type">
+      <option value="date">Date 💞</option>
+      <option value="assignment">Assignment 📝</option>
+    </select>
+    <input type="date" id="date" />
+    <input type="text" id="title" placeholder="Title or subject..." />
+    <input type="text" id="details" placeholder="Place or details..." />
+    <div style="display:flex; gap:10px;">
+      <button id="addBtn">Add</button>
+      <button id="postBtn">Post</button>
     </div>
-    <div class="today" id="today"></div>
-  </header>
+  </div>
+  <div class="posts" id="posts"></div>
+</div>
 
-  <main class="app">
-    <aside class="left">
-      <div class="controls-card">
-        <div class="card-head">Add a plan</div>
-        <div class="row">
-          <select id="type">
-            <option value="date">Date</option>
-            <option value="assignment">Assignment</option>
-          </select>
-          <input id="title" placeholder="Title or Subject" />
-        </div>
-        <div class="row">
-          <input id="details" placeholder="Place or Details" />
-          <input id="date" type="date" aria-label="Date (MM/DD/YYYY)" />
-        </div>
-        <div class="row actions">
-          <button id="addBtn">Add</button>
-          <button id="postBtn">Post</button>
-          <button id="clearAll" class="ghost">Clear</button>
-        </div>
-        <div class="card-foot">
-          <input id="search" placeholder="Search..." />
-          <select id="filter">
-            <option value="all">All</option>
-            <option value="date">Dates</option>
-            <option value="assignment">Assignments</option>
-          </select>
-          <select id="sort">
-            <option value="dateAsc">Date ↑</option>
-            <option value="dateDesc">Date ↓</option>
-            <option value="titleAsc">Title A→Z</option>
-          </select>
-        </div>
-      </div>
+<script>
+const type = document.getElementById("type");
+const dateInput = document.getElementById("date");
+const title = document.getElementById("title");
+const details = document.getElementById("details");
+const addBtn = document.getElementById("addBtn");
+const postBtn = document.getElementById("postBtn");
+const posts = document.getElementById("posts");
 
-      <div class="share-card">
-        <div class="card-head">Share</div>
-        <div class="row">
-          <button id="exportBtn">Export</button>
-          <label for="importFile" class="import">Import</label>
-          <input type="file" id="importFile" accept=".json" />
-        </div>
-        <div class="notify-row">
-          <label class="switch">
-            <input type="checkbox" id="notifyToggle" />
-            <span class="slider"></span>
-          </label>
-          <div class="small">Browser reminders</div>
-        </div>
-      </div>
-    </aside>
+let plans = JSON.parse(localStorage.getItem("plans")) || [];
 
-    <section class="center">
-      <div class="list-head">
-        <div class="list-title">Schedules & Reminders</div>
-        <div class="counts" id="counts"></div>
-      </div>
-      <ul id="items" class="items"></ul>
-      <div class="posts-section">
-        <div class="posts-head">Shared Posts</div>
-        <div id="posts" class="posts"></div>
-      </div>
-    </section>
-
-    <aside class="right">
-      <div class="tips-card">
-        <div class="card-head">Tips</div>
-        <div class="tips">Add schedules and assignments. Use Post to share a cute card below. Turn on browser reminders to get notifications a day before.</div>
-      </div>
-    </aside>
-  </main>
-
-  <script>
-    const todayEl = document.getElementById("today")
-    const itemsEl = document.getElementById("items")
-    const addBtn = document.getElementById("addBtn")
-    const postBtn = document.getElementById("postBtn")
-    const clearAll = document.getElementById("clearAll")
-    const exportBtn = document.getElementById("exportBtn")
-    const importFile = document.getElementById("importFile")
-    const searchEl = document.getElementById("search")
-    const filterEl = document.getElementById("filter")
-    const sortEl = document.getElementById("sort")
-    const countsEl = document.getElementById("counts")
-    const notifyToggle = document.getElementById("notifyToggle")
-    const postsEl = document.getElementById("posts")
-
-    todayEl.textContent = new Date().toDateString()
-
-    let data = JSON.parse(localStorage.getItem("yk_data")) || { dates: [], assignments: [], posts: [] }
-
-    function save() { localStorage.setItem("yk_data", JSON.stringify(data)) }
-    function formatDate(d){ if(!d) return ""; return new Date(d+"T00:00:00").toLocaleDateString() }
-    function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7) }
-
-    function render(){
-      itemsEl.innerHTML = ""
-      const q = searchEl.value.trim().toLowerCase()
-      const f = filterEl.value
-      let list = [...data.dates.map(i=>({type:"date",...i})), ...data.assignments.map(i=>({type:"assignment",...i}))]
-      if(f!=="all") list = list.filter(l=>l.type===f)
-      if(q) list = list.filter(l=> (l.title+ " "+ (l.details||"")).toLowerCase().includes(q))
-      if(sortEl.value==="dateAsc") list.sort((a,b)=>(a.date||"").localeCompare(b.date||""))
-      if(sortEl.value==="dateDesc") list.sort((a,b)=>(b.date||"").localeCompare(a.date||""))
-      if(sortEl.value==="titleAsc") list.sort((a,b)=>a.title.localeCompare(b.title))
-      list.forEach(item=>{
-        const li = document.createElement("li")
-        li.className = "item "+item.type
-        li.innerHTML = '<div class="item-left"><div class="t">'+escapeHtml(item.title)+'</div><div class="d">'+escapeHtml(item.details||"")+'</div></div><div class="item-right"><div class="dt">'+(item.date?formatDate(item.date):"—")+'</div><div class="rowbt"><button class="edit">✎</button><button class="del">×</button></div></div>'
-        li.querySelector(".del").addEventListener("click",()=>{ removeItem(item.type,item.id) })
-        li.querySelector(".edit").addEventListener("click",()=>{ editItem(item) })
-        itemsEl.appendChild(li)
-      })
-      renderPosts()
-      updateCounts()
+function renderPlans() {
+  posts.innerHTML = "";
+  plans.forEach((p) => {
+    const div = document.createElement("div");
+    if (p.type === "date") {
+      div.className = "date-bubble";
+      div.textContent = `💗 ${p.title} on ${p.date} — ${p.details}`;
+    } else {
+      div.className = "assignment-note";
+      div.textContent = `📝 ${p.title} due ${p.date} — ${p.details}`;
     }
+    posts.appendChild(div);
+  });
+}
 
-    function updateCounts(){
-      const d = data.dates.length
-      const a = data.assignments.length
-      countsEl.textContent = `${d} Dates • ${a} Assignments`
-    }
+addBtn.onclick = () => {
+  if (!title.value || !dateInput.value) return alert("Please fill out all fields!");
+  plans.push({
+    type: type.value,
+    date: dateInput.value,
+    title: title.value,
+    details: details.value
+  });
+  localStorage.setItem("plans", JSON.stringify(plans));
+  title.value = details.value = "";
+  renderPlans();
+};
 
-    function addItem(type,title,details,date){
-      if(!title) return
-      const obj = { id: uid(), title, details, date }
-      if(type==="date") data.dates.push(obj) else data.assignments.push(obj)
-      save()
-      render()
-      checkRemindersNow()
-    }
+postBtn.onclick = () => {
+  renderPlans();
+  alert("Posted successfully 💞");
+};
 
-    function removeItem(type,id){
-      if(type==="date") data.dates = data.dates.filter(i=>i.id!==id)
-      else data.assignments = data.assignments.filter(i=>i.id!==id)
-      save()
-      render()
-    }
-
-    function editItem(item){
-      document.getElementById("type").value = item.type
-      document.getElementById("title").value = item.title
-      document.getElementById("details").value = item.details || ""
-      document.getElementById("date").value = item.date || ""
-      removeItem(item.type,item.id)
-    }
-
-    addBtn.addEventListener("click",()=>{
-      const type = document.getElementById("type").value
-      const title = document.getElementById("title").value.trim()
-      const details = document.getElementById("details").value.trim()
-      const date = document.getElementById("date").value
-      if(!title) return
-      addItem(type,title,details,date)
-      document.getElementById("title").value = ""
-      document.getElementById("details").value = ""
-      document.getElementById("date").value = ""
-    })
-
-    postBtn.addEventListener("click",()=>{
-      const type = document.getElementById("type").value
-      const title = document.getElementById("title").value.trim()
-      const details = document.getElementById("details").value.trim()
-      const date = document.getElementById("date").value
-      if(!title) return alert("Please add a title to post")
-      const post = { id: uid(), type, title, details, date, created: new Date().toISOString() }
-      data.posts.unshift(post)
-      save()
-      render()
-      document.getElementById("title").value = ""
-      document.getElementById("details").value = ""
-      document.getElementById("date").value = ""
-    })
-
-    function renderPosts(){
-      postsEl.innerHTML = ""
-      data.posts.forEach(p=>{
-        if(p.type==="date"){
-          const b = document.createElement("div")
-          b.className = "post-bubble"
-          b.innerHTML = '<div class="pb-date">'+formatDate(p.date)+'</div><div class="pb-body"><div class="pb-title">'+escapeHtml(p.title)+'</div><div class="pb-text">'+escapeHtml(p.details||"")+'</div></div><div class="pb-meta"><button class="remove-post">Remove</button></div>'
-          b.querySelector(".remove-post").addEventListener("click",()=>{ removePost(p.id) })
-          postsEl.appendChild(b)
-        } else {
-          const n = document.createElement("div")
-          n.className = "post-note"
-          n.innerHTML = '<div class="note-title">'+escapeHtml(p.title)+'</div><div class="note-date">'+(p.date?formatDate(p.date):"—")+'</div><div class="note-text">'+escapeHtml(p.details||"")+'</div><div class="note-meta"><button class="remove-post">Remove</button></div>'
-          n.querySelector(".remove-post").addEventListener("click",()=>{ removePost(p.id) })
-          postsEl.appendChild(n)
-        }
-      })
-    }
-
-    function removePost(id){
-      data.posts = data.posts.filter(x=>x.id!==id)
-      save()
-      render()
-    }
-
-    clearAll.addEventListener("click",()=>{
-      if(!confirm("Clear everything?")) return
-      data = { dates: [], assignments: [], posts: [] }
-      save()
-      render()
-    })
-
-    exportBtn.addEventListener("click",()=>{
-      try{
-        const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = "yui_and_koi_schedule.json"
-        document.body.appendChild(a)
-        a.click()
-        a.remove()
-        URL.revokeObjectURL(url)
-      }catch{
-        alert("Export failed")
-      }
-    })
-
-    importFile.addEventListener("change",(e)=>{
-      const f = e.target.files[0]
-      if(!f) return
-      const r = new FileReader()
-      r.onload = evt=>{
-        try{
-          const imp = JSON.parse(evt.target.result)
-          if(imp.dates && imp.assignments){
-            data = imp
-            save()
-            render()
-            alert("Imported")
-          } else alert("Invalid file")
-        }catch{ alert("Invalid JSON") }
-      }
-      r.readAsText(f)
-    })
-
-    searchEl.addEventListener("input", render)
-    filterEl.addEventListener("change", render)
-    sortEl.addEventListener("change", render)
-
-    function checkRemindersNow(){
-      const t = new Date()
-      const tomorrow = new Date(t); tomorrow.setDate(t.getDate()+1)
-      const tStr = tomorrow.toISOString().split("T")[0]
-      const upcoming = [...data.dates.filter(e=>e.date===tStr), ...data.assignments.filter(e=>e.date===tStr)]
-      if(upcoming.length){
-        let msg = "Reminders for tomorrow:\n"
-        upcoming.forEach(e=> msg += `• ${e.title} (${e.date})\n`)
-        alert(msg)
-        if(notifyToggle.checked && "Notification" in window){
-          if(Notification.permission==="granted"){
-            new Notification("Yui & Koi • Tomorrow", { body: upcoming.map(x=>x.title).join(", ") })
-          } else {
-            Notification.requestPermission().then(p=>{ if(p==="granted") new Notification("Yui & Koi • Tomorrow", { body: upcoming.map(x=>x.title).join(", ") }) })
-          }
-        }
-      }
-    }
-
-    function escapeHtml(s){ return (s||"").toString().replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])) }
-
-    function removeEmptyStringsFromData(){
-      data.dates = data.dates.filter(i=>i.title)
-      data.assignments = data.assignments.filter(i=>i.title)
-      save()
-    }
-
-    render()
-    setInterval(removeEmptyStringsFromData, 60000)
-    setInterval(checkRemindersNow, 1000*60*30)
-  </script>
+renderPlans();
+</script>
 </body>
 </html>
