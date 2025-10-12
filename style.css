@@ -10,10 +10,11 @@
 }
 
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter, Poppins, sans-serif;background:var(--pink-bg);-webkit-font-smoothing:antialiased}
+html,body{height:100%;margin:0;font-family:Poppins,Inter,sans-serif;background:var(--pink-bg);-webkit-font-smoothing:antialiased}
 .app{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
 .brand{font-weight:700;color:var(--muted);font-size:18px}
+.right-controls{display:flex;gap:8px}
 .pill{padding:8px 12px;border-radius:999px;border:0;background:var(--accent-pink);color:#fff;cursor:pointer;font-weight:600}
 .pill.accent{background:var(--accent-pink)}
 .app.green{background:var(--green-bg)}
@@ -44,7 +45,7 @@ html,body{height:100%;margin:0;font-family:Inter, Poppins, sans-serif;background
 
 /* Chat */
 .chat-window{background:#fff;border-radius:10px;padding:8px;max-height:28vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
-.chat-bubble{padding:8px 12px;border-radius:14px;color:#fff;max-width:75%;animation:fadeUp .25s}
+.chat-bubble{padding:8px 12px;border-radius:14px;color:#fff;max-width:75%;animation:fadeUp .25s;word-wrap:break-word}
 .chat-bubble.yui{background:var(--accent-pink);align-self:flex-start}
 .chat-bubble.koi{background:var(--accent-green);align-self:flex-end}
 
@@ -52,6 +53,7 @@ html,body{height:100%;margin:0;font-family:Inter, Poppins, sans-serif;background
 .game-wrap{background:linear-gradient(180deg,#fff7fb,#fff0f6);padding:8px;border-radius:12px;margin-top:8px}
 .game-setup{display:flex;gap:8px;align-items:center}
 .score-row{margin-top:8px;font-weight:700;color:var(--muted)}
+canvas{width:100%;border-radius:10px;background:#fff}
 
 /* misc */
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
