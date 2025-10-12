@@ -7,23 +7,23 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app" class="app pink">
+  <div id="app" class="app">
     <header class="topbar">
       <div class="brand">Yui & Koi</div>
-      <div class="mode-toggle">
+      <div class="right-controls">
         <button id="themeBtn" class="pill">Switch Theme</button>
       </div>
     </header>
 
     <main class="main">
+      <!-- HOME -->
       <section id="tab-home" class="tab active">
-        <div class="home-card">
+        <div class="panel home-card">
           <h2>Welcome 💞</h2>
           <div class="moniversary">
             <label>Moniversary (every month on the 5th)</label>
             <div id="daysLeft" class="days-left">—</div>
           </div>
-
           <div class="home-actions">
             <button id="toSchedule" class="bigbtn">🗓 Schedule</button>
             <button id="toChat" class="bigbtn">💬 Chat</button>
@@ -32,6 +32,7 @@
         </div>
       </section>
 
+      <!-- SCHEDULE -->
       <section id="tab-schedule" class="tab">
         <div class="panel">
           <h2>Shared Schedule</h2>
@@ -49,11 +50,11 @@
               <button id="sch-post" class="pill accent">Post</button>
             </div>
           </div>
-
           <div id="schedulesList" class="list"></div>
         </div>
       </section>
 
+      <!-- CHAT -->
       <section id="tab-chat" class="tab">
         <div class="panel">
           <h2>Chat</h2>
@@ -62,13 +63,16 @@
               <option value="Yui">💗 Yui</option>
               <option value="Koi">💚 Koi</option>
             </select>
-            <input id="chatInput" placeholder="Type message..." />
-            <button id="chatSend" class="pill">Send</button>
+            <div class="chat-row">
+              <input id="chatInput" placeholder="Type message..." />
+              <button id="chatSend" class="pill">Send</button>
+            </div>
           </div>
           <div id="chatWindow" class="chat-window"></div>
         </div>
       </section>
 
+      <!-- GAME -->
       <section id="tab-game" class="tab">
         <div class="panel">
           <h2>Chibi Dino Run</h2>
@@ -78,10 +82,12 @@
               <option value="yui">Yui (pink)</option>
               <option value="koi">Koi (green)</option>
             </select>
-            <button id="startGame" class="pill accent">Start</button>
-            <div class="score-row">Score: <span id="score">0</span> | Best: <span id="bestScore">0</span></div>
+            <div class="game-controls">
+              <button id="startGame" class="pill accent">Start</button>
+              <div class="score-row">Score: <span id="score">0</span> • Best: <span id="bestScore">0</span></div>
+            </div>
           </div>
-          <div id="gameCanvasWrap" class="game-wrap">
+          <div class="game-wrap">
             <canvas id="gameCanvas" width="320" height="140"></canvas>
           </div>
         </div>
