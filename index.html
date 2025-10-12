@@ -1,50 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yui & Koi 💞</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yui & Koi • Couple Hub</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <h1>💌 Yui & Koi 💌</h1>
+  <div id="app" class="app pink">
+    <header class="topbar">
+      <div class="brand">Yui & Koi</div>
+      <div class="mode-toggle">
+        <button id="themeBtn" class="pill">Switch Theme</button>
+      </div>
+    </header>
 
-    <div class="modes">
-      <button id="pinkMode">🌸 Koi Mode</button>
-      <button id="greenMode">🌿 Yui Mode</button>
-    </div>
+    <main class="main">
+      <section id="tab-home" class="tab active">
+        <div class="home-card">
+          <h2>Welcome 💞</h2>
+          <div class="moniversary">
+            <label>Moniversary (every month on the 5th)</label>
+            <div id="daysLeft" class="days-left">—</div>
+          </div>
 
-    <div class="days-left">
-      <h2>Days until Monsary</h2>
-      <input id="specialDate" type="date" />
-      <p id="daysDisplay">–</p>
-    </div>
+          <div class="home-actions">
+            <button id="toSchedule" class="bigbtn">🗓 Schedule</button>
+            <button id="toChat" class="bigbtn">💬 Chat</button>
+            <button id="toGame" class="bigbtn">🎮 Game</button>
+          </div>
+        </div>
+      </section>
 
-    <div class="input-area">
-      <input id="dateInput" type="date" />
-      <textarea id="noteInput" placeholder="Cute note or assignment..."></textarea>
-      <button id="addBtn">Add</button>
-      <button id="postBtn">Post</button>
-    </div>
+      <section id="tab-schedule" class="tab">
+        <div class="panel">
+          <h2>Shared Schedule</h2>
+          <div class="form-row">
+            <select id="sch-type">
+              <option value="date">Date</option>
+              <option value="assignment">Assignment</option>
+            </select>
+            <input id="sch-date" type="date" />
+            <input id="sch-title" placeholder="Title" />
+            <input id="sch-details" placeholder="Place / Details" />
+            <input id="sch-name" placeholder="Your name (Yui / Koi)" />
+            <div class="row-actions">
+              <button id="sch-add" class="pill">Add</button>
+              <button id="sch-post" class="pill accent">Post</button>
+            </div>
+          </div>
 
-    <div class="schedule-list" id="scheduleList"></div>
+          <div id="schedulesList" class="list"></div>
+        </div>
+      </section>
 
-    <div class="chat-box">
-      <h2>💬 Chat 💬</h2>
-      <div id="chatMessages"></div>
-      <input id="chatInput" placeholder="Type a cute message..." />
-      <button id="sendMsg">Send</button>
-    </div>
+      <section id="tab-chat" class="tab">
+        <div class="panel">
+          <h2>Chat</h2>
+          <div class="chat-controls">
+            <select id="chatSender">
+              <option value="Yui">💗 Yui</option>
+              <option value="Koi">💚 Koi</option>
+            </select>
+            <input id="chatInput" placeholder="Type message..." />
+            <button id="chatSend" class="pill">Send</button>
+          </div>
+          <div id="chatWindow" class="chat-window"></div>
+        </div>
+      </section>
 
-    <div class="game-box">
-      <h2>🎮 Mini Game 🎮</h2>
-      <button id="startGame">Start Game</button>
-      <div id="gameArea"></div>
-    </div>
+      <section id="tab-game" class="tab">
+        <div class="panel">
+          <h2>Chibi Dino Run</h2>
+          <div class="game-setup">
+            <label>Choose character:</label>
+            <select id="playerSelect">
+              <option value="yui">Yui (pink)</option>
+              <option value="koi">Koi (green)</option>
+            </select>
+            <button id="startGame" class="pill accent">Start</button>
+            <div class="score-row">Score: <span id="score">0</span> | Best: <span id="bestScore">0</span></div>
+          </div>
+          <div id="gameCanvasWrap" class="game-wrap">
+            <canvas id="gameCanvas" width="320" height="140"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button data-tab="home" class="navbtn active">🏠</button>
+      <button data-tab="schedule" class="navbtn">🗓</button>
+      <button data-tab="chat" class="navbtn">💬</button>
+      <button data-tab="game" class="navbtn">🎮</button>
+    </nav>
   </div>
 
-  <script type="module" src="app.js"></script>
-  <script type="module" src="game.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
