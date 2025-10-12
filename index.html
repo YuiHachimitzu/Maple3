@@ -3,23 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yui & Koi</title>
+  <title>Yui & Koi 💞</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
-    <h1>🌸 Yui & Koi Schedule 🌸</h1>
+    <h1>💌 Yui & Koi 💌</h1>
+
+    <div class="modes">
+      <button id="pinkMode">🌸 Yui Mode</button>
+      <button id="greenMode">🌿 Koi Mode</button>
+    </div>
+
+    <div class="days-left">
+      <h2>Days until Anniversary 💍</h2>
+      <input id="specialDate" type="date" />
+      <p id="daysDisplay">–</p>
+    </div>
 
     <div class="input-area">
       <input id="dateInput" type="date" />
-      <textarea id="noteInput" placeholder="Write your cute note or assignment here..."></textarea>
+      <textarea id="noteInput" placeholder="Cute note or assignment..."></textarea>
       <button id="addBtn">Add</button>
       <button id="postBtn">Post</button>
     </div>
 
     <div class="schedule-list" id="scheduleList"></div>
+
+    <div class="chat-box">
+      <h2>💬 Chat 💬</h2>
+      <div id="chatMessages"></div>
+      <input id="chatInput" placeholder="Type a cute message..." />
+      <button id="sendMsg">Send</button>
+    </div>
+
+    <div class="game-box">
+      <h2>🎮 Mini Game 🎮</h2>
+      <button id="startGame">Start Game</button>
+      <div id="gameArea"></div>
+    </div>
   </div>
 
   <script type="module" src="app.js"></script>
+  <script type="module" src="game.js"></script>
 </body>
 </html>
