@@ -1,66 +1,62 @@
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #ffe6f2;
-  display: flex;
-  justify-content: center;
-  padding: 30px;
-  transition: background 0.4s;
+:root{
+  --pink-bg: linear-gradient(135deg,#ffeaf2,#ffd6e8);
+  --green-bg: linear-gradient(135deg,#e6fff0,#d8fbe4);
+  --card: #fff;
+  --accent-pink:#ff80a5;
+  --accent-green:#5ec28d;
+  --muted:#6b4351;
+  --radius:14px;
+  --shadow: 0 8px 24px rgba(122,35,64,0.08);
 }
 
-.app {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 0 25px rgba(255, 182, 193, 0.6);
-  width: 400px;
-  padding: 25px;
-  text-align: center;
-}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter, Poppins, sans-serif;background:var(--pink-bg);-webkit-font-smoothing:antialiased}
+.app{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
+.brand{font-weight:700;color:var(--muted);font-size:18px}
+.pill{padding:8px 12px;border-radius:999px;border:0;background:var(--accent-pink);color:#fff;cursor:pointer;font-weight:600}
+.pill.accent{background:var(--accent-pink)}
+.app.green{background:var(--green-bg)}
+.app.green .pill{background:var(--accent-green)}
+.main{flex:1;padding:8px 16px 84px}
+.tab{display:none}
+.tab.active{display:block}
+.panel{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.home-card{padding:12px;text-align:center}
+.days-left{font-size:20px;font-weight:700;color:var(--muted);margin-top:8px}
+.home-actions{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.bigbtn{padding:12px 14px;border-radius:12px;border:0;background:var(--accent-pink);color:#fff;font-weight:700;cursor:pointer}
+.app.green .bigbtn{background:var(--accent-green)}
 
-button {
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
+.form-row, .game-setup, .chat-controls{display:flex;flex-direction:column;gap:8px}
+.form-row input, .form-row select, .chat-controls input, .chat-controls select{padding:8px;border-radius:10px;border:1px solid #ffe6f0;background:#fff;outline:none}
+.row-actions{display:flex;gap:8px;justify-content:flex-end}
+.row-actions .pill{padding:8px 12px}
+.list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow:auto;padding-right:6px}
+.schedule-item{background:linear-gradient(180deg,#fff6f9,#fff0f4);padding:12px;border-radius:12px;display:flex;justify-content:space-between;align-items:center}
+.schedule-item .meta{font-size:12px;color:#8a5867}
+.delete-btn{background:transparent;border:0;color:#ff6fa5;font-size:18px;cursor:pointer}
 
-#pinkMode { background: #ff9ecb; }
-#greenMode { background: #8ed1a6; }
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:rgba(255,255,255,0.95);padding:8px 12px;border-radius:30px;display:flex;gap:8px;box-shadow:var(--shadow)}
+.navbtn{background:transparent;border:0;padding:8px;font-size:18px;border-radius:10px;cursor:pointer}
+.navbtn.active{background:var(--accent-pink);color:#fff}
+.app.green .navbtn.active{background:var(--accent-green);color:#fff}
 
-button:hover {
-  opacity: 0.8;
-}
+/* Chat */
+.chat-window{background:#fff;border-radius:10px;padding:8px;max-height:28vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.chat-bubble{padding:8px 12px;border-radius:14px;color:#fff;max-width:75%;animation:fadeUp .25s}
+.chat-bubble.yui{background:var(--accent-pink);align-self:flex-start}
+.chat-bubble.koi{background:var(--accent-green);align-self:flex-end}
 
-.schedule-item, #chatMessages div {
-  background: #ffe0ec;
-  border-radius: 12px;
-  padding: 10px;
-  margin: 6px 0;
-}
+/* Game */
+.game-wrap{background:linear-gradient(180deg,#fff7fb,#fff0f6);padding:8px;border-radius:12px;margin-top:8px}
+.game-setup{display:flex;gap:8px;align-items:center}
+.score-row{margin-top:8px;font-weight:700;color:var(--muted)}
 
-.delete-btn {
-  float: right;
-  background: #ff6fa5;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  color: white;
-}
-
-#chatMessages {
-  max-height: 150px;
-  overflow-y: auto;
-  margin-bottom: 10px;
-}
-
-.game-box {
-  margin-top: 20px;
-}
-
-#gameArea button {
-  background: #ffb6c1;
-  border-radius: 50%;
-  padding: 15px;
-  position: absolute;
+/* misc */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:420px){
+  .main{padding:8px}
+  .panel{padding:12px}
+  .bottom-nav{padding:6px}
 }
