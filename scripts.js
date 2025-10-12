@@ -1,5 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCNiTqrSrxHtUOrjj0sJJSSskp1Ly3QS-Y",
@@ -13,64 +13,39 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const scheduleRef = ref(db, "schedules");
 
-const type = document.getElementById("type");
-const dateInput = document.getElementById("date");
-const title = document.getElementById("title");
-const details = document.getElementById("details");
 const addBtn = document.getElementById("addBtn");
 const postBtn = document.getElementById("postBtn");
-const posts = document.getElementById("posts");
-const nameInput = document.getElementById("name");
-
-function renderPlans(snapshot) {
-  posts.innerHTML = "";
-  snapshot.forEach((child) => {
-    const p = child.val();
-    const key = child.key;
-
-    const div = document.createElement("div");
-    const del = document.createElement("button");
-    del.textContent = "❌";
-    del.className = "delete-btn";
-    del.onclick = () => remove(ref(db, "plans/" + key));
-
-    if (p.type === "date") {
-      div.className = "date-bubble";
-      div.textContent = `💗 ${p.title} on ${p.date} — ${p.details} (by ${p.name})`;
-    } else {
-      div.className = "assignment-note";
-      div.textContent = `📝 ${p.title} due ${p.date} — ${p.details} (by ${p.name})`;
-    }
-
-    div.appendChild(del);
-    posts.appendChild(div);
-  });
-}
+const dateInput = document.getElementById("dateInput");
+const noteInput = document.getElementById("noteInput");
+const scheduleList = document.getElementById("scheduleList");
 
 addBtn.onclick = () => {
-  if (!title.value || !dateInput.value || !nameInput.value) {
-    alert("Please fill out all fields!");
-    return;
-  }
+  const date = dateInput.value;
+  const note = noteInput.value.trim();
+  if (!date || !note) return alert("Please fill both fields 🥺");
 
-  push(ref(db, "plans"), {
-    name: nameInput.value,
-    type: type.value,
-    date: dateInput.value,
-    title: title.value,
-    details: details.value
+  push(scheduleRef, { date, note });
+  noteInput.value = "";
+};
+
+postBtn.onclick = () => alert("Your cute post has been shared 💌");
+
+onValue(scheduleRef, (snapshot) => {
+  scheduleList.innerHTML = "";
+  snapshot.forEach((child) => {
+    const data = child.val();
+    const item = document.createElement("div");
+    item.className = "schedule-item";
+    item.innerHTML = `
+      <b>📅 ${data.date}</b><br>${data.note}
+      <button class="delete-btn" data-id="${child.key}">×</button>
+    `;
+    scheduleList.appendChild(item);
   });
 
-  title.value = "";
-  details.value = "";
-  nameInput.value = "";
-};
-
-postBtn.onclick = () => {
-  alert("Posted successfully 💞");
-};
-
-onValue(ref(db, "plans"), (snapshot) => {
-  renderPlans(snapshot);
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.onclick = () => remove(ref(db, "schedules/" + btn.dataset.id));
+  });
 });
