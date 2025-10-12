@@ -1,41 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz & Assignment Library</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="https://kit.fontawesome.com/a2e0e9b7c8.js" crossorigin="anonymous"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yui and Koi</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="glow-bg"></div>
 
-<header>
-  <div class="container">
-    <div class="logo">
-      <h1>My Quizzes</h1>
+  <header class="top">
+    <div class="brand">
+      <div class="logo">Y❤K</div>
+      <div class="titles">
+        <div class="main-title">Yui and Koi</div>
+        <div class="sub-title">our little universe</div>
+      </div>
     </div>
-    <button id="menu-btn" class="menu-btn"><i class="fa-solid fa-bars"></i></button>
-    <nav id="main-nav">
-      <a href="#" class="nav-btn active">Home</a>
-      <a href="#" class="nav-btn">Assignments</a>
-    </nav>
-  </div>
-</header>
+    <div class="today" id="today"></div>
+  </header>
 
-<main class="container">
-  <div class="search-container">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" id="search-input" placeholder="Search quizzes or assignments...">
-  </div>
+  <main class="app">
+    <aside class="left">
+      <div class="controls-card">
+        <div class="card-head">Add a plan</div>
+        <div class="row">
+          <select id="type">
+            <option value="date">Date</option>
+            <option value="assignment">Assignment</option>
+          </select>
+          <input id="title" placeholder="Title or Subject" />
+        </div>
+        <div class="row">
+          <input id="details" placeholder="Place or Details" />
+          <input id="date" type="date" />
+        </div>
+        <div class="row actions">
+          <button id="addBtn">Add</button>
+          <button id="clearAll" class="ghost">Clear</button>
+        </div>
+        <div class="card-foot">
+          <input id="search" placeholder="Search..." />
+          <select id="filter">
+            <option value="all">All</option>
+            <option value="date">Dates</option>
+            <option value="assignment">Assignments</option>
+          </select>
+          <select id="sort">
+            <option value="dateAsc">Date ↑</option>
+            <option value="dateDesc">Date ↓</option>
+            <option value="titleAsc">Title A→Z</option>
+          </select>
+        </div>
+      </div>
 
-  <div id="quiz-list" class="quiz-list"></div>
-  <div id="no-results-message" class="no-results-message">No results found</div>
-</main>
+      <div class="share-card">
+        <div class="card-head">Share</div>
+        <div class="row">
+          <button id="exportBtn">Export</button>
+          <label for="importFile" class="import">Import</label>
+          <input type="file" id="importFile" accept=".json" />
+        </div>
+        <div class="notify-row">
+          <label class="switch">
+            <input type="checkbox" id="notifyToggle" />
+            <span class="slider"></span>
+          </label>
+          <div class="small">Browser reminders</div>
+        </div>
+      </div>
+    </aside>
 
-<footer>
-  <p>&copy; <span id="current-time"></span> My Quizzes</p>
-</footer>
+    <section class="center">
+      <div class="list-head">
+        <div class="list-title">Schedules & Reminders</div>
+        <div class="counts" id="counts"></div>
+      </div>
+      <ul id="items" class="items"></ul>
+    </section>
 
-<script src="script.js"></script>
+    <aside class="right">
+      <div class="now-card">
+        <div class="card-head">Now Playing</div>
+        <div class="now-inner">
+          <div id="disc" class="disc" title="toggle play">
+            <div class="label"></div>
+          </div>
+          <div class="meta">
+            <div id="song-title" class="song-title">Take a Chance With Me — NIKI</div>
+            <div class="meta-controls">
+              <div class="buttons">
+                <button id="prevBtn" class="ctrl">⏮</button>
+                <button id="playBtn" class="ctrl">▶</button>
+                <button id="nextBtn" class="ctrl">⏭</button>
+              </div>
+              <div class="vol-row">
+                <input id="vol" type="range" min="0" max="100" value="60" />
+                <button id="repeatBtn" class="tiny">🔁</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tips-card">
+        <div class="card-head">Quick Tips</div>
+        <div class="tips">Tap the disc to play. Import/export to sync. Turn on browser reminders to get notifications a day before.</div>
+      </div>
+    </aside>
+  </main>
+
+  <div id="yt-player" style="display:none"></div>
+
+  <script>
+    const todayEl = document.getElementById("today")
+    const itemsEl = document.getElementById("items")
+    const addBtn = document.getElementById("addBtn")
+    const clearAll = document.getElementById("clearAll")
+    const exportBtn = document.getElementById("exportBtn")
+    const importFile = document.getElementById("importFile")
+    const searchEl = document.getElementById("search")
+    const filterEl = document.getElementById("filter")
+    const sortEl = document.getElementById("sort")
+    const countsEl = document.getElementById("counts")
+    const notifyToggle = document.getElementById("notifyToggle")
+    const disc = document.getElementById("disc")
+    const playBtn = document.getElementById("playBtn")
+    const prevBtn = document.getElementById("prevBtn")
+    const nextBtn = document.getElementById("nextBtn")
+    const songTitle = document.getElementById("song-title")
+    const volEl = document.getElementById("vol")
+    const repeatBtn = document.getElementById("repeatBtn")
+
+    todayEl.textContent = new Date().toDateString()
+
+    let data = JSON.parse(localStorage.getItem("yk_data")) || { dates: [], assignments: [] }
+    let playlist = [
+      { id: "iygXgP2nOF4", title: "Take a Chance With Me — NIKI" },
+      { id: "51zjlMhdSTE", title: "Espresso — Sabrina Carpenter" }
+    ]
+    let currentIndex = 0
+    let player
+    let isPlaying = false
+    let repeat = false
+
+    function save() { localStorage.setItem("yk_data", JSON.stringify(data)) }
+    function formatDate(d){ if(!d) return ""; return new Date(d+"T00:00:00").toLocaleDateString() }
+    function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7) }
+
+    function render(){
+      itemsEl.innerHTML = ""
+      const q = searchEl.value.trim().toLowerCase()
+      const f = filterEl.value
+      let list = [...data.dates.map(i=>({type:"date",...i})), ...data.assignments.map(i=>({type:"assignment",...i}))]
+      if(f!=="all") list = list.filter(l=>l.type===f)
+      if(q) list = list.filter(l=> (l.title+ " "+ (l.details||"")).toLowerCase().includes(q))
+      if(sortEl.value==="dateAsc") list.sort((a,b)=>(a.date||"").localeCompare(b.date||""))
+      if(sortEl.value==="dateDesc") list.sort((a,b)=>(b.date||"").localeCompare(a.date||""))
+      if(sortEl.value==="titleAsc") list.sort((a,b)=>a.title.localeCompare(b.title))
+      list.forEach(item=>{
+        const li = document.createElement("li")
+        li.className = "item "+item.type
+        li.innerHTML = '<div class="item-left"><div class="t">'+escapeHtml(item.title)+'</div><div class="d">'+escapeHtml(item.details||"")+'</div></div><div class="item-right"><div class="dt">'+(item.date?formatDate(item.date):"—")+'</div><div class="rowbt"><button class="edit">✎</button><button class="del">×</button></div></div>'
+        li.querySelector(".del").addEventListener("click",()=>{ removeItem(item.type,item.id) })
+        li.querySelector(".edit").addEventListener("click",()=>{ editItem(item) })
+        itemsEl.appendChild(li)
+      })
+      updateCounts()
+    }
+
+    function updateCounts(){
+      const d = data.dates.length
+      const a = data.assignments.length
+      countsEl.textContent = `${d} Dates • ${a} Assignments`
+    }
+
+    function addItem(type,title,details,date){
+      if(!title) return
+      const obj = { id: uid(), title, details, date }
+      if(type==="date") data.dates.push(obj) else data.assignments.push(obj)
+      save()
+      render()
+      checkRemindersNow()
+    }
+
+    function removeItem(type,id){
+      if(type==="date") data.dates = data.dates.filter(i=>i.id!==id)
+      else data.assignments = data.assignments.filter(i=>i.id!==id)
+      save()
+      render()
+    }
+
+    function editItem(item){
+      document.getElementById("type").value = item.type
+      document.getElementById("title").value = item.title
+      document.getElementById("details").value = item.details || ""
+      document.getElementById("date").value = item.date || ""
+      removeItem(item.type,item.id)
+    }
+
+    addBtn.addEventListener("click",()=>{
+      const type = document.getElementById("type").value
+      const title = document.getElementById("title").value.trim()
+      const details = document.getElementById("details").value.trim()
+      const date = document.getElementById("date").value
+      if(!title) return
+      addItem(type,title,details,date)
+      document.getElementById("title").value = ""
+      document.getElementById("details").value = ""
+      document.getElementById("date").value = ""
+    })
+
+    clearAll.addEventListener("click",()=>{
+      if(!confirm("Clear everything?")) return
+      data = { dates: [], assignments: [] }
+      save()
+      render()
+    })
+
+    exportBtn.addEventListener("click",()=>{
+      const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "yui_and_koi_schedule.json"
+      a.click()
+      URL.revokeObjectURL(url)
+    })
+
+    importFile.addEventListener("change",(e)=>{
+      const f = e.target.files[0]
+      if(!f) return
+      const r = new FileReader()
+      r.onload = evt=>{
+        try{
+          const imp = JSON.parse(evt.target.result)
+          if(imp.dates && imp.assignments){ data = imp; save(); render(); alert("Imported") } else alert("Invalid file")
+        }catch{ alert("Invalid JSON") }
+      }
+      r.readAsText(f)
+    })
+
+    searchEl.addEventListener("input", render)
+    filterEl.addEventListener("change", render)
+    sortEl.addEventListener("change", render)
+
+    function checkRemindersNow(){
+      const t = new Date()
+      const tomorrow = new Date(t); tomorrow.setDate(t.getDate()+1)
+      const tStr = tomorrow.toISOString().split("T")[0]
+      const upcoming = [...data.dates.filter(e=>e.date===tStr), ...data.assignments.filter(e=>e.date===tStr)]
+      if(upcoming.length){
+        let msg = "Reminders for tomorrow:\n"
+        upcoming.forEach(e=> msg += `• ${e.title} (${e.date})\n`)
+        alert(msg)
+        if(notifyToggle.checked && "Notification" in window){
+          if(Notification.permission==="granted"){
+            new Notification("Yui & Koi • Tomorrow", { body: upcoming.map(x=>x.title).join(", ") })
+          } else {
+            Notification.requestPermission().then(p=>{ if(p==="granted") new Notification("Yui & Koi • Tomorrow", { body: upcoming.map(x=>x.title).join(", ") }) })
+          }
+        }
+      }
+    }
+
+    function escapeHtml(s){ return (s||"").toString().replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])) }
+
+    function removeEmptyStringsFromData(){
+      data.dates = data.dates.filter(i=>i.title)
+      data.assignments = data.assignments.filter(i=>i.title)
+      save()
+    }
+
+    render()
+    setInterval(removeEmptyStringsFromData, 60000)
+    setInterval(checkRemindersNow, 1000*60*30)
+
+    (function loadYT(){
+      const s = document.createElement("script")
+      s.src = "https://www.youtube.com/iframe_api"
+      document.head.appendChild(s)
+    })()
+
+    function onYouTubeIframeAPIReady(){
+      player = new YT.Player("yt-player",{
+        height:"0", width:"0",
+        videoId: playlist[currentIndex].id,
+        playerVars: { controls:0, rel:0, modestbranding:1, iv_load_policy:3 },
+        events: { onReady:onPlayerReady, onStateChange:onPlayerStateChange }
+      })
+    }
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady
+
+    function onPlayerReady(){
+      updateMeta()
+      player.setVolume(Number(volEl.value))
+      player.cueVideoById(playlist[currentIndex].id)
+    }
+
+    function onPlayerStateChange(e){
+      if(e.data===1){ isPlaying=true; playBtn.textContent="⏸"; disc.classList.add("spin") }
+      else if(e.data===2){ isPlaying=false; playBtn.textContent="▶"; disc.classList.remove("spin") }
+      else if(e.data===0){ if(repeat) player.playVideo(); else nextTrack() }
+    }
+
+    function playPause(){ if(!player) return; if(isPlaying) player.pauseVideo(); else player.playVideo() }
+
+    function loadTrack(i,autoplay){
+      currentIndex = (i + playlist.length) % playlist.length
+      const id = playlist[currentIndex].id
+      if(player && player.cueVideoById){ player.cueVideoById(id); updateMeta(); if(autoplay) player.playVideo() }
+    }
+
+    function nextTrack(){ loadTrack(currentIndex+1,true) }
+    function prevTrack(){ loadTrack(currentIndex-1,true) }
+
+    function updateMeta(){
+      songTitle.textContent = playlist[currentIndex].title
+      const label = disc.querySelector(".label")
+      label.textContent = playlist[currentIndex].title
+    }
+
+    playBtn.addEventListener("click", ()=>{ playPause() })
+    disc.addEventListener("click", ()=>{ playBtn.click() })
+    nextBtn.addEventListener("click", nextTrack)
+    prevBtn.addEventListener("click", prevTrack)
+
+    volEl.addEventListener("input", ()=>{ if(player) player.setVolume(Number(volEl.value)) })
+
+    repeatBtn.addEventListener("click", ()=>{
+      repeat = !repeat
+      repeatBtn.classList.toggle("active", repeat)
+    })
+
+    document.addEventListener("keydown", e=>{
+      if(e.key===" "){ e.preventDefault(); playPause() }
+    })
+  </script>
 </body>
-</html>
+  </html>
