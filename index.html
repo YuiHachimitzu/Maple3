@@ -1,159 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Yui and Koi</title>
-<style>
-* {
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-body {
-  background: linear-gradient(135deg, #ffe6f2, #ffd6e8);
-  color: #333;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.container {
-  width: 90%;
-  max-width: 600px;
-  background: #fff;
-  border-radius: 25px;
-  padding: 20px;
-  margin-top: 30px;
-  box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
-}
-h1 {
-  text-align: center;
-  color: #ff69b4;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 15px;
-}
-.add-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-input, select, button {
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 15px;
-}
-input, select {
-  background: #ffeaf2;
-}
-button {
-  background: #ff8fb1;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  background: #ff6f91;
-}
-.posts {
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.date-bubble {
-  align-self: flex-start;
-  background: #ffb6c1;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 20px 20px 20px 0;
-  box-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
-  animation: fadeIn 0.5s ease;
-}
-.assignment-note {
-  background: #fff3cd;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
-  transform: rotate(-1deg);
-  animation: pop 0.4s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes pop {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yui and Koi</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="container">
-  <h1>🌸 Yui and Koi 🌸</h1>
-  <div class="add-section">
-    <select id="type">
-      <option value="date">Date 💞</option>
-      <option value="assignment">Assignment 📝</option>
-    </select>
-    <input type="date" id="date" />
-    <input type="text" id="title" placeholder="Title or subject..." />
-    <input type="text" id="details" placeholder="Place or details..." />
-    <div style="display:flex; gap:10px;">
-      <button id="addBtn">Add</button>
-      <button id="postBtn">Post</button>
+  <div class="container">
+    <h1>🌸 Yui and Koi 🌸</h1>
+    <div class="add-section">
+      <select id="type">
+        <option value="date">Date 💞</option>
+        <option value="assignment">Assignment 📝</option>
+      </select>
+      <input type="date" id="date" />
+      <input type="text" id="title" placeholder="Title or subject..." />
+      <input type="text" id="details" placeholder="Place or details..." />
+      <div style="display:flex; gap:10px;">
+        <button id="addBtn">Add</button>
+        <button id="postBtn">Post</button>
+      </div>
     </div>
+    <div class="posts" id="posts"></div>
   </div>
-  <div class="posts" id="posts"></div>
-</div>
 
-<script>
-const type = document.getElementById("type");
-const dateInput = document.getElementById("date");
-const title = document.getElementById("title");
-const details = document.getElementById("details");
-const addBtn = document.getElementById("addBtn");
-const postBtn = document.getElementById("postBtn");
-const posts = document.getElementById("posts");
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const type = document.getElementById("type");
+    const dateInput = document.getElementById("date");
+    const title = document.getElementById("title");
+    const details = document.getElementById("details");
+    const addBtn = document.getElementById("addBtn");
+    const postBtn = document.getElementById("postBtn");
+    const posts = document.getElementById("posts");
 
-let plans = JSON.parse(localStorage.getItem("plans")) || [];
+    let plans = JSON.parse(localStorage.getItem("plans")) || [];
 
-function renderPlans() {
-  posts.innerHTML = "";
-  plans.forEach((p) => {
-    const div = document.createElement("div");
-    if (p.type === "date") {
-      div.className = "date-bubble";
-      div.textContent = `💗 ${p.title} on ${p.date} — ${p.details}`;
-    } else {
-      div.className = "assignment-note";
-      div.textContent = `📝 ${p.title} due ${p.date} — ${p.details}`;
+    function renderPlans() {
+      posts.innerHTML = "";
+      plans.forEach((p) => {
+        const div = document.createElement("div");
+        if (p.type === "date") {
+          div.className = "date-bubble";
+          div.textContent = `💗 ${p.title} on ${p.date} — ${p.details}`;
+        } else {
+          div.className = "assignment-note";
+          div.textContent = `📝 ${p.title} due ${p.date} — ${p.details}`;
+        }
+        posts.appendChild(div);
+      });
     }
-    posts.appendChild(div);
+
+    addBtn.addEventListener("click", () => {
+      if (!title.value || !dateInput.value) return alert("Please fill out all fields!");
+      plans.push({
+        type: type.value,
+        date: dateInput.value,
+        title: title.value,
+        details: details.value
+      });
+      localStorage.setItem("plans", JSON.stringify(plans));
+      title.value = details.value = "";
+      renderPlans();
+    });
+
+    postBtn.addEventListener("click", () => {
+      renderPlans();
+      alert("Posted successfully 💞");
+    });
+
+    renderPlans();
   });
-}
-
-addBtn.onclick = () => {
-  if (!title.value || !dateInput.value) return alert("Please fill out all fields!");
-  plans.push({
-    type: type.value,
-    date: dateInput.value,
-    title: title.value,
-    details: details.value
-  });
-  localStorage.setItem("plans", JSON.stringify(plans));
-  title.value = details.value = "";
-  renderPlans();
-};
-
-postBtn.onclick = () => {
-  renderPlans();
-  alert("Posted successfully 💞");
-};
-
-renderPlans();
-</script>
+  </script>
 </body>
 </html>
