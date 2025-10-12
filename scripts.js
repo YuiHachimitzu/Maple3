@@ -1,3 +1,20 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 const type = document.getElementById("type");
 const dateInput = document.getElementById("date");
 const title = document.getElementById("title");
@@ -6,15 +23,11 @@ const addBtn = document.getElementById("addBtn");
 const postBtn = document.getElementById("postBtn");
 const posts = document.getElementById("posts");
 
-let plans = JSON.parse(localStorage.getItem("plans")) || [];
-
-function savePlans() {
-  localStorage.setItem("plans", JSON.stringify(plans));
-}
-
-function renderPlans() {
+function renderPlans(snapshot) {
   posts.innerHTML = "";
-  plans.forEach((p, i) => {
+  snapshot.forEach((child) => {
+    const p = child.val();
+    const key = child.key;
     const div = document.createElement("div");
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "❌";
@@ -22,11 +35,7 @@ function renderPlans() {
     deleteBtn.style.border = "none";
     deleteBtn.style.background = "transparent";
     deleteBtn.style.cursor = "pointer";
-    deleteBtn.onclick = () => {
-      plans.splice(i, 1);
-      savePlans();
-      renderPlans();
-    };
+    deleteBtn.onclick = () => remove(ref(db, "plans/" + key));
 
     if (p.type === "date") {
       div.className = "date-bubble";
@@ -46,21 +55,22 @@ addBtn.onclick = () => {
     alert("Please fill out all fields!");
     return;
   }
-  plans.push({
+
+  push(ref(db, "plans"), {
     type: type.value,
     date: dateInput.value,
     title: title.value,
     details: details.value
   });
-  savePlans();
+
   title.value = "";
   details.value = "";
-  renderPlans();
 };
 
 postBtn.onclick = () => {
-  renderPlans();
   alert("Posted successfully 💞");
 };
 
-renderPlans();
+onValue(ref(db, "plans"), (snapshot) => {
+  renderPlans(snapshot);
+});
