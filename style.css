@@ -1,74 +1,66 @@
 body {
-  background-color: #ffe6f2;
   font-family: 'Poppins', sans-serif;
+  background-color: #ffe6f2;
   display: flex;
   justify-content: center;
   padding: 30px;
+  transition: background 0.4s;
 }
 
 .app {
   background: white;
   border-radius: 20px;
   box-shadow: 0 0 25px rgba(255, 182, 193, 0.6);
-  width: 380px;
+  width: 400px;
   padding: 25px;
   text-align: center;
 }
 
-h1 {
-  color: #ff6fa5;
-  font-size: 22px;
-}
-
-.input-area {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input, textarea {
-  padding: 10px;
-  border-radius: 10px;
-  border: 2px solid #ffb6c1;
-}
-
 button {
-  background-color: #ff9ecb;
   border: none;
   border-radius: 10px;
   padding: 10px;
-  font-weight: bold;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
+
+#pinkMode { background: #ff9ecb; }
+#greenMode { background: #8ed1a6; }
 
 button:hover {
-  background-color: #ff6fa5;
+  opacity: 0.8;
 }
 
-.schedule-list {
-  margin-top: 20px;
-  text-align: left;
-}
-
-.schedule-item {
-  background-color: #ffe0ec;
+.schedule-item, #chatMessages div {
+  background: #ffe0ec;
   border-radius: 12px;
   padding: 10px;
-  margin-bottom: 10px;
-  position: relative;
+  margin: 6px 0;
 }
 
 .delete-btn {
-  position: absolute;
-  right: 10px;
-  top: 8px;
+  float: right;
   background: #ff6fa5;
-  color: white;
-  border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  color: white;
+}
+
+#chatMessages {
+  max-height: 150px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.game-box {
+  margin-top: 20px;
+}
+
+#gameArea button {
+  background: #ffb6c1;
+  border-radius: 50%;
+  padding: 15px;
+  position: absolute;
 }
