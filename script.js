@@ -17,17 +17,16 @@ const schedulesRef = ref(db, "schedules");
 const chatRef = ref(db, "chat");
 const scoresRef = ref(db, "scores");
 
-// UI refs
+// UI refs and helpers
 const appRoot = document.getElementById("app");
 const tabs = Array.from(document.querySelectorAll(".tab"));
 const navBtns = Array.from(document.querySelectorAll(".navbtn"));
 const themeBtn = document.getElementById("themeBtn");
-
 const toSchedule = document.getElementById("toSchedule");
 const toChat = document.getElementById("toChat");
 const toGame = document.getElementById("toGame");
 
-// Schedule elements
+// schedule elements
 const schType = document.getElementById("sch-type");
 const schDate = document.getElementById("sch-date");
 const schTitle = document.getElementById("sch-title");
@@ -37,35 +36,31 @@ const schAdd = document.getElementById("sch-add");
 const schPost = document.getElementById("sch-post");
 const schedulesList = document.getElementById("schedulesList");
 
-// Chat elements
+// chat elements
 const chatSender = document.getElementById("chatSender");
 const chatInput = document.getElementById("chatInput");
 const chatSend = document.getElementById("chatSend");
 const chatWindow = document.getElementById("chatWindow");
 
-// Game elements
+// game elements
 const playerSelect = document.getElementById("playerSelect");
 const startGameBtn = document.getElementById("startGame");
 const canvas = document.getElementById("gameCanvas");
 const scoreEl = document.getElementById("score");
 const bestEl = document.getElementById("bestScore");
 
+// theme
 let theme = localStorage.getItem("yk_theme") || "pink";
 applyTheme(theme);
+themeBtn.onclick = () => { theme = theme === "pink" ? "green" : "pink"; applyTheme(theme); };
 
 function applyTheme(t){
-  if(t==="green"){ appRoot.classList.remove("pink"); appRoot.classList.add("green"); document.body.style.background = "linear-gradient(135deg,#e6fff0,#d8fbe4)"; }
-  else { appRoot.classList.remove("green"); appRoot.classList.add("pink"); document.body.style.background = "linear-gradient(135deg,#ffeaf2,#ffd6e8)"; }
+  if(t==="green"){ appRoot.classList.add("green"); document.body.style.background = "linear-gradient(135deg,#e6fff0,#d8fbe4)"; }
+  else { appRoot.classList.remove("green"); document.body.style.background = "linear-gradient(135deg,#ffeaf2,#ffd6e8)"; }
   localStorage.setItem("yk_theme", t);
 }
 
-// Theme toggle
-themeBtn.onclick = () => {
-  theme = theme === "pink" ? "green" : "pink";
-  applyTheme(theme);
-};
-
-// bottom nav
+// tabs nav
 navBtns.forEach(b=>{
   b.onclick = ()=>{
     navBtns.forEach(x=>x.classList.remove("active"));
@@ -74,27 +69,24 @@ navBtns.forEach(b=>{
     tabs.forEach(t=> t.id === `tab-${tabName}` ? t.classList.add("active") : t.classList.remove("active"));
   };
 });
-
-// quick nav
+function navigateTo(n){ navBtns.forEach(x=> x.classList.toggle("active", x.dataset.tab===n)); tabs.forEach(t=> t.id===`tab-${n}`? t.classList.add("active"): t.classList.remove("active")); }
 toSchedule.onclick = ()=> navigateTo("schedule");
 toChat.onclick = ()=> navigateTo("chat");
 toGame.onclick = ()=> navigateTo("game");
-function navigateTo(n){ navBtns.forEach(x=> x.classList.toggle("active", x.dataset.tab===n)); tabs.forEach(t=> t.id===`tab-${n}`? t.classList.add("active"): t.classList.remove("active")); }
 
-// MONIVERSARY: every month on 5th
+// moniversary (5th)
 const daysLeftEl = document.getElementById("daysLeft");
 function updateDaysLeft(){
   const now = new Date();
-  const year = now.getFullYear();
-  let target = new Date(year, now.getMonth(), 5);
-  if(target <= now) { target = new Date(year, now.getMonth()+1, 5); }
+  let target = new Date(now.getFullYear(), now.getMonth(), 5);
+  if(target <= now) target = new Date(now.getFullYear(), now.getMonth()+1, 5);
   const diff = Math.ceil((target - now) / (1000*60*60*24));
   daysLeftEl.textContent = diff>0 ? `${diff} days left 💖` : "🎉 It's today!";
 }
 updateDaysLeft();
-setInterval(updateDaysLeft, 1000*60*60);
+setInterval(updateDaysLeft, 60*60*1000);
 
-// SCHEDULE: add / post / list / delete
+// SCHEDULE: push/list/delete
 schAdd.onclick = () => {
   if(!schTitle.value || !schDate.value || !schName.value) return alert("Please fill Title, Date and Name");
   const obj = { type: schType.value, title: schTitle.value, details: schDetails.value||"", date: schDate.value, name: schName.value, createdAt: Date.now() };
@@ -121,10 +113,17 @@ onValue(schedulesRef, snapshot=>{
       </div>`;
     schedulesList.appendChild(el);
   });
-  document.querySelectorAll(".delete-btn").forEach(btn=> btn.onclick = ()=> remove(ref(db, "schedules/"+btn.dataset.key)));
+  // attach delete handlers
+  document.querySelectorAll(".delete-btn").forEach(btn=>{
+    btn.onclick = ()=> {
+      const k = btn.dataset.key;
+      if(!confirm("Delete this post?")) return;
+      remove(ref(db, "schedules/"+k));
+    };
+  });
 });
 
-// CHAT: send / render with sender color
+// CHAT: send & render with sender color
 chatSend.onclick = ()=>{
   const txt = chatInput.value.trim();
   const sender = chatSender.value || "Yui";
@@ -138,87 +137,122 @@ onValue(chatRef, snap=>{
   snap.forEach(child=>{
     const msg = child.val();
     const bubble = document.createElement("div");
-    bubble.className = `chat-bubble ${msg.sender.toLowerCase()}`;
+    const cls = (msg.sender || "Yui").toLowerCase() === "koi" ? "koi" : "yui";
+    bubble.className = `chat-bubble ${cls}`;
     bubble.innerHTML = `<strong>${escapeHtml(msg.sender)}</strong>: ${escapeHtml(msg.text)}`;
     chatWindow.appendChild(bubble);
   });
   chatWindow.scrollTop = chatWindow.scrollHeight;
 });
 
-// GAME: simplified Chrome-dino style with character choice
+// GAME: improved scoring and random spawn
 const ctx = canvas.getContext("2d");
 let running = false;
-let gameState = { playerY: 100, vy:0, gravity:0.6, jump:-10, score:0, obstacles:[], frame:0 };
-let bestScoreLocal = 0;
+let gameState = null;
+let bestLocal = Number(localStorage.getItem("yk_best")) || 0;
+bestEl.textContent = bestLocal;
 
 startGameBtn.onclick = ()=> startGame();
 
 onValue(scoresRef, snap=>{
-  let best = 0;
-  snap.forEach(s=> { const v = s.val(); if(v.score>best) best = v.score; });
-  bestScoreLocal = best;
-  bestEl.textContent = bestScoreLocal;
+  // update displayed best from DB
+  let best = bestLocal;
+  snap.forEach(child => { const v = child.val(); if(v.score > best) best = v.score; });
+  bestEl.textContent = best;
 });
 
 function startGame(){
   if(running) return;
   running = true;
-  gameState = { playerY: 100, vy:0, gravity:0.6, jump:-10, score:0, obstacles:[], frame:0 };
+  gameState = { y: 100, vy:0, gravity:0.7, jump:-11, score:0, obstacles:[], frame:0, spawnTimer:0, spawnInterval: Math.floor(80 + Math.random()*120) };
   scoreEl.textContent = "0";
   const player = playerSelect.value;
-  let loop = setInterval(()=>{
-    updateGame();
+  canvas.focus();
+  let lastTime = performance.now();
+  function loop(t){
+    if(!running) return endGame();
+    const dt = t - lastTime; lastTime = t;
+    updateGame(dt);
     drawGame(player);
-    if(!running){
-      clearInterval(loop);
-      const name = prompt("Game over! Enter your name to save score:", player) || player;
-      push(scoresRef, { name, score: gameState.score, ts: Date.now(), player });
-      running = false;
-    }
-  }, 30);
-  canvas.onclick = ()=> {
-    if(gameState.playerY >= 100) gameState.vy = gameState.jump;
-  };
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.onclick = ()=> { if(gameState.y >= 100) gameState.vy = gameState.jump; };
+  document.addEventListener("keydown", keyJump);
 }
 
-function updateGame(){
-  gameState.frame++;
-  gameState.vy += gameState.gravity;
-  gameState.playerY += gameState.vy;
-  if(gameState.playerY > 100) { gameState.playerY = 100; gameState.vy = 0; }
-  if(gameState.frame % 60 === 0){
-    gameState.obstacles.push({ x: 340, w: 18, h: 24 });
+function keyJump(e){
+  if(e.code === "Space" || e.code === "ArrowUp") {
+    if(gameState && gameState.y >= 100) gameState.vy = gameState.jump;
   }
-  gameState.obstacles.forEach(o=> o.x -= 6);
-  gameState.obstacles = gameState.obstacles.filter(o=> o.x + o.w > -10);
-  // collision
-  gameState.obstacles.forEach(o=>{
-    const px = 40, py = gameState.playerY;
-    if(px + 20 > o.x && px < o.x + o.w && py + 20 > 140 - o.h){
+}
+
+function updateGame(dt){
+  gameState.frame++;
+  gameState.spawnTimer++;
+  gameState.vy += gameState.gravity;
+  gameState.y += gameState.vy;
+  if(gameState.y > 100){ gameState.y = 100; gameState.vy = 0; }
+
+  // random spawn: occasional clusters or single cactus
+  if(gameState.spawnTimer >= gameState.spawnInterval){
+    // reset spawn timer and randomize next interval
+    gameState.spawnTimer = 0;
+    gameState.spawnInterval = Math.floor(50 + Math.random()*140);
+    // spawn 1-2 obstacles: possibly create a small cluster
+    const count = Math.random() < 0.25 ? 2 : 1;
+    for(let i=0;i<count;i++){
+      const offset = i * (30 + Math.random()*20);
+      gameState.obstacles.push({ x: canvas.width + offset, w: 18, h: 18 + Math.floor(Math.random()*30) });
+    }
+  }
+
+  // move obstacles and check collisions
+  for(let o of gameState.obstacles) o.x -= 6 + Math.min(6, Math.floor(gameState.score/50));
+  // remove off-screen
+  gameState.obstacles = gameState.obstacles.filter(o => o.x + o.w > -20);
+
+  // collision detection
+  for(let o of gameState.obstacles){
+    const px = 40, py = gameState.y;
+    if(px + 18 > o.x && px < o.x + o.w && py + 18 > 140 - o.h){
       running = false;
     }
-  });
+  }
+
+  // scoring: +1 per frame window / 6, bonus for near-miss
   gameState.score = Math.floor(gameState.frame / 6);
   scoreEl.textContent = gameState.score;
 }
 
 function drawGame(player){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  // scale to canvas size
+  const W = canvas.width, H = canvas.height;
   // ground
-  ctx.fillStyle = "#eed1df";
-  ctx.fillRect(0, 120, canvas.width, 20);
-  // player (simple chibi: circle head + body)
-  if(player === "yui") ctx.fillStyle = "#ff9ecb"; else ctx.fillStyle = "#8ed1a6";
-  ctx.beginPath();
-  ctx.arc(40, gameState.playerY - 6, 10, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillRect(33, gameState.playerY+4, 14, 18);
+  ctx.fillStyle = "#eed1df"; ctx.fillRect(0, 120, W, 20);
+  // player (simple chibi)
+  ctx.fillStyle = player === "yui" ? "#ff9ecb" : "#8ed1a6";
+  ctx.beginPath(); ctx.arc(40, gameState.y - 6, 10, 0, Math.PI*2); ctx.fill();
+  ctx.fillRect(33, gameState.y+4, 14, 18);
   // obstacles
   ctx.fillStyle = "#7a2340";
-  gameState.obstacles.forEach(o=>{
+  for(let o of gameState.obstacles){
     ctx.fillRect(o.x, 140 - o.h, o.w, o.h);
-  });
+  }
 }
 
-// escaping helper
+function endGame(){
+  // cleanup
+  document.removeEventListener("keydown", keyJump);
+  const finalScore = gameState.score;
+  scoreEl.textContent = finalScore;
+  running = false;
+  // save locally and to firebase
+  if(finalScore > bestLocal){ bestLocal = finalScore; localStorage.setItem("yk_best", bestLocal); bestEl.textContent = bestLocal; }
+  push(scoresRef, { name: playerSelect.value, score: finalScore, ts: Date.now() });
+  alert(`Game over! Score: ${finalScore} 💗`);
+}
+
+// helper
 function escapeHtml(s){ return (s||"").toString().replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
