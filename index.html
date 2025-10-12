@@ -33,10 +33,11 @@
         </div>
         <div class="row">
           <input id="details" placeholder="Place or Details" />
-          <input id="date" type="date" />
+          <input id="date" type="date" aria-label="Date (MM/DD/YYYY)" />
         </div>
         <div class="row actions">
           <button id="addBtn">Add</button>
+          <button id="postBtn">Post</button>
           <button id="clearAll" class="ghost">Clear</button>
         </div>
         <div class="card-foot">
@@ -77,45 +78,25 @@
         <div class="counts" id="counts"></div>
       </div>
       <ul id="items" class="items"></ul>
+      <div class="posts-section">
+        <div class="posts-head">Shared Posts</div>
+        <div id="posts" class="posts"></div>
+      </div>
     </section>
 
     <aside class="right">
-      <div class="now-card">
-        <div class="card-head">Now Playing</div>
-        <div class="now-inner">
-          <div id="disc" class="disc" title="toggle play">
-            <div class="label"></div>
-          </div>
-          <div class="meta">
-            <div id="song-title" class="song-title">Take a Chance With Me — NIKI</div>
-            <div class="meta-controls">
-              <div class="buttons">
-                <button id="prevBtn" class="ctrl">⏮</button>
-                <button id="playBtn" class="ctrl">▶</button>
-                <button id="nextBtn" class="ctrl">⏭</button>
-              </div>
-              <div class="vol-row">
-                <input id="vol" type="range" min="0" max="100" value="60" />
-                <button id="repeatBtn" class="tiny">🔁</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="tips-card">
-        <div class="card-head">Quick Tips</div>
-        <div class="tips">Tap the disc to play. Import/export to sync. Turn on browser reminders to get notifications a day before.</div>
+        <div class="card-head">Tips</div>
+        <div class="tips">Add schedules and assignments. Use Post to share a cute card below. Turn on browser reminders to get notifications a day before.</div>
       </div>
     </aside>
   </main>
-
-  <div id="yt-player" style="display:none"></div>
 
   <script>
     const todayEl = document.getElementById("today")
     const itemsEl = document.getElementById("items")
     const addBtn = document.getElementById("addBtn")
+    const postBtn = document.getElementById("postBtn")
     const clearAll = document.getElementById("clearAll")
     const exportBtn = document.getElementById("exportBtn")
     const importFile = document.getElementById("importFile")
@@ -124,25 +105,11 @@
     const sortEl = document.getElementById("sort")
     const countsEl = document.getElementById("counts")
     const notifyToggle = document.getElementById("notifyToggle")
-    const disc = document.getElementById("disc")
-    const playBtn = document.getElementById("playBtn")
-    const prevBtn = document.getElementById("prevBtn")
-    const nextBtn = document.getElementById("nextBtn")
-    const songTitle = document.getElementById("song-title")
-    const volEl = document.getElementById("vol")
-    const repeatBtn = document.getElementById("repeatBtn")
+    const postsEl = document.getElementById("posts")
 
     todayEl.textContent = new Date().toDateString()
 
-    let data = JSON.parse(localStorage.getItem("yk_data")) || { dates: [], assignments: [] }
-    let playlist = [
-      { id: "iygXgP2nOF4", title: "Take a Chance With Me — NIKI" },
-      { id: "51zjlMhdSTE", title: "Espresso — Sabrina Carpenter" }
-    ]
-    let currentIndex = 0
-    let player
-    let isPlaying = false
-    let repeat = false
+    let data = JSON.parse(localStorage.getItem("yk_data")) || { dates: [], assignments: [], posts: [] }
 
     function save() { localStorage.setItem("yk_data", JSON.stringify(data)) }
     function formatDate(d){ if(!d) return ""; return new Date(d+"T00:00:00").toLocaleDateString() }
@@ -166,6 +133,7 @@
         li.querySelector(".edit").addEventListener("click",()=>{ editItem(item) })
         itemsEl.appendChild(li)
       })
+      renderPosts()
       updateCounts()
     }
 
@@ -211,21 +179,67 @@
       document.getElementById("date").value = ""
     })
 
+    postBtn.addEventListener("click",()=>{
+      const type = document.getElementById("type").value
+      const title = document.getElementById("title").value.trim()
+      const details = document.getElementById("details").value.trim()
+      const date = document.getElementById("date").value
+      if(!title) return alert("Please add a title to post")
+      const post = { id: uid(), type, title, details, date, created: new Date().toISOString() }
+      data.posts.unshift(post)
+      save()
+      render()
+      document.getElementById("title").value = ""
+      document.getElementById("details").value = ""
+      document.getElementById("date").value = ""
+    })
+
+    function renderPosts(){
+      postsEl.innerHTML = ""
+      data.posts.forEach(p=>{
+        if(p.type==="date"){
+          const b = document.createElement("div")
+          b.className = "post-bubble"
+          b.innerHTML = '<div class="pb-date">'+formatDate(p.date)+'</div><div class="pb-body"><div class="pb-title">'+escapeHtml(p.title)+'</div><div class="pb-text">'+escapeHtml(p.details||"")+'</div></div><div class="pb-meta"><button class="remove-post">Remove</button></div>'
+          b.querySelector(".remove-post").addEventListener("click",()=>{ removePost(p.id) })
+          postsEl.appendChild(b)
+        } else {
+          const n = document.createElement("div")
+          n.className = "post-note"
+          n.innerHTML = '<div class="note-title">'+escapeHtml(p.title)+'</div><div class="note-date">'+(p.date?formatDate(p.date):"—")+'</div><div class="note-text">'+escapeHtml(p.details||"")+'</div><div class="note-meta"><button class="remove-post">Remove</button></div>'
+          n.querySelector(".remove-post").addEventListener("click",()=>{ removePost(p.id) })
+          postsEl.appendChild(n)
+        }
+      })
+    }
+
+    function removePost(id){
+      data.posts = data.posts.filter(x=>x.id!==id)
+      save()
+      render()
+    }
+
     clearAll.addEventListener("click",()=>{
       if(!confirm("Clear everything?")) return
-      data = { dates: [], assignments: [] }
+      data = { dates: [], assignments: [], posts: [] }
       save()
       render()
     })
 
     exportBtn.addEventListener("click",()=>{
-      const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = "yui_and_koi_schedule.json"
-      a.click()
-      URL.revokeObjectURL(url)
+      try{
+        const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = "yui_and_koi_schedule.json"
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+        URL.revokeObjectURL(url)
+      }catch{
+        alert("Export failed")
+      }
     })
 
     importFile.addEventListener("change",(e)=>{
@@ -235,7 +249,12 @@
       r.onload = evt=>{
         try{
           const imp = JSON.parse(evt.target.result)
-          if(imp.dates && imp.assignments){ data = imp; save(); render(); alert("Imported") } else alert("Invalid file")
+          if(imp.dates && imp.assignments){
+            data = imp
+            save()
+            render()
+            alert("Imported")
+          } else alert("Invalid file")
         }catch{ alert("Invalid JSON") }
       }
       r.readAsText(f)
@@ -275,67 +294,6 @@
     render()
     setInterval(removeEmptyStringsFromData, 60000)
     setInterval(checkRemindersNow, 1000*60*30)
-
-    (function loadYT(){
-      const s = document.createElement("script")
-      s.src = "https://www.youtube.com/iframe_api"
-      document.head.appendChild(s)
-    })()
-
-    function onYouTubeIframeAPIReady(){
-      player = new YT.Player("yt-player",{
-        height:"0", width:"0",
-        videoId: playlist[currentIndex].id,
-        playerVars: { controls:0, rel:0, modestbranding:1, iv_load_policy:3 },
-        events: { onReady:onPlayerReady, onStateChange:onPlayerStateChange }
-      })
-    }
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady
-
-    function onPlayerReady(){
-      updateMeta()
-      player.setVolume(Number(volEl.value))
-      player.cueVideoById(playlist[currentIndex].id)
-    }
-
-    function onPlayerStateChange(e){
-      if(e.data===1){ isPlaying=true; playBtn.textContent="⏸"; disc.classList.add("spin") }
-      else if(e.data===2){ isPlaying=false; playBtn.textContent="▶"; disc.classList.remove("spin") }
-      else if(e.data===0){ if(repeat) player.playVideo(); else nextTrack() }
-    }
-
-    function playPause(){ if(!player) return; if(isPlaying) player.pauseVideo(); else player.playVideo() }
-
-    function loadTrack(i,autoplay){
-      currentIndex = (i + playlist.length) % playlist.length
-      const id = playlist[currentIndex].id
-      if(player && player.cueVideoById){ player.cueVideoById(id); updateMeta(); if(autoplay) player.playVideo() }
-    }
-
-    function nextTrack(){ loadTrack(currentIndex+1,true) }
-    function prevTrack(){ loadTrack(currentIndex-1,true) }
-
-    function updateMeta(){
-      songTitle.textContent = playlist[currentIndex].title
-      const label = disc.querySelector(".label")
-      label.textContent = playlist[currentIndex].title
-    }
-
-    playBtn.addEventListener("click", ()=>{ playPause() })
-    disc.addEventListener("click", ()=>{ playBtn.click() })
-    nextBtn.addEventListener("click", nextTrack)
-    prevBtn.addEventListener("click", prevTrack)
-
-    volEl.addEventListener("input", ()=>{ if(player) player.setVolume(Number(volEl.value)) })
-
-    repeatBtn.addEventListener("click", ()=>{
-      repeat = !repeat
-      repeatBtn.classList.toggle("active", repeat)
-    })
-
-    document.addEventListener("keydown", e=>{
-      if(e.key===" "){ e.preventDefault(); playPause() }
-    })
   </script>
 </body>
-  </html>
+</html>
