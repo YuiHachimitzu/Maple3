@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yui & Koi’s Shared Notes 💞</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yui & Koi</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>💞 Yui & Koi’s Shared Notes 💞</h1>
 
-    <div class="form">
+    <div class="add-section">
+      <input type="text" id="name" placeholder="Your name (Yui or Koi)" />
       <select id="type">
         <option value="date">Date 💗</option>
         <option value="assignment">Assignment 📝</option>
       </select>
-
-      <input type="text" id="title" placeholder="Title..." />
-      <input type="text" id="details" placeholder="Details..." />
       <input type="date" id="date" />
-      <input type="text" id="name" placeholder="Your name..." />
-
-      <div class="buttons">
-        <button id="addBtn">➕ Add</button>
-        <button id="postBtn">💌 Post</button>
+      <input type="text" id="title" placeholder="Title or subject..." />
+      <input type="text" id="details" placeholder="Place or details..." />
+      <div class="btns">
+        <button id="addBtn">Add</button>
+        <button id="postBtn">Post</button>
       </div>
     </div>
 
-    <div id="posts" class="posts"></div>
+    <div class="posts" id="posts"></div>
   </div>
 
   <script type="module" src="script.js"></script>
