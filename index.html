@@ -7,27 +7,19 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>💞 Yui & Koi’s Shared Notes 💞</h1>
+  <div class="app">
+    <h1>🌸 Yui & Koi Schedule 🌸</h1>
 
-    <div class="add-section">
-      <input type="text" id="name" placeholder="Your name (Yui or Koi)" />
-      <select id="type">
-        <option value="date">Date 💗</option>
-        <option value="assignment">Assignment 📝</option>
-      </select>
-      <input type="date" id="date" />
-      <input type="text" id="title" placeholder="Title or subject..." />
-      <input type="text" id="details" placeholder="Place or details..." />
-      <div class="btns">
-        <button id="addBtn">Add</button>
-        <button id="postBtn">Post</button>
-      </div>
+    <div class="input-area">
+      <input id="dateInput" type="date" />
+      <textarea id="noteInput" placeholder="Write your cute note or assignment here..."></textarea>
+      <button id="addBtn">Add</button>
+      <button id="postBtn">Post</button>
     </div>
 
-    <div class="posts" id="posts"></div>
+    <div class="schedule-list" id="scheduleList"></div>
   </div>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
