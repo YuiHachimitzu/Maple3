@@ -14,7 +14,7 @@ html,body{height:100%;margin:0;font-family:Poppins,Inter,sans-serif;background:v
 .app{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
 .brand{font-weight:700;color:var(--muted);font-size:18px}
-.right-controls{display:flex;gap:8px}
+.controls{display:flex;gap:8px}
 .pill{padding:8px 12px;border-radius:999px;border:0;background:var(--accent-pink);color:#fff;cursor:pointer;font-weight:600}
 .pill.accent{background:var(--accent-pink)}
 .app.green{background:var(--green-bg)}
@@ -24,39 +24,52 @@ html,body{height:100%;margin:0;font-family:Poppins,Inter,sans-serif;background:v
 .tab.active{display:block}
 .panel{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
 .home-card{padding:12px;text-align:center}
-.days-left{font-size:20px;font-weight:700;color:var(--muted);margin-top:8px}
+.days-left{font-size:18px;font-weight:700;color:var(--muted);margin-top:8px}
 .home-actions{display:flex;gap:8px;justify-content:center;margin-top:12px}
 .bigbtn{padding:12px 14px;border-radius:12px;border:0;background:var(--accent-pink);color:#fff;font-weight:700;cursor:pointer}
 .app.green .bigbtn{background:var(--accent-green)}
 
-.form-row, .game-setup, .chat-controls{display:flex;flex-direction:column;gap:8px}
-.form-row input, .form-row select, .chat-controls input, .chat-controls select{padding:8px;border-radius:10px;border:1px solid #ffe6f0;background:#fff;outline:none}
+.toggle-row{display:flex;justify-content:center;margin-bottom:8px}
+.toggle-pill{background:#fff5f8;border-radius:999px;padding:4px;display:flex;gap:6px;box-shadow:0 4px 12px rgba(122,35,64,0.04)}
+.smallpill{padding:6px 10px;border-radius:999px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.smallpill.active{background:var(--accent-pink);color:#fff}
+.app.green .smallpill.active{background:var(--accent-green)}
+
+.form-row{display:flex;gap:12px;flex-direction:column}
+.calendar-wrap{display:flex;justify-content:center;margin-bottom:8px}
+.inputs{display:flex;flex-direction:column;gap:8px}
+input, select, textarea{padding:8px;border-radius:10px;border:1px solid #ffe6f0;background:#fff;outline:none}
 .row-actions{display:flex;gap:8px;justify-content:flex-end}
 .row-actions .pill{padding:8px 12px}
-.list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow:auto;padding-right:6px}
+
+.list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:42vh;overflow:auto;padding-right:6px}
 .schedule-item{background:linear-gradient(180deg,#fff6f9,#fff0f4);padding:12px;border-radius:12px;display:flex;justify-content:space-between;align-items:center}
 .schedule-item .meta{font-size:12px;color:#8a5867}
 .delete-btn{background:transparent;border:0;color:#ff6fa5;font-size:18px;cursor:pointer}
 
+/* calendar */
+.month {width:100%;max-width:320px;background:#fff;border-radius:12px;padding:8px;box-shadow:0 8px 18px rgba(122,35,64,0.04)}
+.month .row{display:flex;justify-content:space-between;padding:6px 2px}
+.day{width:14%;text-align:center;padding:6px;border-radius:8px;cursor:pointer}
+.day.other{opacity:0.3}
+.day .num{display:block}
+.day.heart{background:linear-gradient(180deg,#fff0f2,#ffe6ee);box-shadow:0 6px 14px rgba(255,182,193,0.12)}
+
+/* chat */
+.chat-window{background:#fff;border-radius:10px;padding:8px;max-height:40vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.chat-row{display:flex;gap:8px}
+.chat-bubble{padding:8px 12px;border-radius:14px;color:#fff;max-width:80%;animation:fadeUp .25s;word-wrap:break-word}
+.chat-bubble .meta{font-size:11px;opacity:0.9;margin-bottom:6px}
+.chat-bubble.yui{background:var(--accent-pink);align-self:flex-start}
+.chat-bubble.koi{background:var(--accent-green);align-self:flex-end}
+
+/* misc */
+.hidden{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:rgba(255,255,255,0.95);padding:8px 12px;border-radius:30px;display:flex;gap:8px;box-shadow:var(--shadow)}
 .navbtn{background:transparent;border:0;padding:8px;font-size:18px;border-radius:10px;cursor:pointer}
 .navbtn.active{background:var(--accent-pink);color:#fff}
 .app.green .navbtn.active{background:var(--accent-green);color:#fff}
-
-/* Chat */
-.chat-window{background:#fff;border-radius:10px;padding:8px;max-height:28vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
-.chat-bubble{padding:8px 12px;border-radius:14px;color:#fff;max-width:75%;animation:fadeUp .25s;word-wrap:break-word}
-.chat-bubble.yui{background:var(--accent-pink);align-self:flex-start}
-.chat-bubble.koi{background:var(--accent-green);align-self:flex-end}
-
-/* Game */
-.game-wrap{background:linear-gradient(180deg,#fff7fb,#fff0f6);padding:8px;border-radius:12px;margin-top:8px}
-.game-setup{display:flex;gap:8px;align-items:center}
-.score-row{margin-top:8px;font-weight:700;color:var(--muted)}
-canvas{width:100%;border-radius:10px;background:#fff}
-
-/* misc */
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media (max-width:420px){
   .main{padding:8px}
   .panel{padding:12px}
