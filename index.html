@@ -3,28 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Yui & Koi</title>
+  <title>Yui & Koi • Calendar & Chat</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="picker" class="overlay hidden">
-    <div class="modal">
-      <h2>Who's here?</h2>
-      <div class="picker-row">
-        <button id="pick-yui" class="pick yui">Yui 💗</button>
-        <button id="pick-koi" class="pick koi">Koi 💚</button>
-      </div>
-    </div>
-  </div>
-
   <header class="topbar">
-    <div class="brand">Yui & Koi</div>
+    <div class="brand">Yui &amp; Koi</div>
     <nav class="tabs">
       <button data-tab="schedule" class="tabbtn active">🗓 Schedule</button>
       <button data-tab="chat" class="tabbtn">💬 Chat</button>
-      <button data-tab="theme" class="tabbtn">🎨 Theme</button>
     </nav>
-    <div class="right">
+    <div class="top-right">
+      <button id="themeToggle" class="theme-heart" aria-label="Toggle theme">💗</button>
       <div id="userBadge" class="user-badge"></div>
     </div>
   </header>
@@ -33,39 +23,31 @@
     <section id="schedule" class="panel active">
       <div class="panel-inner">
         <div class="left">
-          <div id="calendarWrap"></div>
+          <div id="calendarWrap" class="calendar-wrap"></div>
+          <div id="dayDetail" class="day-detail hidden">
+            <div class="dayDetail-header">
+              <div id="dayDetailDate" class="dayDetail-date"></div>
+              <button id="addFromDay" class="pill small">+ Add</button>
+            </div>
+            <div id="dayDetailList" class="dayDetail-list"></div>
+          </div>
         </div>
-        <div class="right-col">
-          <h3>New Event</h3>
-          <div class="seg">
-            <div class="seg-row">
-              <button id="modeDate" class="seg-btn active">Date</button>
-              <button id="modeTimer" class="seg-btn">Timer</button>
+
+        <aside class="right-col">
+          <h3>Quick Add</h3>
+          <div class="card">
+            <input id="quick-title" placeholder="Title" />
+            <input id="quick-date" type="date" />
+            <textarea id="quick-details" placeholder="Details (optional)"></textarea>
+            <div class="row">
+              <input id="quick-name" placeholder="Your name (Yui / Koi)" />
+              <button id="openAddModal" class="pill accent">+ Add Schedule</button>
             </div>
           </div>
-          <input id="ev-title" placeholder="Title" />
-          <input id="ev-details" placeholder="Details (optional)" />
-          <div id="dateInputs">
-            <label>Pick Date</label>
-            <input id="ev-date" type="date" />
-            <label>Optional Time</label>
-            <input id="ev-time" type="time" />
-          </div>
-          <div id="timerInputs" class="hidden">
-            <label>Hours</label>
-            <input id="ev-hours" type="number" min="0" />
-            <label>Minutes</label>
-            <input id="ev-mins" type="number" min="0" max="59" />
-          </div>
-          <input id="ev-name" placeholder="Your name (Yui / Koi)" />
-          <div class="row">
-            <button id="ev-add" class="pill">Add</button>
-            <button id="ev-post" class="pill accent">Save</button>
-          </div>
 
-          <h4>Your Events</h4>
-          <div id="eventsList" class="list"></div>
-        </div>
+          <h4>Upcoming</h4>
+          <div id="upcomingList" class="list"></div>
+        </aside>
       </div>
     </section>
 
@@ -82,18 +64,32 @@
         </div>
       </div>
     </section>
-
-    <section id="theme" class="panel">
-      <div class="panel-inner">
-        <h3>Theme</h3>
-        <div class="theme-row">
-          <button id="themePink" class="theme-btn active">Pink</button>
-          <button id="themeGreen" class="theme-btn">Green</button>
-        </div>
-        <div class="note">Theme saved to your device</div>
-      </div>
-    </section>
   </main>
+
+  <div id="addModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>Add Schedule</h3>
+      <input id="m-title" placeholder="Title" />
+      <input id="m-date" type="date" />
+      <input id="m-time" type="time" />
+      <textarea id="m-details" placeholder="Details (optional)"></textarea>
+      <input id="m-name" placeholder="Your name (Yui / Koi)" />
+      <div class="row modal-actions">
+        <button id="m-cancel" class="pill">Cancel</button>
+        <button id="m-save" class="pill accent">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="picker" class="picker-overlay hidden">
+    <div class="picker-card">
+      <h3>Who's here?</h3>
+      <div class="picker-row">
+        <button id="pick-yui" class="pick yui">Yui 💗</button>
+        <button id="pick-koi" class="pick koi">Koi 💚</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="app.js"></script>
 </body>
