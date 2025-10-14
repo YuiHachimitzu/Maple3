@@ -1,77 +1,114 @@
 :root{
-  --pink-bg: linear-gradient(135deg,#ffeaf2,#ffd6e8);
-  --green-bg: linear-gradient(135deg,#e6fff0,#d8fbe4);
+  /* Theme Colors: Softer, cuter shades */
+  --pink-bg: linear-gradient(135deg,#fff8fb,#ffeaf2); 
+  --green-bg: linear-gradient(135deg,#f2fff7,#e6fff0); 
   --card: #fff;
-  --accent-pink:#ff80a5;
-  --accent-green:#5ec28d;
-  --muted:#6b4351;
-  --radius:14px;
-  --shadow: 0 8px 24px rgba(122,35,64,0.08);
+  --accent-pink:#ff80a5; /* Primary pink */
+  --accent-green:#5ec28d; /* Primary green */
+  --muted-pink:#994d68; /* For text and labels */
+  --muted-green:#3a684b; 
+
+  /* Layout & Sizing: Larger for mobile tapping */
+  --radius:16px; 
+  --shadow: 0 10px 30px rgba(122,35,64,0.06);
 }
 
+/* Base Styles & Accessibility */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Poppins,Inter,sans-serif;background:var(--pink-bg);-webkit-font-smoothing:antialiased}
-.app{min-height:100vh;display:flex;flex-direction:column;align-items:stretch}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+html,body{height:100%;margin:0;font-family:'Poppins', sans-serif;background-color:#f6f6f6; -webkit-font-smoothing:antialiased}
+label{font-size:12px;font-weight:600;color:var(--muted-pink)}
+h1{margin:0}
+h2{font-size:18px;margin-top:0;margin-bottom:12px;color:var(--muted-pink)}
+
+/* App Layout: Fixed width for mobile aesthetic */
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  background:var(--pink-bg); 
+  /* Center on desktop screens */
+  max-width:420px;
+  margin:0 auto;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
-.brand{font-weight:700;color:var(--muted);font-size:18px}
-.controls{display:flex;gap:8px}
-.pill{padding:8px 12px;border-radius:999px;border:0;background:var(--accent-pink);color:#fff;cursor:pointer;font-weight:600}
-.pill.accent{background:var(--accent-pink)}
+.brand{font-weight:800;color:var(--muted-pink);font-size:20px}
+
+/* Pills and Buttons */
+.pill{padding:8px 14px;border-radius:999px;border:0;background:#e7e7e7;color:var(--muted-pink);cursor:pointer;font-weight:600;transition:all .2s}
+.pill.accent{background:var(--accent-pink);color:#fff}
+.pill:focus{outline:none;box-shadow:0 0 0 3px rgba(255,128,165,0.4)}
+.bigbtn{padding:14px 18px;border-radius:14px;border:0;background:var(--accent-pink);color:#fff;font-weight:700;cursor:pointer;flex:1;max-width:180px;transition:transform .1s}
+.bigbtn:active{transform:scale(0.98)} /* Add active state for mobile feedback */
+
+/* Green Theme Overrides */
 .app.green{background:var(--green-bg)}
-.app.green .pill{background:var(--accent-green)}
+.app.green .brand, .app.green h2, .app.green label, .app.green .days-left{color:var(--muted-green)}
+.app.green .pill.accent{background:var(--accent-green)}
+.app.green .pill.accent:focus{box-shadow:0 0 0 3px rgba(94,194,141,0.4)}
+.app.green .bigbtn{background:var(--accent-green)}
+
+/* Main Content */
 .main{flex:1;padding:8px 16px 84px}
 .tab{display:none}
 .tab.active{display:block}
-.panel{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
-.home-card{padding:12px;text-align:center}
-.days-left{font-size:18px;font-weight:700;color:var(--muted);margin-top:8px}
-.home-actions{display:flex;gap:8px;justify-content:center;margin-top:12px}
-.bigbtn{padding:12px 14px;border-radius:12px;border:0;background:var(--accent-pink);color:#fff;font-weight:700;cursor:pointer}
-.app.green .bigbtn{background:var(--accent-green)}
+.panel{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 
-.toggle-row{display:flex;justify-content:center;margin-bottom:8px}
-.toggle-pill{background:#fff5f8;border-radius:999px;padding:4px;display:flex;gap:6px;box-shadow:0 4px 12px rgba(122,35,64,0.04)}
-.smallpill{padding:6px 10px;border-radius:999px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+/* Home Tab */
+.days-left{font-size:24px;font-weight:800;margin-top:8px}
+
+/* Schedule Tab */
+.toggle-row{margin-bottom:12px}
+.smallpill{color:var(--muted-pink);font-weight:600}
 .smallpill.active{background:var(--accent-pink);color:#fff}
 .app.green .smallpill.active{background:var(--accent-green)}
+.inputs{display:flex;flex-direction:column;gap:10px}
+input, select, textarea{padding:10px;border-radius:10px;border:1px solid #ffe6f0;background:#fff;outline:none;transition:border-color .2s}
+input:focus{border-color:var(--accent-pink)}
 
-.form-row{display:flex;gap:12px;flex-direction:column}
-.calendar-wrap{display:flex;justify-content:center;margin-bottom:8px}
-.inputs{display:flex;flex-direction:column;gap:8px}
-input, select, textarea{padding:8px;border-radius:10px;border:1px solid #ffe6f0;background:#fff;outline:none}
-.row-actions{display:flex;gap:8px;justify-content:flex-end}
-.row-actions .pill{padding:8px 12px}
+/* List Style Reset */
+.list, .chat-window{padding-left:0;list-style:none}
+.list{margin-top:16px;display:flex;flex-direction:column;gap:12px;max-height:45vh;overflow-y:auto;padding-right:8px;}
+.schedule-item{padding:14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#fff6f9,#fff0f4);}
+.delete-btn{background:transparent;border:0;color:var(--accent-pink);font-size:20px;cursor:pointer;margin-left:8px;opacity:0.8;transition:opacity .1s}
 
-.list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:42vh;overflow:auto;padding-right:6px}
-.schedule-item{background:linear-gradient(180deg,#fff6f9,#fff0f4);padding:12px;border-radius:12px;display:flex;justify-content:space-between;align-items:center}
-.schedule-item .meta{font-size:12px;color:#8a5867}
-.delete-btn{background:transparent;border:0;color:#ff6fa5;font-size:18px;cursor:pointer}
+/* Calendar */
+.month {padding:10px;border-radius:14px;}
+.day.heart{background:linear-gradient(180deg,#fff0f2,#ffe6ee);}
+.app.green .day.heart{background:linear-gradient(180deg,#e9f8f2,#dff4e7)}
 
-/* calendar */
-.month {width:100%;max-width:320px;background:#fff;border-radius:12px;padding:8px;box-shadow:0 8px 18px rgba(122,35,64,0.04)}
-.month .row{display:flex;justify-content:space-between;padding:6px 2px}
-.day{width:14%;text-align:center;padding:6px;border-radius:8px;cursor:pointer}
-.day.other{opacity:0.3}
-.day .num{display:block}
-.day.heart{background:linear-gradient(180deg,#fff0f2,#ffe6ee);box-shadow:0 6px 14px rgba(255,182,193,0.12)}
+/* Chat */
+.chat-window{background:#fff;border-radius:12px;padding:10px;max-height:45vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.chat-bubble{padding:10px 14px;border-radius:18px;max-width:85%;}
+.chat-bubble.yui{background:var(--accent-pink);align-self:flex-start;border-bottom-left-radius:6px}
+.chat-bubble.koi{background:var(--accent-green);align-self:flex-end;border-bottom-right-radius:6px}
 
-/* chat */
-.chat-window{background:#fff;border-radius:10px;padding:8px;max-height:40vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
-.chat-row{display:flex;gap:8px}
-.chat-bubble{padding:8px 12px;border-radius:14px;color:#fff;max-width:80%;animation:fadeUp .25s;word-wrap:break-word}
-.chat-bubble .meta{font-size:11px;opacity:0.9;margin-bottom:6px}
-.chat-bubble.yui{background:var(--accent-pink);align-self:flex-start}
-.chat-bubble.koi{background:var(--accent-green);align-self:flex-end}
-
-/* misc */
-.hidden{display:none}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:rgba(255,255,255,0.95);padding:8px 12px;border-radius:30px;display:flex;gap:8px;box-shadow:var(--shadow)}
-.navbtn{background:transparent;border:0;padding:8px;font-size:18px;border-radius:10px;cursor:pointer}
+/* Footer Nav */
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:16px;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter: blur(5px);
+  padding:8px 16px;
+  border-radius:30px;
+  display:flex;
+  gap:10px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+.navbtn{background:transparent;border:0;padding:10px;font-size:20px;border-radius:12px;cursor:pointer;transition:background .2s}
 .navbtn.active{background:var(--accent-pink);color:#fff}
 .app.green .navbtn.active{background:var(--accent-green);color:#fff}
+
+/* Mobile Adjustments (Default is mobile, this is for safety) */
 @media (max-width:420px){
   .main{padding:8px}
-  .panel{padding:12px}
-  .bottom-nav{padding:6px}
+  .panel{padding:14px}
+  .bottom-nav{padding:6px 12px;gap:8px}
+  .navbtn{padding:8px}
 }
