@@ -1,96 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Yui & Koi • Calendar & Chat</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yui & Koi</title>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="topbar">
-    <div class="brand">Yui &amp; Koi</div>
-    <nav class="tabs">
-      <button data-tab="schedule" class="tabbtn active">🗓 Schedule</button>
-      <button data-tab="chat" class="tabbtn">💬 Chat</button>
-    </nav>
-    <div class="top-right">
-      <button id="themeToggle" class="theme-heart" aria-label="Toggle theme">💗</button>
-      <div id="userBadge" class="user-badge"></div>
+<body class="pink">
+
+<header>
+  <h1>Yui & Koi 💞</h1>
+  <button id="theme-btn">🌸</button>
+</header>
+
+<nav>
+  <button class="tab active" data-tab="schedule">📅 Schedule</button>
+  <button class="tab" data-tab="calendar">🌷 Calendar</button>
+  <button class="tab" data-tab="chat">💬 Chat</button>
+</nav>
+
+<main>
+  <section id="schedule" class="tab-content active">
+    <form id="schedule-form">
+      <input type="text" id="schedule-title" placeholder="Title" required>
+      <input type="date" id="schedule-date" required>
+      <input type="time" id="schedule-time" required>
+      <button type="submit" id="addBtn">Add</button>
+    </form>
+    <ul id="schedule-list"></ul>
+  </section>
+
+  <section id="calendar" class="tab-content">
+    <div id="calendar"></div>
+  </section>
+
+  <section id="chat" class="tab-content">
+    <div class="chat-header">
+      <select id="user-select">
+        <option>Yui</option>
+        <option>Koi</option>
+      </select>
     </div>
-  </header>
-
-  <main class="main">
-    <section id="schedule" class="panel active">
-      <div class="panel-inner">
-        <div class="left">
-          <div id="calendarWrap" class="calendar-wrap"></div>
-          <div id="dayDetail" class="day-detail hidden">
-            <div class="dayDetail-header">
-              <div id="dayDetailDate" class="dayDetail-date"></div>
-              <button id="addFromDay" class="pill small">+ Add</button>
-            </div>
-            <div id="dayDetailList" class="dayDetail-list"></div>
-          </div>
-        </div>
-
-        <aside class="right-col">
-          <h3>Quick Add</h3>
-          <div class="card">
-            <input id="quick-title" placeholder="Title" />
-            <input id="quick-date" type="date" />
-            <textarea id="quick-details" placeholder="Details (optional)"></textarea>
-            <div class="row">
-              <input id="quick-name" placeholder="Your name (Yui / Koi)" />
-              <button id="openAddModal" class="pill accent">+ Add Schedule</button>
-            </div>
-          </div>
-
-          <h4>Upcoming</h4>
-          <div id="upcomingList" class="list"></div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="chat" class="panel">
-      <div class="panel-inner chat-panel">
-        <div id="chatWindow" class="chat-window"></div>
-        <div class="chat-input">
-          <select id="chatSender" class="small">
-            <option value="Yui">Yui 💗</option>
-            <option value="Koi">Koi 💚</option>
-          </select>
-          <input id="chatText" placeholder="Write a message..." />
-          <button id="chatSend" class="pill">Send</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="addModal" class="modal-overlay hidden">
-    <div class="modal-card">
-      <h3>Add Schedule</h3>
-      <input id="m-title" placeholder="Title" />
-      <input id="m-date" type="date" />
-      <input id="m-time" type="time" />
-      <textarea id="m-details" placeholder="Details (optional)"></textarea>
-      <input id="m-name" placeholder="Your name (Yui / Koi)" />
-      <div class="row modal-actions">
-        <button id="m-cancel" class="pill">Cancel</button>
-        <button id="m-save" class="pill accent">Save</button>
-      </div>
+    <div id="chat-box"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="Type a message...">
+      <button id="send-btn">Send</button>
     </div>
-  </div>
+  </section>
+</main>
 
-  <div id="picker" class="picker-overlay hidden">
-    <div class="picker-card">
-      <h3>Who's here?</h3>
-      <div class="picker-row">
-        <button id="pick-yui" class="pick yui">Yui 💗</button>
-        <button id="pick-koi" class="pick koi">Koi 💚</button>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
