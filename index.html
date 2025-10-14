@@ -1,34 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yui & Koi</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="login-screen" class="screen">
-    <h2>Who’s here today? 💞</h2>
-    <div class="btns">
-      <button id="yui-btn">Yui 🩷</button>
-      <button id="koi-btn">Koi 💚</button>
+  <div id="picker" class="overlay hidden">
+    <div class="modal">
+      <h2>Who's here?</h2>
+      <div class="picker-row">
+        <button id="pick-yui" class="pick yui">Yui 💗</button>
+        <button id="pick-koi" class="pick koi">Koi 💚</button>
+      </div>
     </div>
   </div>
 
-  <div id="main-screen" class="screen hidden">
-    <header>
-      <h1 id="user-title"></h1>
-      <button id="logout">Switch</button>
-    </header>
-
-    <div id="chat-box"></div>
-
-    <div class="chat-input">
-      <input type="text" id="message-input" placeholder="Type something cute..." />
-      <button id="send-btn">Send</button>
+  <header class="topbar">
+    <div class="brand">Yui & Koi</div>
+    <nav class="tabs">
+      <button data-tab="schedule" class="tabbtn active">🗓 Schedule</button>
+      <button data-tab="chat" class="tabbtn">💬 Chat</button>
+      <button data-tab="theme" class="tabbtn">🎨 Theme</button>
+    </nav>
+    <div class="right">
+      <div id="userBadge" class="user-badge"></div>
     </div>
-  </div>
+  </header>
 
-  <script src="app.js"></script>
+  <main class="main">
+    <section id="schedule" class="panel active">
+      <div class="panel-inner">
+        <div class="left">
+          <div id="calendarWrap"></div>
+        </div>
+        <div class="right-col">
+          <h3>New Event</h3>
+          <div class="seg">
+            <div class="seg-row">
+              <button id="modeDate" class="seg-btn active">Date</button>
+              <button id="modeTimer" class="seg-btn">Timer</button>
+            </div>
+          </div>
+          <input id="ev-title" placeholder="Title" />
+          <input id="ev-details" placeholder="Details (optional)" />
+          <div id="dateInputs">
+            <label>Pick Date</label>
+            <input id="ev-date" type="date" />
+            <label>Optional Time</label>
+            <input id="ev-time" type="time" />
+          </div>
+          <div id="timerInputs" class="hidden">
+            <label>Hours</label>
+            <input id="ev-hours" type="number" min="0" />
+            <label>Minutes</label>
+            <input id="ev-mins" type="number" min="0" max="59" />
+          </div>
+          <input id="ev-name" placeholder="Your name (Yui / Koi)" />
+          <div class="row">
+            <button id="ev-add" class="pill">Add</button>
+            <button id="ev-post" class="pill accent">Save</button>
+          </div>
+
+          <h4>Your Events</h4>
+          <div id="eventsList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="chat" class="panel">
+      <div class="panel-inner chat-panel">
+        <div id="chatWindow" class="chat-window"></div>
+        <div class="chat-input">
+          <select id="chatSender" class="small">
+            <option value="Yui">Yui 💗</option>
+            <option value="Koi">Koi 💚</option>
+          </select>
+          <input id="chatText" placeholder="Write a message..." />
+          <button id="chatSend" class="pill">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="theme" class="panel">
+      <div class="panel-inner">
+        <h3>Theme</h3>
+        <div class="theme-row">
+          <button id="themePink" class="theme-btn active">Pink</button>
+          <button id="themeGreen" class="theme-btn">Green</button>
+        </div>
+        <div class="note">Theme saved to your device</div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
 </body>
 </html>
