@@ -5,22 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yui & Koi • Shared Notes</title>
   <link rel="stylesheet" href="style.css" />
-  </head>
+</head>
 <body>
   <div id="app" class="app pink">
     <header class="topbar">
-      <h1 class="brand">Yui & Koi</h1>
+      <div class="brand">Yui & Koi</div>
       <div class="controls">
         <button id="themeBtn" class="pill">🌸</button>
       </div>
     </header>
 
     <main class="main">
-      <section id="tab-home" class="tab active" role="tabpanel" aria-labelledby="nav-home">
+      <!-- HOME -->
+      <section id="tab-home" class="tab active">
         <div class="panel home-card">
-          <h2>Welcome Sweetheart!</h2>
+          <h2>Welcome 💞</h2>
           <div class="moniversary">
-            <label>Moniversary Countdown</label>
+            <label>Moniversary (every month on the 5th)</label>
             <div id="daysLeft" class="days-left">—</div>
           </div>
           <div class="home-actions">
@@ -30,7 +31,8 @@
         </div>
       </section>
 
-      <section id="tab-schedule" class="tab" role="tabpanel" aria-labelledby="nav-schedule">
+      <!-- SCHEDULE -->
+      <section id="tab-schedule" class="tab">
         <div class="panel">
           <h2>Shared Schedule</h2>
 
@@ -43,63 +45,53 @@
 
           <div class="form-row">
             <div id="calendarWrap" class="calendar-wrap"></div>
-            
-            <form id="scheduleForm" class="inputs">
-              <label for="sch-title" class="visually-hidden">Title</label>
-              <input id="sch-title" placeholder="Title (e.g., Movie Night)" required />
-              
-              <label for="sch-details" class="visually-hidden">Details</label>
+
+            <div class="inputs">
+              <input id="sch-title" placeholder="Title" />
               <input id="sch-details" placeholder="Details (optional)" />
-              
               <div id="dateInputs" class="date-inputs">
-                <label for="sch-date" class="visually-hidden">Target Date</label>
-                <input id="sch-date" type="date" required />
+                <input id="sch-date" type="date" />
               </div>
-              
               <div id="timerInputs" class="timer-inputs hidden">
-                <label for="sch-hours" class="visually-hidden">Hours</label>
                 <input id="sch-hours" type="number" min="0" placeholder="Hours" />
-                
-                <label for="sch-mins" class="visually-hidden">Minutes</label>
                 <input id="sch-mins" type="number" min="0" max="59" placeholder="Minutes" />
               </div>
-              
-              <label for="sch-name" class="visually-hidden">Your name</label>
-              <input id="sch-name" placeholder="Your name (Yui / Koi)" required />
-              
+              <input id="sch-name" placeholder="Your name (Yui / Koi)" />
               <div class="row-actions">
-                <button id="sch-add" class="pill accent" type="submit">Add to Shared</button>
+                <button id="sch-add" class="pill">Add</button>
+                <button id="sch-post" class="pill accent">Post</button>
               </div>
-            </form>
-          </div>
-
-          <ul id="schedulesList" class="list"></ul>
-        </div>
-      </section>
-
-      <section id="tab-chat" class="tab" role="tabpanel" aria-labelledby="nav-chat">
-        <div class="panel">
-          <h2>Couple Chat</h2>
-          <div class="chat-controls">
-            <select id="chatSender">
-              <option value="Yui">Yui 💗 (Sweetheart)</option>
-              <option value="Koi">Koi 💚 (Darling)</option>
-            </select>
-            <div class="chat-row">
-              <input id="chatInput" placeholder="Type a message..." />
-              <button id="chatSend" class="pill accent">Send</button>
             </div>
           </div>
 
-          <ul id="chatWindow" class="chat-window"></ul>
+          <div id="schedulesList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- CHAT -->
+      <section id="tab-chat" class="tab">
+        <div class="panel">
+          <h2>Chat</h2>
+          <div class="chat-controls">
+            <select id="chatSender">
+              <option value="Yui">Yui 💗</option>
+              <option value="Koi">Koi 💚</option>
+            </select>
+            <div class="chat-row">
+              <input id="chatInput" placeholder="Type a message..." />
+              <button id="chatSend" class="pill">Send</button>
+            </div>
+          </div>
+
+          <div id="chatWindow" class="chat-window"></div>
         </div>
       </section>
     </main>
 
-    <nav class="bottom-nav" role="tablist">
-      <button data-tab="home" id="nav-home" class="navbtn active" role="tab" aria-controls="tab-home" aria-selected="true">🏠</button>
-      <button data-tab="schedule" id="nav-schedule" class="navbtn" role="tab" aria-controls="tab-schedule" aria-selected="false">🗓</button>
-      <button data-tab="chat" id="nav-chat" class="navbtn" role="tab" aria-controls="tab-chat" aria-selected="false">💬</button>
+    <nav class="bottom-nav">
+      <button data-tab="home" class="navbtn active">🏠</button>
+      <button data-tab="schedule" class="navbtn">🗓</button>
+      <button data-tab="chat" class="navbtn">💬</button>
     </nav>
   </div>
 
