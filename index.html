@@ -1,1 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>MapleGUI Editor Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
+        :root { --bg-primary: #0a0a0a; --bg-secondary: #141414; --bg-tertiary: #1e1e1e; --bg-elevated: #252525; --bg-card: #1a1a1a; --accent: #6366f1; --accent-hover: #818cf8; --success: #22c55e; --warning: #f59e0b; --error: #ef4444; --text-primary: #ffffff; --text-secondary: #a1a1aa; --text-tertiary: #71717a; --border: #27272a; --border-light: #3f3f46; --grid-line: #1f1f1f; }
+        html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; }
+        .app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); gap: 8px; flex-shrink: 0; }
+        .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+        .header-title { font-size: 16px; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+        .header-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 18px; cursor: pointer; transition: all 0.15s; }
+        .header-btn:hover, .header-btn.active { background: var(--bg-elevated); color: var(--text-primary); border-color: var(--accent); }
+        .header-btn.primary { background: var(--accent); border-color: var(--accent); color: white; width: auto; padding: 0 16px; font-size: 13px; font-weight: 500; }
+        .main-content { flex: 1; display: flex; overflow: hidden; position: relative; }
+        .side-panel { position: absolute; top: 0; bottom: 0; width: 280px; background: var(--bg-secondary); z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .side-panel.left { left: 0; border-right: 1px solid var(--border); transform: translateX(-100%); }
+        .side-panel.right { right: 0; border-left: 1px solid var(--border); transform: translateX(100%); }
+        .side-panel.open { transform: translateX(0); }
+        .panel-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 99; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .panel-overlay.visible { opacity: 1; visibility: visible; }
+        .panel-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-tertiary); }
+        .panel-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+        .panel-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-tertiary); font-size: 20px; cursor: pointer; }
+        .panel-tabs { display: flex; background: var(--bg-tertiary); padding: 4px; gap: 4px; }
+        .panel-tab { flex: 1; padding: 8px; text-align: center; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+        .panel-tab.active { background: var(--accent); color: white; }
+        .panel-content { flex: 1; overflow-y: auto; padding: 12px; }
+        .panel-section { display: none; }
+        .panel-section.active { display: block; }
+        .search-box { position: relative; margin-bottom: 12px; }
+        .search-input { width: 100%; height: 40px; padding: 0 12px 0 36px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 14px; outline: none; }
+        .search-input:focus { border-color: var(--accent); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 16px; }
+        .gui-list { display: flex; flex-direction: column; gap: 4px; }
+        .gui-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+        .gui-item:hover { background: var(--bg-elevated); border-color: var(--border-light); }
+        .gui-item.active { background: rgba(99, 102, 241, 0.15); border-color: var(--accent); }
+        .gui-item-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border-radius: 6px; font-size: 16px; }
+        .gui-item-info { flex: 1; min-width: 0; }
+        .gui-item-name { font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .gui-item-type { font-size: 11px; color: var(--text-tertiary); }
+        .gui-item-visibility { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-tertiary); font-size: 16px; cursor: pointer; border-radius: 4px; }
+        .gui-item-visibility.hidden { opacity: 0.4; }
+        .layers-tree { display: flex; flex-direction: column; gap: 2px; }
+        .layer-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+        .layer-item:hover { background: var(--bg-tertiary); }
+        .layer-item.active { background: rgba(99, 102, 241, 0.15); }
+        .layer-item.level-1 { padding-left: 12px; } .layer-item.level-2 { padding-left: 28px; } .layer-item.level-3 { padding-left: 44px; } .layer-item.level-4 { padding-left: 60px; }
+        .layer-expand { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 12px; }
+        .layer-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .layer-name { flex: 1; font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .layer-item.active .layer-name { color: var(--text-primary); }
+        .layer-visibility { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 14px; }
+        .palette-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .palette-item { display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; }
+        .palette-item:hover { background: var(--bg-elevated); border-color: var(--accent); }
+        .palette-item:active { transform: scale(0.95); }
+        .palette-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 6px; }
+        .palette-label { font-size: 10px; color: var(--text-secondary); text-align: center; }
+        .canvas-area { flex: 1; position: relative; overflow: hidden; background: var(--bg-primary); touch-action: none; }
+        .canvas-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform-origin: center center; will-change: transform; }
+        .canvas-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(45deg, var(--bg-secondary) 25%, transparent 25%), linear-gradient(-45deg, var(--bg-secondary) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--bg-secondary) 75%), linear-gradient(-45deg, transparent 75%, var(--bg-secondary) 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; opacity: 0.3; }
+        .grid-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+        .grid-overlay.visible { opacity: 1; }
+        .grid-overlay.lines { background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); background-size: 20px 20px; }
+        .canvas-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 360px; height: 640px; background: var(--bg-secondary); border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); overflow: hidden; }
+        .canvas-component { position: absolute; cursor: grab; will-change: transform, width, height; }
+        .canvas-component:active { cursor: grabbing; }
+        .canvas-component.selected { z-index: 1000 !important; }
+        .canvas-component.selected .selection-box { display: block; }
+        .selection-box { display: none; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border: 2px solid var(--accent); pointer-events: none; }
+        .resize-handle { position: absolute; width: 16px; height: 16px; background: var(--accent); border: 2px solid var(--bg-primary); border-radius: 50%; pointer-events: auto; z-index: 1001; }
+        .resize-handle.nw { top: -8px; left: -8px; cursor: nw-resize; } .resize-handle.n { top: -8px; left: 50%; transform: translateX(-50%); cursor: n-resize; } .resize-handle.ne { top: -8px; right: -8px; cursor: ne-resize; } .resize-handle.e { top: 50%; right: -8px; transform: translateY(-50%); cursor: e-resize; } .resize-handle.se { bottom: -8px; right: -8px; cursor: se-resize; } .resize-handle.s { bottom: -8px; left: 50%; transform: translateX(-50%); cursor: s-resize; } .resize-handle.sw { bottom: -8px; left: -8px; cursor: sw-resize; } .resize-handle.w { top: 50%; left: -8px; transform: translateY(-50%); cursor: w-resize; }
+        .comp-window { background: rgba(30, 30, 30, 0.98); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); min-width: 200px; min-height: 150px; overflow: hidden; border: 1px solid var(--border); }
+        .comp-window .window-titlebar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1)); border-bottom: 1px solid var(--border); }
+        .comp-window .window-title { font-weight: 500; font-size: 13px; }
+        .comp-button { min-width: 80px; min-height: 40px; background: var(--accent); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 14px; padding: 0 16px; border: none; }
+        .comp-text { min-width: 60px; min-height: 24px; color: var(--text-primary); padding: 4px 8px; font-size: 14px; }
+        .comp-input { min-width: 120px; height: 40px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 0 12px; display: flex; align-items: center; color: var(--text-secondary); font-size: 14px; }
+        .comp-toggle { min-width: 52px; height: 28px; background: var(--bg-elevated); border-radius: 14px; position: relative; padding: 3px; border: 1px solid var(--border); }
+        .comp-toggle.active { background: var(--accent); border-color: var(--accent); }
+        .comp-toggle .toggle-knob { width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.2s; }
+        .comp-toggle.active .toggle-knob { transform: translateX(24px); }
+        .comp-slider { min-width: 120px; height: 40px; display: flex; align-items: center; padding: 0 8px; }
+        .comp-slider .slider-track { flex: 1; height: 6px; background: var(--bg-elevated); border-radius: 3px; position: relative; }
+        .comp-slider .slider-fill { position: absolute; left: 0; top: 0; height: 100%; width: 50%; background: var(--accent); border-radius: 3px; }
+        .comp-slider .slider-thumb { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 18px; height: 18px; background: white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .comp-progress { min-width: 100px; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
+        .comp-progress .progress-fill { height: 100%; width: 60%; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); border-radius: 4px; }
+        .comp-image { min-width: 64px; min-height: 64px; background: var(--bg-tertiary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 24px; border: 1px solid var(--border); }
+        .comp-container { min-width: 150px; min-height: 100px; background: rgba(37, 37, 37, 0.5); border: 1px dashed var(--border-light); border-radius: 8px; }
+        .comp-list { min-width: 150px; min-height: 120px; background: var(--bg-tertiary); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .comp-grid { min-width: 150px; min-height: 150px; background: var(--bg-tertiary); border-radius: 8px; border: 1px solid var(--border); }
+        .form-section { margin-bottom: 20px; }
+        .form-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .form-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); }
+        .form-section-action { font-size: 11px; color: var(--accent); cursor: pointer; }
+        .form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 12px; }
+        .form-label { font-size: 13px; color: var(--text-secondary); min-width: 70px; }
+        .form-input { flex: 1; height: 36px; padding: 0 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 13px; outline: none; }
+        .form-input:focus { border-color: var(--accent); }
+        .form-input-small { width: 70px; flex: none; }
+        .input-group { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .input-group .form-input { flex: 1; }
+        .input-nudge { display: flex; flex-direction: column; gap: 2px; }
+        .nudge-btn { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 3px; color: var(--text-tertiary); font-size: 8px; cursor: pointer; padding: 0; }
+        .nudge-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .form-toggle { width: 48px; height: 26px; background: var(--bg-tertiary); border-radius: 13px; position: relative; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; }
+        .form-toggle.active { background: var(--accent); border-color: var(--accent); }
+        .form-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.2s; }
+        .form-toggle.active::after { transform: translateX(22px); }
+        .color-picker-wrapper { display: flex; align-items: center; gap: 10px; }
+        .color-preview { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; }
+        .color-input { width: 80px; height: 36px; padding: 0 8px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px; font-family: monospace; }
+        .form-select { flex: 1; height: 36px; padding: 0 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 13px; outline: none; cursor: pointer; }
+        .form-select:focus { border-color: var(--accent); }
+        .btn-group { display: flex; gap: 8px; }
+        .btn-small { flex: 1; height: 36px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer; transition: all 0.15s; }
+        .btn-small:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .btn-small.primary { background: var(--accent); border-color: var(--accent); color: white; }
+        .btn-small.danger { background: var(--error); border-color: var(--error); color: white; }
+        .advanced-section { background: var(--bg-tertiary); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+        .advanced-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .advanced-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+        .advanced-arrow { color: var(--text-tertiary); font-size: 12px; transition: transform 0.2s; }
+        .advanced-section.open .advanced-arrow { transform: rotate(180deg); }
+        .advanced-content { display: none; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
+        .advanced-section.open .advanced-content { display: block; }
+        .event-list { display: flex; flex-direction: column; gap: 8px; }
+        .event-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; }
+        .event-name { font-size: 12px; color: var(--text-secondary); }
+        .event-add { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--accent); border: none; border-radius: 4px; color: white; font-size: 14px; cursor: pointer; }
+        .bottom-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-secondary); border-top: 1px solid var(--border); gap: 12px; }
+        .bottom-info { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-tertiary); }
+        .bottom-info-item { display: flex; align-items: center; gap: 6px; }
+        .bottom-actions { display: flex; align-items: center; gap: 8px; }
+        .modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(0, 0, 0, 0.8); opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .modal.open { opacity: 1; visibility: visible; }
+        .modal-content { width: 100%; max-width: 400px; background: var(--bg-secondary); border-radius: 16px; overflow: hidden; transform: scale(0.9); transition: transform 0.3s; }
+        .modal.open .modal-content { transform: scale(1); }
+        .modal-header { padding: 16px; border-bottom: 1px solid var(--border); }
+        .modal-title { font-size: 16px; font-weight: 600; }
+        .modal-body { padding: 16px; }
+        .modal-footer { display: flex; gap: 8px; padding: 16px; border-top: 1px solid var(--border); }
+        .modal-btn { flex: 1; height: 44px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 14px; cursor: pointer; }
+        .modal-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+        .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 12px 20px; background: var(--bg-elevated); border-radius: 8px; font-size: 13px; color: var(--text-primary); z-index: 1001; opacity: 0; transition: all 0.3s; border: 1px solid var(--border); }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; color: var(--text-tertiary); }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state-title { font-size: 14px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+        @media (min-width: 1024px) { .side-panel { position: relative; transform: none !important; } .side-panel.left { width: 280px; } .side-panel.right { width: 320px; } .panel-close { display: none; } .panel-overlay { display: none; } .header-btn[data-panel] { display: none; } .palette-grid { grid-template-columns: repeat(2, 1fr); } }
+        .fab { position: fixed; bottom: 80px; right: 20px; width: 56px; height: 56px; background: var(--accent); border: none; border-radius: 50%; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); z-index: 50; display: flex; align-items: center; justify-content: center; }
+        .fab:active { transform: scale(0.95); }
+        @media (min-width: 1024px) { .fab { display: none; } }
+
+        /* Preview Tab Styles */
+        .preview-controls { display: flex; flex-direction: column; gap: 16px; }
+        .preview-device-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .preview-device-btn { padding: 12px 8px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 11px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .preview-device-btn:hover { background: var(--bg-elevated); border-color: var(--border-light); }
+        .preview-device-btn.active { background: rgba(99, 102, 241, 0.2); border-color: var(--accent); color: var(--text-primary); }
+        .preview-device-btn .device-icon { font-size: 20px; }
+        .preview-options { display: flex; flex-direction: column; gap: 12px; }
+        .preview-option-row { display: flex; align-items: center; justify-content: space-between; }
+        .preview-option-label { font-size: 12px; color: var(--text-secondary); }
+        .preview-scale-slider { width: 100%; margin-top: 8px; }
+        .preview-info { background: var(--bg-tertiary); border-radius: 8px; padding: 12px; font-size: 11px; color: var(--text-tertiary); }
+        .preview-info-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .preview-info-row:last-child { margin-bottom: 0; }
+        .preview-actions { display: flex; gap: 8px; }
+        .preview-actions .btn-small { flex: 1; }
+        .preview-frame-container { position: relative; width: 100%; height: 400px; background: var(--bg-primary); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .preview-frame { position: relative; background: var(--bg-secondary); border-radius: 8px; overflow: hidden; transition: all 0.3s ease; }
+        .preview-frame.phone { width: 180px; height: 320px; }
+        .preview-frame.tablet { width: 240px; height: 320px; }
+        .preview-frame.desktop { width: 320px; height: 200px; }
+        .preview-frame-bevel { position: absolute; inset: 0; border: 8px solid #333; border-radius: 12px; pointer-events: none; }
+        .preview-frame-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 16px; background: #333; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+        .preview-content { position: absolute; inset: 8px; overflow: hidden; }
+        .preview-gui-item { position: absolute; transition: all 0.2s; }
+        .preview-gui-item.window { background: rgba(30, 30, 30, 0.98); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .preview-gui-item.window .win-titlebar { padding: 6px 10px; background: linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.1)); font-size: 10px; font-weight: 500; }
+        .preview-gui-item.button { background: var(--accent); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; }
+        .preview-gui-item.text { color: var(--text-primary); font-size: 10px; display: flex; align-items: center; }
+        .preview-gui-item.toggle { background: var(--bg-elevated); border-radius: 10px; position: relative; }
+        .preview-gui-item.toggle.active { background: var(--accent); }
+        .preview-gui-item.toggle .knob { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.2s; }
+        .preview-gui-item.toggle.active .knob { transform: translateX(20px); }
+        .preview-gui-item.slider { display: flex; align-items: center; padding: 0 4px; }
+        .preview-gui-item.slider .track { flex: 1; height: 4px; background: var(--bg-elevated); border-radius: 2px; position: relative; }
+        .preview-gui-item.slider .fill { position: absolute; left: 0; top: 0; height: 100%; width: 50%; background: var(--accent); border-radius: 2px; }
+        .preview-gui-item.slider .thumb { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px; background: white; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+        .preview-gui-item.progress { background: var(--bg-elevated); border-radius: 3px; overflow: hidden; }
+        .preview-gui-item.progress .bar { height: 100%; width: 60%; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); }
+        .preview-gui-item.input { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; padding: 0 8px; color: var(--text-secondary); font-size: 10px; }
+        .preview-gui-item.image { background: var(--bg-tertiary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 16px; border: 1px solid var(--border); }
+        .preview-gui-item.container { background: rgba(37, 37, 37, 0.5); border: 1px dashed var(--border-light); border-radius: 6px; }
+        .preview-gui-item.list { background: var(--bg-tertiary); border-radius: 6px; border: 1px solid var(--border); }
+        .preview-gui-item.grid { background: var(--bg-tertiary); border-radius: 6px; border: 1px solid var(--border); background-image: linear-gradient(to right, var(--border) 1px, transparent 1px), linear-gradient(to bottom, var(--border) 1px, transparent 1px); background-size: 20px 20px; }
+        .preview-status { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 6px; font-size: 11px; color: var(--text-secondary); }
+        .preview-status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .preview-tabs-demo { margin-top: 16px; }
+        .preview-tabs-header { display: flex; gap: 4px; margin-bottom: 12px; }
+        .preview-tab-btn { padding: 8px 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 11px; cursor: pointer; }
+        .preview-tab-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+        .preview-tabs-content { background: var(--bg-tertiary); border-radius: 8px; padding: 16px; min-height: 100px; }
+        .tab-preview-item { display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--bg-elevated); border-radius: 6px; margin-bottom: 8px; }
+        .tab-preview-item:last-child { margin-bottom: 0; }
+        .tab-preview-icon { width: 32px; height: 32px; background: var(--bg-card); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .tab-preview-info { flex: 1; }
+        .tab-preview-name { font-size: 12px; color: var(--text-primary); }
+        .tab-preview-type { font-size: 10px; color: var(--text-tertiary); }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-left">
+                <button class="header-btn" data-panel="left">☰</button>
+                <span class="header-title">⚡ MapleGUI Editor</span>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" onclick="toggleGrid()">⊞</button>
+                <button class="header-btn" onclick="undo()">↶</button>
+                <button class="header-btn" onclick="redo()">↷</button>
+                <button class="header-btn primary" onclick="exportCode()">Export</button>
+                <button class="header-btn" data-panel="right">⚙</button>
+            </div>
+        </header>
+        <div class="main-content">
+            <aside class="side-panel left" id="leftPanel">
+                <div class="panel-header">
+                    <span class="panel-title">GUI Elements</span>
+                    <button class="panel-close" onclick="closePanels()">×</button>
+                </div>
+                <div class="panel-tabs">
+                    <div class="panel-tab active" data-tab="palette">Palette</div>
+                    <div class="panel-tab" data-tab="layers">Layers</div>
+                    <div class="panel-tab" data-tab="list">List</div>
+                    <div class="panel-tab" data-tab="preview">Preview</div>
+                </div>
+                <div class="panel-content">
+                    <div class="panel-section active" id="paletteSection">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Search components..." id="paletteSearch">
+                        </div>
+                        <div class="palette-grid" id="paletteGrid"></div>
+                    </div>
+                    <div class="panel-section" id="layersSection">
+                        <div class="layers-tree" id="layersTree"></div>
+                    </div>
+                    <div class="panel-section" id="listSection">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Search GUIs..." id="listSearch">
+                        </div>
+                        <div class="gui-list" id="guiList"></div>
+                    </div>
+                    <div class="panel-section" id="previewSection">
+                        <div class="preview-controls">
+                            <div class="form-section">
+                                <span class="form-section-title">Device Frame</span>
+                                <div class="preview-device-selector">
+                                    <button class="preview-device-btn active" data-device="phone" onclick="setPreviewDevice('phone')">
+                                        <span class="device-icon">📱</span>
+                                        <span>Phone</span>
+                                    </button>
+                                    <button class="preview-device-btn" data-device="tablet" onclick="setPreviewDevice('tablet')">
+                                        <span class="device-icon">📲</span>
+                                        <span>Tablet</span>
+                                    </button>
+                                    <button class="preview-device-btn" data-device="desktop" onclick="setPreviewDevice('desktop')">
+                                        <span class="device-icon">🖥️</span>
+                                        <span>Desktop</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <span class="form-section-title">Preview Options</span>
+                                <div class="preview-options">
+                                    <div class="preview-option-row">
+                                        <span class="preview-option-label">Show Grid</span>
+                                        <div class="form-toggle" id="previewShowGrid" onclick="togglePreviewGrid()"></div>
+                                    </div>
+                                    <div class="preview-option-row">
+                                        <span class="preview-option-label">Show Bounds</span>
+                                        <div class="form-toggle active" id="previewShowBounds" onclick="togglePreviewBounds()"></div>
+                                    </div>
+                                    <div class="preview-option-row">
+                                        <span class="preview-option-label">Interactive</span>
+                                        <div class="form-toggle" id="previewInteractive" onclick="togglePreviewInteractive()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <span class="form-section-title">Scale</span>
+                                <input type="range" min="50" max="150" value="100" class="preview-scale-slider" id="previewScale" oninput="updatePreviewScale(this.value)">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">
+                                    <span>50%</span>
+                                    <span id="previewScaleValue">100%</span>
+                                    <span>150%</span>
+                                </div>
+                            </div>
+                            <div class="preview-frame-container">
+                                <div class="preview-frame phone" id="previewFrame">
+                                    <div class="preview-frame-bevel"></div>
+                                    <div class="preview-frame-notch"></div>
+                                    <div class="preview-content" id="previewContent"></div>
+                                </div>
+                            </div>
+                            <div class="preview-status">
+                                <div class="preview-status-dot"></div>
+                                <span>Live Preview Active</span>
+                            </div>
+                            <div class="preview-info">
+                                <div class="preview-info-row">
+                                    <span>Elements:</span>
+                                    <span id="previewElementCount">0</span>
+                                </div>
+                                <div class="preview-info-row">
+                                    <span>Resolution:</span>
+                                    <span id="previewResolution">360 × 640</span>
+                                </div>
+                                <div class="preview-info-row">
+                                    <span>Aspect Ratio:</span>
+                                    <span id="previewRatio">9:16</span>
+                                </div>
+                            </div>
+                            <div class="preview-actions">
+                                <button class="btn-small" onclick="refreshPreview()">🔄 Refresh</button>
+                                <button class="btn-small primary" onclick="capturePreview()">📸 Capture</button>
+                            </div>
+                            
+                            <div class="preview-tabs-demo">
+                                <span class="form-section-title">Tab Component Preview</span>
+                                <div class="preview-tabs-header">
+                                    <button class="preview-tab-btn active" onclick="switchPreviewTab(this, 'gui')">GUI Items</button>
+                                    <button class="preview-tab-btn" onclick="switchPreviewTab(this, 'hierarchy')">Hierarchy</button>
+                                    <button class="preview-tab-btn" onclick="switchPreviewTab(this, 'code')">Code</button>
+                                </div>
+                                <div class="preview-tabs-content" id="previewTabsContent">
+                                    <div id="tabContentGui">
+                                        <div class="empty-state" style="padding: 20px;">
+                                            <div style="font-size: 32px; margin-bottom: 8px;">📦</div>
+                                            <div style="font-size: 12px;">GUI items will appear here</div>
+                                        </div>
+                                    </div>
+                                    <div id="tabContentHierarchy" style="display: none;">
+                                        <div class="empty-state" style="padding: 20px;">
+                                            <div style="font-size: 32px; margin-bottom: 8px;">🌳</div>
+                                            <div style="font-size: 12px;">Hierarchy view</div>
+                                        </div>
+                                    </div>
+                                    <div id="tabContentCode" style="display: none;">
+                                        <div class="empty-state" style="padding: 20px;">
+                                            <div style="font-size: 32px; margin-bottom: 8px;">💻</div>
+                                            <div style="font-size: 12px;">Generated code preview</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <div class="panel-overlay" id="panelOverlay" onclick="closePanels()"></div>
+            <div class="canvas-area" id="canvasArea">
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <div class="canvas-bg"></div>
+                    <div class="grid-overlay lines" id="gridOverlay"></div>
+                    <div class="canvas-content" id="canvasContent"></div>
+                </div>
+            </div>
+            <aside class="side-panel right" id="rightPanel">
+                <div class="panel-header">
+                    <span class="panel-title">Inspector</span>
+                    <button class="panel-close" onclick="closePanels()">×</button>
+                </div>
+                <div class="panel-tabs">
+                    <div class="panel-tab active" data-tab="props">Props</div>
+                    <div class="panel-tab" data-tab="layout">Layout</div>
+                    <div class="panel-tab" data-tab="advanced">Advanced</div>
+                    <div class="panel-tab" data-tab="events">Events</div>
+                </div>
+                <div class="panel-content" id="inspectorContent">
+                    <div class="panel-section active" id="propsSection">
+                        <div class="empty-state" id="emptyInspector">
+                            <div class="empty-state-icon">📦</div>
+                            <div class="empty-state-title">No GUI Selected</div>
+                            <div>Select a GUI element to edit its properties</div>
+                        </div>
+                        <div id="propsForm" style="display: none;">
+                            <div class="form-section">
+                                <div class="form-section-header">
+                                    <span class="form-section-title">Identity</span>
+                                    <span class="form-section-action" onclick="renameGUI()">Rename</span>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Name</span>
+                                    <input type="text" class="form-input" id="propName" onchange="updateProperty('name', this.value)">
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Type</span>
+                                    <select class="form-select" id="propType" onchange="updateProperty('type', this.value)">
+                                        <option value="window">Window</option><option value="text">Text</option><option value="button">Button</option><option value="toggle">Toggle</option><option value="slider">Slider</option><option value="progress">Progress</option><option value="input">Input</option><option value="image">Image</option><option value="container">Container</option><option value="list">List</option><option value="grid">Grid</option><option value="table">Table</option><option value="masonry">Masonry</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <span class="form-section-title">Position</span>
+                                <div class="form-row">
+                                    <span class="form-label">X</span>
+                                    <div class="input-group">
+                                        <input type="number" class="form-input" id="propX" onchange="updateProperty('x', parseInt(this.value))">
+                                        <div class="input-nudge">
+                                            <button class="nudge-btn" onclick="nudgeValue('x', 1)">▲</button>
+                                            <button class="nudge-btn" onclick="nudgeValue('x', -1)">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Y</span>
+                                    <div class="input-group">
+                                        <input type="number" class="form-input" id="propY" onchange="updateProperty('y', parseInt(this.value))">
+                                        <div class="input-nudge">
+                                            <button class="nudge-btn" onclick="nudgeValue('y', 1)">▲</button>
+                                            <button class="nudge-btn" onclick="nudgeValue('y', -1)">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <div class="form-section-header">
+                                    <span class="form-section-title">Size</span>
+                                    <div class="form-toggle" id="lockRatio" onclick="toggleLockRatio()"></div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Width</span>
+                                    <div class="input-group">
+                                        <input type="number" class="form-input" id="propWidth" onchange="updateProperty('width', parseInt(this.value))">
+                                        <div class="input-nudge">
+                                            <button class="nudge-btn" onclick="nudgeValue('width', 1)">▲</button>
+                                            <button class="nudge-btn" onclick="nudgeValue('width', -1)">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Height</span>
+                                    <div class="input-group">
+                                        <input type="number" class="form-input" id="propHeight" onchange="updateProperty('height', parseInt(this.value))">
+                                        <div class="input-nudge">
+                                            <button class="nudge-btn" onclick="nudgeValue('height', 1)">▲</button>
+                                            <button class="nudge-btn" onclick="nudgeValue('height', -1)">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn-small" onclick="cropGUI()">Crop</button>
+                                    <button class="btn-small" onclick="resetSize()">Reset</button>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <span class="form-section-title">Appearance</span>
+                                <div class="form-row">
+                                    <span class="form-label">Visible</span>
+                                    <div class="form-toggle active" id="propVisible" onclick="toggleProperty('visible')"></div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Touch</span>
+                                    <div class="form-toggle active" id="propTouch" onclick="toggleProperty('touchable')"></div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Locked</span>
+                                    <div class="form-toggle" id="propLocked" onclick="toggleProperty('locked')"></div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">BG Color</span>
+                                    <div class="color-picker-wrapper">
+                                        <div class="color-preview" id="colorPreview" style="background: #1e1e1e;" onclick="pickColor()"></div>
+                                        <input type="text" class="color-input" id="propColor" value="#1e1e1e" onchange="updateColor(this.value)">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Alpha</span>
+                                    <input type="range" min="0" max="100" value="100" style="flex: 1;" id="propAlpha" onchange="updateProperty('alpha', this.value / 100)">
+                                </div>
+                            </div>
+                            <div class="form-section" id="contentSection">
+                                <span class="form-section-title">Content</span>
+                                <div class="form-row">
+                                    <span class="form-label">Text</span>
+                                    <input type="text" class="form-input" id="propText" onchange="updateProperty('text', this.value)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-section" id="layoutSection">
+                        <div class="empty-state" id="emptyLayout">
+                            <div class="empty-state-icon">📐</div>
+                            <div class="empty-state-title">No GUI Selected</div>
+                        </div>
+                        <div id="layoutForm" style="display: none;">
+                            <div class="form-section">
+                                <span class="form-section-title">Alignment</span>
+                                <div class="form-row">
+                                    <span class="form-label">Horizontal</span>
+                                    <select class="form-select" id="alignHorz" onchange="updateProperty('alignHorz', parseInt(this.value))"><option value="0">Left</option><option value="1">Center</option><option value="2">Right</option></select>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Vertical</span>
+                                    <select class="form-select" id="alignVert" onchange="updateProperty('alignVert', parseInt(this.value))"><option value="0">Top</option><option value="1">Center</option><option value="2">Bottom</option></select>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <span class="form-section-title">Layout</span>
+                                <div class="form-row">
+                                    <span class="form-label">Container</span>
+                                    <select class="form-select" id="containerType" onchange="updateProperty('containerType', parseInt(this.value))"><option value="1">Vertical</option><option value="2">Horizontal</option><option value="3">Grid</option><option value="4">Masonry</option><option value="5">Evenly Horizontal</option><option value="6">Evenly Vertical</option></select>
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Padding</span>
+                                    <input type="number" class="form-input form-input-small" value="0" id="layoutPadding" onchange="updateProperty('padding', parseInt(this.value))">
+                                </div>
+                                <div class="form-row">
+                                    <span class="form-label">Spacing</span>
+                                    <input type="number" class="form-input form-input-small" value="0" id="layoutSpacing" onchange="updateProperty('spacing', parseInt(this.value))">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-section" id="advancedSection">
+                        <div class="empty-state" id="emptyAdvanced">
+                            <div class="empty-state-icon">⚙️</div>
+                            <div class="empty-state-title">No GUI Selected</div>
+                        </div>
+                        <div id="advancedForm" style="display: none;">
+                            <div class="advanced-section open">
+                                <div class="advanced-header" onclick="toggleAdvanced(this)">
+                                    <span class="advanced-title">Parent-Child</span>
+                                    <span class="advanced-arrow">▼</span>
+                                </div>
+                                <div class="advanced-content">
+                                    <div class="form-row">
+                                        <span class="form-label">Parent</span>
+                                        <select class="form-select" id="propParent" onchange="setParent(this.value)"><option value="">None (Root)</option></select>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button class="btn-small" onclick="addToParent()">Add to Parent</button>
+                                        <button class="btn-small" onclick="removeFromParent()">Remove</button>
+                                    </div>
+                                    <div class="form-row" style="margin-top: 12px;">
+                                        <span class="form-label">Level</span>
+                                        <input type="number" class="form-input form-input-small" id="propLevel" value="0" onchange="updateProperty('level', parseInt(this.value))">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="advanced-section">
+                                <div class="advanced-header" onclick="toggleAdvanced(this)">
+                                    <span class="advanced-title">Visibility Actions</span>
+                                    <span class="advanced-arrow">▼</span>
+                                </div>
+                                <div class="advanced-content">
+                                    <div class="form-row">
+                                        <span class="form-label">On Click</span>
+                                        <select class="form-select" id="onClickAction" onchange="setAction('click', this.value)"><option value="">None</option><option value="toggleVisible">Toggle Visible</option><option value="show">Show Parent</option><option value="hide">Hide Parent</option><option value="toggleParent">Toggle Parent</option></select>
+                                    </div>
+                                    <div class="form-row">
+                                        <span class="form-label">Target</span>
+                                        <select class="form-select" id="actionTarget"><option value="">Self</option></select>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button class="btn-small" onclick="addVisibilityAction()">Add Action</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="advanced-section">
+                                <div class="advanced-header" onclick="toggleAdvanced(this)">
+                                    <span class="advanced-title">Interaction</span>
+                                    <span class="advanced-arrow">▼</span>
+                                </div>
+                                <div class="advanced-content">
+                                    <div class="form-row"><span class="form-label">Draggable</span><div class="form-toggle" id="propDraggable" onclick="toggleProperty('draggable')"></div></div>
+                                    <div class="form-row"><span class="form-label">Resizable</span><div class="form-toggle" id="propResizable" onclick="toggleProperty('resizable')"></div></div>
+                                    <div class="form-row"><span class="form-label">Clip Children</span><div class="form-toggle" id="propClip" onclick="toggleProperty('clipChildren')"></div></div>
+                                    <div class="form-row"><span class="form-label">Auto Size</span><div class="form-toggle" id="propAutoSize" onclick="toggleProperty('autoSize')"></div></div>
+                                </div>
+                            </div>
+                            <div class="advanced-section">
+                                <div class="advanced-header" onclick="toggleAdvanced(this)">
+                                    <span class="advanced-title">Animation</span>
+                                    <span class="advanced-arrow">▼</span>
+                                </div>
+                                <div class="advanced-content">
+                                    <div class="form-row"><span class="form-label">Open Anim</span><div class="form-toggle" id="propAnimOpen" onclick="toggleProperty('animOpen')"></div></div>
+                                    <div class="form-row"><span class="form-label">Duration</span><input type="number" class="form-input form-input-small" value="200" id="animDuration" onchange="updateProperty('animDuration', parseInt(this.value))"></div>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <button class="btn-small danger" onclick="deleteGUI()" style="width: 100%;">Delete GUI</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-section" id="eventsSection">
+                        <div class="empty-state" id="emptyEvents">
+                            <div class="empty-state-icon">📡</div>
+                            <div class="empty-state-title">No GUI Selected</div>
+                        </div>
+                        <div id="eventsForm" style="display: none;">
+                            <div class="form-section">
+                                <span class="form-section-title">Available Events</span>
+                                <div class="event-list">
+                                    <div class="event-item"><span class="event-name">OnClick</span><button class="event-add" onclick="addEvent('click')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnDoubleClick</span><button class="event-add" onclick="addEvent('doubleClick')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnTouchDown</span><button class="event-add" onclick="addEvent('touchDown')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnTouchUp</span><button class="event-add" onclick="addEvent('touchUp')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnDrag</span><button class="event-add" onclick="addEvent('drag')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnTextChanged</span><button class="event-add" onclick="addEvent('textChanged')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnStateChanged</span><button class="event-add" onclick="addEvent('stateChanged')">+</button></div>
+                                    <div class="event-item"><span class="event-name">OnValueChanged</span><button class="event-add" onclick="addEvent('valueChanged')">+</button></div>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <span class="form-section-title">Active Events</span>
+                                <div id="activeEvents">
+                                    <div class="empty-state" style="padding: 20px;"><div style="font-size: 24px; margin-bottom: 8px;">📭</div><div style="font-size: 12px;">No events assigned</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+        <div class="bottom-bar">
+            <div class="bottom-info">
+                <div class="bottom-info-item"><span>📦</span><span id="itemCount">0 items</span></div>
+                <div class="bottom-info-item"><span>📍</span><span id="cursorPos">0, 0</span></div>
+                <div class="bottom-info-item"><span>📐</span><span id="selectionSize">-</span></div>
+            </div>
+            <div class="bottom-actions">
+                <button class="header-btn" onclick="clearCanvas()">🗑️</button>
+            </div>
+        </div>
+    </div>
+    <button class="fab" onclick="showAddModal()">+</button>
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">Add New GUI</div></div>
+            <div class="modal-body">
+                <div class="form-row"><span class="form-label">Type</span><select class="form-select" id="newGuiType"><option value="window">Window</option><option value="text">Text</option><option value="button">Button</option><option value="toggle">Toggle</option><option value="slider">Slider</option><option value="progress">Progress</option><option value="input">Input</option><option value="image">Image</option><option value="container">Container</option><option value="list">List</option><option value="grid">Grid</option></select></div>
+                <div class="form-row"><span class="form-label">Name</span><input type="text" class="form-input" id="newGuiName" placeholder="MyGUI_1"></div>
+            </div>
+            <div class="modal-footer"><button class="modal-btn" onclick="closeModal()">Cancel</button><button class="modal-btn primary" onclick="addNewGUI()">Add</button></div>
+        </div>
+    </div>
+    <div class="modal" id="renameModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">Rename GUI</div></div>
+            <div class="modal-body"><div class="form-row"><span class="form-label">New Name</span><input type="text" class="form-input" id="renameInput"></div></div>
+            <div class="modal-footer"><button class="modal-btn" onclick="closeModal()">Cancel</button><button class="modal-btn primary" onclick="confirmRename()">Rename</button></div>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script>
+        const guiTypes = {
+            window: { icon: '🪟', label: 'Window', class: 'comp-window' },
+            text: { icon: '📝', label: 'Text', class: 'comp-text' },
+            button: { icon: '🔘', label: 'Button', class: 'comp-button' },
+            toggle: { icon: '☑️', label: 'Toggle', class: 'comp-toggle' },
+            slider: { icon: '🎚️', label: 'Slider', class: 'comp-slider' },
+            progress: { icon: '📊', label: 'Progress', class: 'comp-progress' },
+            input: { icon: '⌨️', label: 'Input', class: 'comp-input' },
+            image: { icon: '🖼️', label: 'Image', class: 'comp-image' },
+            container: { icon: '📦', label: 'Container', class: 'comp-container' },
+            list: { icon: '📋', label: 'List', class: 'comp-list' },
+            grid: { icon: '⊞', label: 'Grid', class: 'comp-grid' },
+            table: { icon: '📑', label: 'Table', class: 'comp-list' },
+            masonry: { icon: '🧱', label: 'Masonry', class: 'comp-grid' }
+        };
+
+        let guis = [], selectedId = null, zoom = 1, showGrid = false, lockRatio = false;
+        let dragState = { active: false, gui: null, offsetX: 0, offsetY: 0 };
+        let resizeState = { active: false, gui: null, handle: null, startX: 0, startY: 0, startW: 0, startH: 0 };
+        let history = [], historyIndex = -1;
+        let previewDevice = 'phone';
+        let previewScale = 100;
+        let previewShowGrid = false;
+        let previewShowBounds = true;
+        let previewInteractive = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initPalette();
+            initTabs();
+            initPanelToggles();
+            initCanvas();
+            initSearch();
+            addSampleData();
+            updatePreview();
+        });
+
+        function addSampleData() {
+            addGUI('window', 'MainWindow', { x: 20, y: 40, width: 280, height: 400, text: 'Mod Menu' });
+            addGUI('button', 'BtnClose', { x: 220, y: 10, width: 40, height: 30, parent: 'MainWindow', text: 'X' });
+            addGUI('text', 'LblTitle', { x: 20, y: 60, width: 200, height: 30, parent: 'MainWindow', text: 'Welcome!' });
+            addGUI('toggle', 'TglEnable', { x: 20, y: 100, width: 50, height: 26, parent: 'MainWindow' });
+            addGUI('slider', 'SldVolume', { x: 20, y: 140, width: 200, height: 40, parent: 'MainWindow' });
+            updateGUIList();
+            updateLayersTree();
+            saveHistory();
+            updatePreview();
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('paletteGrid');
+            Object.entries(guiTypes).forEach(([type, info]) => {
+                const item = document.createElement('div');
+                item.className = 'palette-item';
+                item.innerHTML = `<div class="palette-icon">${info.icon}</div><div class="palette-label">${info.label}</div>`;
+                item.onclick = () => { addGUI(type); updatePreview(); };
+                grid.appendChild(item);
+            });
+        }
+
+        function initTabs() {
+            document.querySelectorAll('.panel-tabs').forEach(tabContainer => {
+                tabContainer.querySelectorAll('.panel-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const container = tab.closest('.side-panel');
+                        container.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+                        container.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+                        tab.classList.add('active');
+                        container.querySelector(`#${tab.dataset.tab}Section`).classList.add('active');
+                        if (tab.dataset.tab === 'preview') updatePreview();
+                    });
+                });
+            });
+        }
+
+        function initPanelToggles() {
+            document.querySelectorAll('[data-panel]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const panelId = btn.dataset.panel === 'left' ? 'leftPanel' : 'rightPanel';
+                    const panel = document.getElementById(panelId);
+                    const overlay = document.getElementById('panelOverlay');
+                    const isOpen = panel.classList.contains('open');
+                    closePanels();
+                    if (!isOpen) { panel.classList.add('open'); overlay.classList.add('visible'); }
+                });
+            });
+        }
+
+        function closePanels() {
+            document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('open'));
+            document.getElementById('panelOverlay').classList.remove('visible');
+        }
+
+        function initCanvas() {
+            const canvas = document.getElementById('canvasArea');
+            canvas.addEventListener('pointerdown', handlePointerDown);
+            canvas.addEventListener('pointermove', handlePointerMove);
+            canvas.addEventListener('pointerup', handlePointerUp);
+            canvas.addEventListener('pointercancel', handlePointerUp);
+            canvas.addEventListener('pointermove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.round((e.clientX - rect.left) / zoom);
+                const y = Math.round((e.clientY - rect.top) / zoom);
+                document.getElementById('cursorPos').textContent = `${x}, ${y}`;
+            });
+        }
+
+        function initSearch() {
+            document.getElementById('paletteSearch').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.palette-item').forEach(item => {
+                    item.style.display = item.querySelector('.palette-label').textContent.toLowerCase().includes(term) ? 'flex' : 'none';
+                });
+            });
+            document.getElementById('listSearch').addEventListener('input', (e) => updateGUIList(e.target.value));
+        }
+
+        function addGUI(type, name = null, props = {}) {
+            const id = 'gui_' + Date.now();
+            const guiName = name || `${guiTypes[type].label}_${guis.length + 1}`;
+            const gui = {
+                id, type, name: guiName,
+                x: props.x ?? 50, y: props.y ?? 50,
+                width: props.width ?? 100, height: props.height ?? 40,
+                text: props.text ?? guiName,
+                visible: true, touchable: true, locked: false,
+                draggable: false, resizable: true, clipChildren: false, autoSize: false, animOpen: false,
+                alpha: 1, color: '#1e1e1e',
+                alignHorz: 0, alignVert: 0, containerType: 1, padding: 0, spacing: 0, level: 0,
+                parent: props.parent || null, children: [], events: []
+            };
+            guis.push(gui);
+            renderGUI(gui);
+            updateGUIList();
+            updateLayersTree();
+            selectGUI(id);
+            saveHistory();
+            updatePreview();
+            showToast(`${guiTypes[type].label} added`);
+            return gui;
+        }
+
+        function renderGUI(gui) {
+            const canvas = document.getElementById('canvasContent');
+            const el = document.createElement('div');
+            el.id = gui.id;
+            el.className = `canvas-component ${guiTypes[gui.type].class}`;
+            el.style.left = gui.x + 'px';
+            el.style.top = gui.y + 'px';
+            el.style.width = gui.width + 'px';
+            el.style.height = gui.height + 'px';
+            el.style.opacity = gui.alpha;
+            el.style.zIndex = gui.level;
+
+            if (gui.type === 'window') {
+                el.innerHTML = `<div class="window-titlebar"><span class="window-title">${gui.text}</span><div class="window-controls"><div class="window-btn min"></div><div class="window-btn close"></div></div></div>`;
+            } else if (gui.type === 'text' || gui.type === 'button') {
+                el.textContent = gui.text;
+            } else if (gui.type === 'toggle') {
+                el.innerHTML = '<div class="toggle-knob"></div>';
+            } else if (gui.type === 'slider') {
+                el.innerHTML = '<div class="slider-track"><div class="slider-fill"></div><div class="slider-thumb"></div></div>';
+            } else if (gui.type === 'progress') {
+                el.innerHTML = '<div class="progress-fill"></div>';
+            } else if (gui.type === 'input') {
+                el.textContent = gui.text || 'Input...';
+            } else if (gui.type === 'image') {
+                el.innerHTML = '🖼️';
+            }
+
+            const selectionBox = document.createElement('div');
+            selectionBox.className = 'selection-box';
+            ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(h => {
+                const handle = document.createElement('div');
+                handle.className = `resize-handle ${h}`;
+                handle.dataset.handle = h;
+                selectionBox.appendChild(handle);
+            });
+            el.appendChild(selectionBox);
+            canvas.appendChild(el);
+
+            el.addEventListener('pointerdown', (e) => {
+                if (e.target.classList.contains('resize-handle')) {
+                    e.stopPropagation();
+                    startResize(e, gui, e.target.dataset.handle);
+                } else {
+                    e.stopPropagation();
+                    selectGUI(gui.id);
+                    if (gui.draggable && !gui.locked) startDrag(e, gui);
+                }
+            });
+        }
+
+        function selectGUI(id) {
+            if (selectedId) {
+                const prev = document.getElementById(selectedId);
+                if (prev) prev.classList.remove('selected');
+            }
+            selectedId = id;
+            if (id) {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('selected');
+                updateInspector();
+            }
+            updateGUIList();
+            updateLayersTree();
+        }
+
+        function updateInspector() {
+            const gui = guis.find(g => g.id === selectedId);
+            const emptyIds = ['emptyInspector', 'emptyLayout', 'emptyAdvanced', 'emptyEvents'];
+            const formIds = ['propsForm', 'layoutForm', 'advancedForm', 'eventsForm'];
+
+            if (!gui) {
+                emptyIds.forEach(id => document.getElementById(id).style.display = 'flex');
+                formIds.forEach(id => document.getElementById(id).style.display = 'none');
+                document.getElementById('selectionSize').textContent = '-';
+                return;
+            }
+
+            emptyIds.forEach(id => document.getElementById(id).style.display = 'none');
+            formIds.forEach(id => document.getElementById(id).style.display = 'block');
+
+            document.getElementById('propName').value = gui.name;
+            document.getElementById('propType').value = gui.type;
+            document.getElementById('propX').value = gui.x;
+            document.getElementById('propY').value = gui.y;
+            document.getElementById('propWidth').value = gui.width;
+            document.getElementById('propHeight').value = gui.height;
+            document.getElementById('propText').value = gui.text || '';
+            document.getElementById('propVisible').classList.toggle('active', gui.visible);
+            document.getElementById('propTouch').classList.toggle('active', gui.touchable);
+            document.getElementById('propLocked').classList.toggle('active', gui.locked);
+            document.getElementById('propAlpha').value = gui.alpha * 100;
+            document.getElementById('colorPreview').style.background = gui.color;
+            document.getElementById('propColor').value = gui.color;
+
+            document.getElementById('alignHorz').value = gui.alignHorz;
+            document.getElementById('alignVert').value = gui.alignVert;
+            document.getElementById('containerType').value = gui.containerType;
+            document.getElementById('layoutPadding').value = gui.padding;
+            document.getElementById('layoutSpacing').value = gui.spacing;
+
+            document.getElementById('propLevel').value = gui.level;
+            document.getElementById('propDraggable').classList.toggle('active', gui.draggable);
+            document.getElementById('propResizable').classList.toggle('active', gui.resizable);
+            document.getElementById('propClip').classList.toggle('active', gui.clipChildren);
+            document.getElementById('propAutoSize').classList.toggle('active', gui.autoSize);
+            document.getElementById('propAnimOpen').classList.toggle('active', gui.animOpen);
+
+            const parentSelect = document.getElementById('propParent');
+            parentSelect.innerHTML = '<option value="">None (Root)</option>';
+            guis.filter(g => g.id !== gui.id).forEach(g => {
+                parentSelect.innerHTML += `<option value="${g.id}" ${g.id === gui.parent ? 'selected' : ''}>${g.name}</option>`;
+            });
+
+            document.getElementById('selectionSize').textContent = `${gui.width} × ${gui.height}`;
+        }
+
+        function updateProperty(prop, value) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            gui[prop] = value;
+            if (lockRatio && (prop === 'width' || prop === 'height')) {
+                const ratio = gui.width / gui.height;
+                if (prop === 'width') gui.height = Math.round(gui.width / ratio);
+                else gui.width = Math.round(gui.height * ratio);
+            }
+            renderGUIUpdate(gui);
+            updateInspector();
+            saveHistory();
+            updatePreview();
+        }
+
+        function toggleProperty(prop) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            gui[prop] = !gui[prop];
+            renderGUIUpdate(gui);
+            updateInspector();
+            saveHistory();
+            updatePreview();
+        }
+
+        function renderGUIUpdate(gui) {
+            const el = document.getElementById(gui.id);
+            if (!el) return;
+            el.style.left = gui.x + 'px';
+            el.style.top = gui.y + 'px';
+            el.style.width = gui.width + 'px';
+            el.style.height = gui.height + 'px';
+            el.style.opacity = gui.alpha;
+            el.style.zIndex = gui.level;
+            el.style.display = gui.visible ? 'block' : 'none';
+            el.style.backgroundColor = gui.color;
+
+            if (gui.type === 'window') {
+                const title = el.querySelector('.window-title');
+                if (title) title.textContent = gui.text;
+            } else if (gui.type === 'text' || gui.type === 'button' || gui.type === 'input') {
+                el.textContent = gui.text;
+                if (!el.querySelector('.selection-box')) {
+                    const selectionBox = document.createElement('div');
+                    selectionBox.className = 'selection-box';
+                    ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(h => {
+                        const handle = document.createElement('div');
+                        handle.className = `resize-handle ${h}`;
+                        handle.dataset.handle = h;
+                        selectionBox.appendChild(handle);
+                    });
+                    el.appendChild(selectionBox);
+                }
+            }
+            updateGUIList();
+            updateLayersTree();
+        }
+
+        function nudgeValue(prop, delta) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            gui[prop] += delta;
+            renderGUIUpdate(gui);
+            updateInspector();
+            updatePreview();
+        }
+
+        function toggleLockRatio() {
+            lockRatio = !lockRatio;
+            document.getElementById('lockRatio').classList.toggle('active', lockRatio);
+        }
+
+        function updateColor(value) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            gui.color = value;
+            document.getElementById('colorPreview').style.background = value;
+            renderGUIUpdate(gui);
+            saveHistory();
+            updatePreview();
+        }
+
+        function startDrag(e, gui) {
+            dragState = { active: true, gui, offsetX: e.clientX / zoom - gui.x, offsetY: e.clientY / zoom - gui.y };
+            document.getElementById(gui.id).classList.add('dragging');
+        }
+
+        function startResize(e, gui, handle) {
+            resizeState = { active: true, gui, handle, startX: e.clientX / zoom, startY: e.clientY / zoom, startW: gui.width, startH: gui.height, startLeft: gui.x, startTop: gui.y };
+            document.getElementById(gui.id).classList.add('resizing');
+        }
+
+        function handlePointerDown(e) {
+            if (e.target.closest('.canvas-component')) return;
+            selectGUI(null);
+        }
+
+        function handlePointerMove(e) {
+            if (dragState.active && dragState.gui) {
+                const gui = dragState.gui;
+                gui.x = Math.round(e.clientX / zoom - dragState.offsetX);
+                gui.y = Math.round(e.clientY / zoom - dragState.offsetY);
+                renderGUIUpdate(gui);
+                updateInspector();
+            }
+            if (resizeState.active && resizeState.gui) {
+                const gui = resizeState.gui;
+                const dx = e.clientX / zoom - resizeState.startX;
+                const dy = e.clientY / zoom - resizeState.startY;
+                switch (resizeState.handle) {
+                    case 'se': gui.width = Math.max(20, resizeState.startW + dx); gui.height = Math.max(20, resizeState.startH + dy); break;
+                    case 'sw': gui.width = Math.max(20, resizeState.startW - dx); gui.height = Math.max(20, resizeState.startH + dy); gui.x = resizeState.startLeft + (resizeState.startW - gui.width); break;
+                    case 'ne': gui.width = Math.max(20, resizeState.startW + dx); gui.height = Math.max(20, resizeState.startH - dy); gui.y = resizeState.startTop + (resizeState.startH - gui.height); break;
+                    case 'nw': gui.width = Math.max(20, resizeState.startW - dx); gui.height = Math.max(20, resizeState.startH - dy); gui.x = resizeState.startLeft + (resizeState.startW - gui.width); gui.y = resizeState.startTop + (resizeState.startH - gui.height); break;
+                    case 'e': gui.width = Math.max(20, resizeState.startW + dx); break;
+                    case 'w': gui.width = Math.max(20, resizeState.startW - dx); gui.x = resizeState.startLeft + (resizeState.startW - gui.width); break;
+                    case 's': gui.height = Math.max(20, resizeState.startH + dy); break;
+                    case 'n': gui.height = Math.max(20, resizeState.startH - dy); gui.y = resizeState.startTop + (resizeState.startH - gui.height); break;
+                }
+                renderGUIUpdate(gui);
+                updateInspector();
+            }
+        }
+
+        function handlePointerUp() {
+            if (dragState.active) {
+                if (dragState.gui) document.getElementById(dragState.gui.id).classList.remove('dragging');
+                dragState = { active: false, gui: null, offsetX: 0, offsetY: 0 };
+                saveHistory();
+                updatePreview();
+            }
+            if (resizeState.active) {
+                if (resizeState.gui) document.getElementById(resizeState.gui.id).classList.remove('resizing');
+                resizeState = { active: false, gui: null, handle: null, startX: 0, startY: 0, startW: 0, startH: 0 };
+                saveHistory();
+                updatePreview();
+            }
+        }
+
+        function updateGUIList(searchTerm = '') {
+            const list = document.getElementById('guiList');
+            list.innerHTML = '';
+            const filtered = guis.filter(g => g.name.toLowerCase().includes(searchTerm.toLowerCase()) || g.type.toLowerCase().includes(searchTerm.toLowerCase()));
+            filtered.forEach(gui => {
+                const item = document.createElement('div');
+                item.className = `gui-item ${gui.id === selectedId ? 'active' : ''}`;
+                item.innerHTML = `<div class="gui-item-icon">${guiTypes[gui.type].icon}</div><div class="gui-item-info"><div class="gui-item-name">${gui.name}</div><div class="gui-item-type">${guiTypes[gui.type].label}</div></div><button class="gui-item-visibility ${gui.visible ? '' : 'hidden'}" onclick="toggleVisibility('${gui.id}', event)">${gui.visible ? '👁️' : '🚫'}</button>`;
+                item.onclick = () => selectGUI(gui.id);
+                list.appendChild(item);
+            });
+            document.getElementById('itemCount').textContent = `${guis.length} items`;
+            updateTabPreviewList();
+        }
+
+        function updateLayersTree() {
+            const tree = document.getElementById('layersTree');
+            tree.innerHTML = '';
+            guis.filter(g => !g.parent).forEach(gui => renderLayerItem(gui, tree, 0));
+        }
+
+        function renderLayerItem(gui, container, level) {
+            const item = document.createElement('div');
+            item.className = `layer-item level-${Math.min(level + 1, 4)} ${gui.id === selectedId ? 'active' : ''}`;
+            item.innerHTML = `<span class="layer-expand">${gui.children.length > 0 ? '▼' : ''}</span><span class="layer-icon">${guiTypes[gui.type].icon}</span><span class="layer-name">${gui.name}</span><span class="layer-visibility">${gui.visible ? '👁️' : '🚫'}</span>`;
+            item.onclick = () => selectGUI(gui.id);
+            container.appendChild(item);
+            if (gui.children.length > 0) {
+                gui.children.forEach(childId => {
+                    const child = guis.find(g => g.id === childId);
+                    if (child) renderLayerItem(child, container, level + 1);
+                });
+            }
+        }
+
+        function toggleVisibility(id, event) {
+            event.stopPropagation();
+            const gui = guis.find(g => g.id === id);
+            if (gui) {
+                gui.visible = !gui.visible;
+                renderGUIUpdate(gui);
+                updateGUIList();
+                updateLayersTree();
+                saveHistory();
+                updatePreview();
+            }
+        }
+
+        function setParent(parentId) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            if (gui.parent) {
+                const oldParent = guis.find(g => g.id === gui.parent);
+                if (oldParent) oldParent.children = oldParent.children.filter(id => id !== gui.id);
+            }
+            gui.parent = parentId || null;
+            if (parentId) {
+                const newParent = guis.find(g => g.id === parentId);
+                if (newParent) newParent.children.push(gui.id);
+            }
+            updateLayersTree();
+            saveHistory();
+            updatePreview();
+            showToast(parentId ? 'Added to parent' : 'Removed from parent');
+        }
+
+        function addToParent() { showToast('Select a parent from the dropdown'); }
+        function removeFromParent() { setParent(''); }
+        function toggleAdvanced(header) { header.parentElement.classList.toggle('open'); }
+        function addVisibilityAction() { showToast('Action added!'); }
+
+        function addEvent(eventType) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            if (!gui.events.includes(eventType)) {
+                gui.events.push(eventType);
+                updateActiveEvents(gui);
+                showToast(`Event "${eventType}" added`);
+                saveHistory();
+            }
+        }
+
+        function updateActiveEvents(gui) {
+            const container = document.getElementById('activeEvents');
+            if (gui.events.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 20px;"><div style="font-size: 24px; margin-bottom: 8px;">📭</div><div style="font-size: 12px;">No events assigned</div></div>';
+                return;
+            }
+            container.innerHTML = gui.events.map(e => `<div class="event-item"><span class="event-name">${e}</span><button class="event-add" onclick="removeEvent('${e}')" style="background: var(--error);">−</button></div>`).join('');
+        }
+
+        function removeEvent(eventType) {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            gui.events = gui.events.filter(e => e !== eventType);
+            updateActiveEvents(gui);
+            saveHistory();
+        }
+
+        function renameGUI() {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            document.getElementById('renameInput').value = gui.name;
+            openModal('renameModal');
+        }
+
+        function confirmRename() {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            const newName = document.getElementById('renameInput').value.trim();
+            if (newName) {
+                gui.name = newName;
+                updateGUIList();
+                updateLayersTree();
+                updateInspector();
+                saveHistory();
+                updatePreview();
+                showToast('Renamed successfully');
+            }
+            closeModal();
+        }
+
+        function cropGUI() { showToast('Crop mode activated'); }
+
+        function resetSize() {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            const defaults = { width: 100, height: 40 };
+            if (gui.type === 'window') { defaults.width = 200; defaults.height = 150; }
+            if (gui.type === 'container') { defaults.width = 150; defaults.height = 100; }
+            gui.width = defaults.width;
+            gui.height = defaults.height;
+            renderGUIUpdate(gui);
+            updateInspector();
+            saveHistory();
+            updatePreview();
+        }
+
+        function deleteGUI() {
+            const gui = guis.find(g => g.id === selectedId);
+            if (!gui) return;
+            if (confirm(`Delete "${gui.name}"?`)) {
+                const el = document.getElementById(gui.id);
+                if (el) el.remove();
+                guis = guis.filter(g => g.id !== selectedId);
+                guis.forEach(g => { g.children = g.children.filter(id => id !== selectedId); });
+                selectedId = null;
+                updateGUIList();
+                updateLayersTree();
+                updateInspector();
+                saveHistory();
+                updatePreview();
+                showToast('GUI deleted');
+            }
+        }
+
+        function showAddModal() { openModal('addModal'); }
+
+        function addNewGUI() {
+            const type = document.getElementById('newGuiType').value;
+            const name = document.getElementById('newGuiName').value.trim();
+            addGUI(type, name || null);
+            closeModal();
+            document.getElementById('newGuiName').value = '';
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('open')); }
+        function toggleGrid() { showGrid = !showGrid; document.getElementById('gridOverlay').classList.toggle('visible', showGrid); }
+        function zoomIn() { zoom = Math.min(zoom + 0.1, 2); updateZoom(); }
+        function zoomOut() { zoom = Math.max(zoom - 0.1, 0.5); updateZoom(); }
+        function updateZoom() { document.getElementById('canvasWrapper').style.transform = `scale(${zoom})`; }
+
+        function saveHistory() {
+            history = history.slice(0, historyIndex + 1);
+            history.push(JSON.stringify(guis));
+            historyIndex++;
+        }
+
+        function undo() {
+            if (historyIndex > 0) { historyIndex--; restoreHistory(); }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) { historyIndex++; restoreHistory(); }
+        }
+
+        function restoreHistory() {
+            guis = JSON.parse(history[historyIndex]);
+            document.getElementById('canvasContent').innerHTML = '';
+            guis.forEach(gui => renderGUI(gui));
+            updateGUIList();
+            updateLayersTree();
+            if (selectedId) selectGUI(selectedId);
+            updatePreview();
+        }
+
+        function clearCanvas() {
+            if (guis.length === 0) return;
+            if (confirm('Clear all GUIs?')) {
+                guis = [];
+                document.getElementById('canvasContent').innerHTML = '';
+                selectedId = null;
+                updateGUIList();
+                updateLayersTree();
+                updateInspector();
+                saveHistory();
+                updatePreview();
+                showToast('Canvas cleared');
+            }
+        }
+
+        function exportCode() {
+            let code = '-- Generated by MapleGUI Editor\n\n';
+            guis.forEach(gui => {
+                const typeClass = gui.type === 'window' ? 'MapleWindow' : gui.type === 'text' ? 'MapleText' : gui.type === 'toggle' ? 'MapleToggle' : gui.type === 'slider' ? 'MapleSlider' : gui.type === 'progress' ? 'MapleProgress' : gui.type === 'input' ? 'MapleEditBox' : gui.type === 'image' ? 'MapleImage' : gui.type === 'container' ? 'MapleContainer' : gui.type === 'list' ? 'MapleList' : gui.type === 'grid' ? 'MapleGrid' : gui.type === 'table' ? 'MapleTable' : gui.type === 'masonry' ? 'MapleMasonry' : 'MapleWindow';
+                code += `local ${gui.name} = ${typeClass}:new("${gui.name}")\n`;
+                code += `${gui.name}:setPos(${gui.x}, ${gui.y})\n`;
+                code += `${gui.name}:setSize(${gui.width}, ${gui.height})\n`;
+                if (gui.text && ['text', 'button', 'window', 'input'].includes(gui.type)) code += `${gui.name}:setText("${gui.text}")\n`;
+                if (!gui.visible) code += `${gui.name}:setVisible(false)\n`;
+                if (!gui.touchable) code += `${gui.name}:setTouch(false)\n`;
+                if (gui.alpha !== 1) code += `${gui.name}:setAlpha(${gui.alpha})\n`;
+                if (gui.color !== '#1e1e1e') code += `${gui.name}:setBGColor(${hexToRGB(gui.color)})\n`;
+                if (gui.draggable) code += `${gui.name}:setDragStyle(true)\n`;
+                if (gui.level !== 0) code += `${gui.name}:setLevel(${gui.level})\n`;
+                code += '\n';
+            });
+            guis.forEach(gui => {
+                if (gui.parent) {
+                    const parent = guis.find(g => g.id === gui.parent);
+                    if (parent) code += `${gui.name}:AddTo(${parent.name})\n`;
+                }
+            });
+            prompt("Copy your code below:", code);
+            showToast('Code exported to console!');
+        }
+
+        function hexToRGB(hex) {
+            const r = parseInt(hex.slice(1, 3), 16) / 255;
+            const g = parseInt(hex.slice(3, 5), 16) / 255;
+            const b = parseInt(hex.slice(5, 7), 16) / 255;
+            return `{${r.toFixed(2)}, ${g.toFixed(2)}, ${b.toFixed(2)}, 1}`;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function pickColor() {
+            const input = document.createElement('input');
+            input.type = 'color';
+            input.value = document.getElementById('propColor').value;
+            input.onchange = (e) => updateColor(e.target.value);
+            input.click();
+        }
+
+        // Preview Tab Functions
+        function setPreviewDevice(device) {
+            previewDevice = device;
+            document.querySelectorAll('.preview-device-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-device="${device}"]`).classList.add('active');
+            const frame = document.getElementById('previewFrame');
+            frame.className = `preview-frame ${device}`;
+            updatePreviewInfo();
+        }
+
+        function updatePreviewScale(value) {
+            previewScale = value;
+            document.getElementById('previewScaleValue').textContent = value + '%';
+            const frame = document.getElementById('previewFrame');
+            frame.style.transform = `scale(${value / 100})`;
+        }
+
+        function togglePreviewGrid() {
+            previewShowGrid = !previewShowGrid;
+            document.getElementById('previewShowGrid').classList.toggle('active', previewShowGrid);
+            updatePreview();
+        }
+
+        function togglePreviewBounds() {
+            previewShowBounds = !previewShowBounds;
+            document.getElementById('previewShowBounds').classList.toggle('active', previewShowBounds);
+            updatePreview();
+        }
+
+        function togglePreviewInteractive() {
+            previewInteractive = !previewInteractive;
+            document.getElementById('previewInteractive').classList.toggle('active', previewInteractive);
+            showToast(previewInteractive ? 'Interactive mode ON' : 'Interactive mode OFF');
+        }
+
+        function updatePreview() {
+            const content = document.getElementById('previewContent');
+            content.innerHTML = '';
+            
+            if (previewShowGrid) {
+                content.style.backgroundImage = 'linear-gradient(to right, rgba(99,102,241,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(99,102,241,0.1) 1px, transparent 1px)';
+                content.style.backgroundSize = '20px 20px';
+            } else {
+                content.style.backgroundImage = 'none';
+            }
+
+            const visibleGuis = guis.filter(g => g.visible);
+            visibleGuis.forEach(gui => {
+                const el = document.createElement('div');
+                el.className = `preview-gui-item ${gui.type}`;
+                el.style.left = (gui.x * 0.5) + 'px';
+                el.style.top = (gui.y * 0.5) + 'px';
+                el.style.width = (gui.width * 0.5) + 'px';
+                el.style.height = (gui.height * 0.5) + 'px';
+                el.style.opacity = gui.alpha;
+                
+                if (previewShowBounds) {
+                    el.style.outline = '1px solid rgba(99,102,241,0.3)';
+                }
+
+                if (gui.type === 'window') {
+                    el.innerHTML = `<div class="win-titlebar">${gui.text}</div>`;
+                } else if (gui.type === 'button') {
+                    el.textContent = gui.text;
+                } else if (gui.type === 'text') {
+                    el.textContent = gui.text;
+                } else if (gui.type === 'toggle') {
+                    el.innerHTML = '<div class="knob"></div>';
+                } else if (gui.type === 'slider') {
+                    el.innerHTML = '<div class="track"><div class="fill"></div><div class="thumb"></div></div>';
+                } else if (gui.type === 'progress') {
+                    el.innerHTML = '<div class="bar"></div>';
+                } else if (gui.type === 'input') {
+                    el.textContent = gui.text || 'Input...';
+                } else if (gui.type === 'image') {
+                    el.innerHTML = '🖼️';
+                }
+
+                if (previewInteractive) {
+                    el.style.cursor = 'pointer';
+                    el.onclick = () => showToast(`Clicked: ${gui.name}`);
+                }
+
+                content.appendChild(el);
+            });
+
+            document.getElementById('previewElementCount').textContent = visibleGuis.length;
+        }
+
+        function updatePreviewInfo() {
+            const resolutions = { phone: '360 × 640', tablet: '768 × 1024', desktop: '1920 × 1080' };
+            const ratios = { phone: '9:16', tablet: '3:4', desktop: '16:9' };
+            document.getElementById('previewResolution').textContent = resolutions[previewDevice];
+            document.getElementById('previewRatio').textContent = ratios[previewDevice];
+        }
+
+        function refreshPreview() {
+            updatePreview();
+            showToast('Preview refreshed');
+        }
+
+        function capturePreview() {
+            showToast('Screenshot captured! (Simulated)');
+        }
+
+        function switchPreviewTab(btn, tab) {
+            document.querySelectorAll('.preview-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tabContentGui').style.display = tab === 'gui' ? 'block' : 'none';
+            document.getElementById('tabContentHierarchy').style.display = tab === 'hierarchy' ? 'block' : 'none';
+            document.getElementById('tabContentCode').style.display = tab === 'code' ? 'block' : 'none';
+        }
+
+        function updateTabPreviewList() {
+            const container = document.getElementById('tabContentGui');
+            if (guis.length === 0) {
+                container.innerHTML = `<div class="empty-state" style="padding: 20px;"><div style="font-size: 32px; margin-bottom: 8px;">📦</div><div style="font-size: 12px;">GUI items will appear here</div></div>`;
+                return;
+            }
+            container.innerHTML = guis.map(gui => `
+                <div class="tab-preview-item">
+                    <div class="tab-preview-icon">${guiTypes[gui.type].icon}</div>
+                    <div class="tab-preview-info">
+                        <div class="tab-preview-name">${gui.name}</div>
+                        <div class="tab-preview-type">${guiTypes[gui.type].label} • ${gui.width}×${gui.height}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'z') { e.preventDefault(); undo(); }
+                else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) { e.preventDefault(); redo(); }
+            }
+            if (e.key === 'Delete' && selectedId) deleteGUI();
+        });
+    </script>
+</body>
+</html>
 
